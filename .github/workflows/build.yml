@@ -1,0 +1,59 @@
+name: Build Prod
+
+on:
+  push: { branches: [main] }
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+jobs:
+  buildForSomePlatforms:
+    name: Build for ${{ matrix.platform }} on version ${{ matrix.unityVersion }}
+    runs-on: Ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        projectPath:
+          - ""
+        unityVersion:
+          - 2019.4.18f1
+        platform:
+          - StandaloneOSX       # Build a macOS standalone (Intel 64-bit).
+          - StandaloneWindows64 # Build a Windows standalone.
+          - StandaloneLinux64   # Build a Linux 64-bit standalone.
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create LFS file list
+        run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+
+      - name: Cache Library Folder
+        uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ matrix.platform }}-${{ hashFiles('Packages/manifest.json') }}-v1.0
+          restore-keys: |
+            Library-${{ matrix.platform }}-
+
+      - name: Cache git lfs
+        uses: actions/cache@v2
+        with:
+          path: .git/lfs
+          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}-v1.0
+          # use previous cache if current one is not found
+          restore-keys: |
+            ${{ runner.os }}-lfs-
+
+      - name: Pull lfs data, if not cached
+        run: git lfs pull
+
+      - uses: webbertakken/unity-builder@v2.0-alpha-6
+        with:
+          projectPath: ${{ matrix.projectPath }}
+          unityVersion: ${{ matrix.unityVersion }}
+          targetPlatform: ${{ matrix.platform }}
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.platform }}
+          path: build
