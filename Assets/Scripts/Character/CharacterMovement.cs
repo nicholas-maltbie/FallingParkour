@@ -68,9 +68,8 @@ namespace PropHunt.Character
         public float rotationRate = 180;
 
         /// <summary>
-        /// How the character intended to move this frame
+        /// How the character intended to move this frame. The direction the character tried to move this frame
         /// </summary>
-        /// <value>The direction the character tried to move this frame</value>
         public Vector3 moveDirection;
 
         public void Start()
@@ -122,8 +121,6 @@ namespace PropHunt.Character
             // Setup a movement vector
             // Get user input and move player if moving
             Vector3 movement = new Vector3(unityService.GetAxis("Horizontal"), 0, unityService.GetAxis("Vertical"));
-
-            UnityEngine.Debug.Log(movement);
 
             // Rotate movement vector by player yaw (rotation about vertical axis)
             Quaternion horizPlaneView = transform.rotation;

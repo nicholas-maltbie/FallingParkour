@@ -4,7 +4,9 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "PropHunt",
-        "Mirror"
+        "Mirror",
+        "kcp2k",
+        "Tests.Common"
     ],
     "includePlatforms": [
         "Editor"
