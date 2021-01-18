@@ -1,0 +1,69 @@
+name: Tests
+
+on:
+  push: { branches: [main] }
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+jobs:
+  testAllModes:
+    name: Test in ${{ matrix.testMode }} on version ${{ matrix.unityVersion }}
+    runs-on: Ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        projectPath:
+          - ""
+        unityVersion:
+          - 2019.4.18f1
+        testMode:
+          - editmode
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: false
+
+      - name: Create LFS file list
+        run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+
+      - name: Cache Library Folder
+        uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-Tests-${{ hashFiles('Packages/manifest.json') }}-v1.0
+          restore-keys: |
+            Library-Tests-
+
+      - name: Cache git lfs
+        uses: actions/cache@v2
+        with:
+          path: .git/lfs
+          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}-v1.2
+          # use previous cache if current one is not found
+          restore-keys: |
+            ${{ runner.os }}-lfs-
+
+      - name: Pull lfs data, if not cached
+        run: git lfs pull
+
+      - uses: webbertakken/unity-test-runner@v2.0-alpha-1
+        id: tests
+        with:
+          projectPath: ${{ matrix.projectPath }}
+          unityVersion: ${{ matrix.unityVersion }}
+          testMode: ${{ matrix.testMode }}
+          artifactsPath: ${{ matrix.testMode }}-artifacts
+          customParameters: |
+            -enableCodeCoverage
+            -debugCodeOptimization
+            -burst-disable-compilation 
+            -coverageResultsPath ${{ matrix.testMode }}-artifacts
+            -coverageOptions "generateBadgeReport;assemblyFilters:-Assembly*,-Mirror*,-Tests*,-SimpleWebTransport,-Telepathy,-kcp2k;pathFilters:-*/Assets/Mirror/*,-*/Assets/Tests/*"
+            -nographics
+
+      - name: Upload Results
+        uses: actions/upload-artifact@v1
+        with:
+          name: Test results for ${{ matrix.testMode }}
+          path: ${{ steps.tests.outputs.artifactsPath }}
