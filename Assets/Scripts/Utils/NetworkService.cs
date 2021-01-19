@@ -56,6 +56,16 @@ namespace PropHunt.Utils
         /// The <see cref="NetworkConnection">NetworkConnection</see> associated with this <see cref="NetworkIdentity">NetworkIdentity.</see> This is only valid for player objects on the server.
         /// </summary>
         NetworkConnection connectionToClient { get; }
+
+        /// <summary>
+        /// Is the client connected to the network
+        /// </summary>
+        bool isConnectedNetworkClient { get; }
+
+        /// <summary>
+        /// Is the network client currently active
+        /// </summary>
+        bool activeNetworkClient { get; }
     }
 
     /// <summary>
@@ -103,5 +113,11 @@ namespace PropHunt.Utils
 
         /// <inheritdoc/>
         public NetworkConnection connectionToClient => behaviour.connectionToClient;
+
+        /// <inheritdoc/>
+        public bool isConnectedNetworkClient => NetworkClient.isConnected;
+
+        /// <inheritdoc/>
+        public bool activeNetworkClient => NetworkClient.active;
     }
 }
