@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 2268735473202633543}
   - component: {fileID: -749921916936975090}
   - component: {fileID: 6982824905100499536}
+  - component: {fileID: -526833284236462530}
   m_Layer: 0
   m_Name: BasicPlayer
   m_TagString: Untagged
@@ -195,6 +196,28 @@ MonoBehaviour:
   syncInterval: 0.1
   pushPower: 10
   weight: 20
+--- !u!114 &-526833284236462530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245587927565386927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c1b1902a8c533a4e8f55a1a77e19d40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  sphereRadius: 0.1
+  viewDistance: 5
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  cameraTransform: {fileID: 8130394144415267709}
+  focus: {fileID: 0}
+  currentHitDistance: 0
 --- !u!1 &886816266439757742
 GameObject:
   m_ObjectHideFlags: 0
