@@ -9,7 +9,7 @@ using Mirror;
 using UnityEngine.TestTools;
 using System.Collections;
 
-namespace Tests.UI
+namespace Tests.EditMode.UI
 {
     /// <summary>
     /// Tests the behaviour of the toggle transport for changing transport types

@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using PropHunt.Utils;
 
-namespace Tests.Utils
+namespace Tests.EditMode.Utils
 {
     [TestFixture]
     public class UnityServiceTests

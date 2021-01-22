@@ -4,7 +4,7 @@ using PropHunt.Character;
 using PropHunt.Utils;
 using UnityEngine;
 
-namespace Tests.Character
+namespace Tests.EditMode.Character
 {
     /// <summary>
     /// Tests to verify behaviour of camera follower script behaviour

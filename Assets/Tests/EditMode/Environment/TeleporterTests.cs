@@ -2,7 +2,7 @@ using NUnit.Framework;
 using PropHunt.Environment;
 using UnityEngine;
 
-namespace Tests.Environment
+namespace Tests.EditMode.Environment
 {
     /// <summary>
     /// File to test behaviour of teleporter

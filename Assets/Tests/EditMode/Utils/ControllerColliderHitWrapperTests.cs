@@ -3,7 +3,7 @@ using NUnit.Framework;
 using PropHunt.Utils;
 using UnityEngine;
 
-namespace Tests.Utils
+namespace Tests.EditMode.Utils
 {
     [TestFixture]
     public class ControllerColliderHitWrapperTests

@@ -4,7 +4,7 @@ using PropHunt.Character;
 using PropHunt.Utils;
 using UnityEngine;
 
-namespace Tests.Utils
+namespace Tests.EditMode.Utils
 {
     [TestFixture]
     public class NetworkServiceTests
