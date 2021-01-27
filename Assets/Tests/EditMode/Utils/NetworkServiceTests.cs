@@ -26,6 +26,7 @@ namespace Tests.EditMode.Utils
             Assert.IsTrue(networkService.connectionToClient == null);
             Assert.IsTrue(networkService.activeNetworkClient == false);
             Assert.IsTrue(networkService.isConnectedNetworkClient == false);
+            Assert.IsTrue(networkService.activeNetworkServer == false);
 
             GameObject.DestroyImmediate(go);
         }

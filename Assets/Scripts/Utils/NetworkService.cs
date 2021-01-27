@@ -66,6 +66,11 @@ namespace PropHunt.Utils
         /// Is the network client currently active
         /// </summary>
         bool activeNetworkClient { get; }
+
+        /// <summary>
+        /// Is the network server currently active
+        /// </summary>
+        bool activeNetworkServer { get; }
     }
 
     /// <summary>
@@ -119,5 +124,8 @@ namespace PropHunt.Utils
 
         /// <inheritdoc/>
         public bool activeNetworkClient => NetworkClient.active;
+
+        /// <inheritdoc/>
+        public bool activeNetworkServer => NetworkServer.active;
     }
 }

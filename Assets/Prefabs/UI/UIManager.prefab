@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &576314974741431287
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 576314974741431281}
+  - component: {fileID: 576314974741431280}
+  - component: {fileID: 7569278591705480162}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &576314974741431281
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576314974741431287}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &576314974741431280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576314974741431287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75d794b5250a4b5429cf5cc8c0623a7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenPrefabs:
+  - {fileID: 8543157476786906891, guid: d7e0cec9d46eff341ad598031aeba302, type: 3}
+  - {fileID: 5674224039144228346, guid: 3cf2c1b6756d7954098700a0085ef674, type: 3}
+  - {fileID: 6101108449083475881, guid: a6b724ce986920c46859b833b6f1bc83, type: 3}
+  - {fileID: 3816567771485690121, guid: 77f3d4674d5aa254aba6cd0ff623b5c3, type: 3}
+  - {fileID: 4151337882126337141, guid: 09e4cd27b3cce1849887002c2e6e0639, type: 3}
+  - {fileID: 6637053135914170325, guid: de594f0ca0c7e164fbcaade84840570f, type: 3}
+  initialScreen: 0
+--- !u!114 &7569278591705480162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576314974741431287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d30bf099d632ae48981479766147ef3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offlineScreen: {fileID: 8543157476786906886, guid: d7e0cec9d46eff341ad598031aeba302,
+    type: 3}
+  connectingScreen: {fileID: 5674224039144228343, guid: 3cf2c1b6756d7954098700a0085ef674,
+    type: 3}
+  onlineScreen: {fileID: 6101108449083475876, guid: a6b724ce986920c46859b833b6f1bc83,
+    type: 3}
+  serverScreen: {fileID: 4151337882126337144, guid: 09e4cd27b3cce1849887002c2e6e0639,
+    type: 3}

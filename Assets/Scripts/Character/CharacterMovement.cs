@@ -100,9 +100,14 @@ namespace PropHunt.Character
             }
 
             float yaw = transform.rotation.eulerAngles.y;
+            // bound pitch between -180 and 180
             float pitch = (cameraTransform.rotation.eulerAngles.x % 360 + 180) % 360 - 180;
-            yaw += rotationRate * deltaTime * unityService.GetAxis("Mouse X");
-            pitch += rotationRate * deltaTime * -1 * unityService.GetAxis("Mouse Y");
+            // Only allow rotation if player is allowed to move
+            if (PlayerInputManager.playerMovementState == PlayerInputState.Allow)
+            {
+                yaw += rotationRate * deltaTime * unityService.GetAxis("Mouse X");
+                pitch += rotationRate * deltaTime * -1 * unityService.GetAxis("Mouse Y");
+            }
             // Clamp rotation of camera between minimum and maximum specified pitch
             pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
 
@@ -121,6 +126,11 @@ namespace PropHunt.Character
             // Setup a movement vector
             // Get user input and move player if moving
             Vector3 movement = new Vector3(unityService.GetAxis("Horizontal"), 0, unityService.GetAxis("Vertical"));
+            // If player is not allowed to move, stop player movement
+            if (PlayerInputManager.playerMovementState == PlayerInputState.Deny)
+            {
+                movement = Vector3.zero;
+            }
 
             // Rotate movement vector by player yaw (rotation about vertical axis)
             Quaternion horizPlaneView = transform.rotation;

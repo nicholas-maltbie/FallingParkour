@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using kcp2k;
 using Mirror;
@@ -26,6 +25,11 @@ namespace PropHunt.UI
     public class ToggleTransport : MonoBehaviour
     {
         /// <summary>
+        /// Public instance for controlling transport
+        /// </summary>
+        public static ToggleTransport Instance;
+
+        /// <summary>
         /// Current mode we have selected
         /// </summary>
         public MultiplayerMode currentMode = MultiplayerMode.KcpTransport;
@@ -50,18 +54,19 @@ namespace PropHunt.UI
         /// </summary>
         public INetworkService networkService = new NetworkService(null);
 
-        /// <summary>
-        /// Links to the game objects for control buttons
-        /// </summary>
-        public GameObject controlButtons;
-
         public void Start()
         {
+            // Set main instance
+            ToggleTransport.Instance = this;
+
             // setup a lookup table to link the currently available multiplayer modes
             //  to their enum type in code
             this.transportSettingsLookup = new Dictionary<MultiplayerMode, Transport>();
             this.transportSettingsLookup[MultiplayerMode.FizzySteamworks] = this.fizzySteamworksSettings;
             this.transportSettingsLookup[MultiplayerMode.KcpTransport] = this.kcpTransportSettings;
+
+            // Un-parent fizzy steamworks because it leads to warning if not
+            this.fizzySteamworksSettings.transform.parent = null;
 
             // Setup initial mode
             SetMultiplayerMode(this.currentMode, forceUpdate: true);
@@ -95,23 +100,11 @@ namespace PropHunt.UI
             // Enable new mode
             this.currentMode = mode;
             Transport currentTransport = transportSettingsLookup[this.currentMode];
+            Transport.activeTransport = currentTransport;
             currentTransport.gameObject.SetActive(true);
 
             // Attach this game mode to our network manager
             Transport.activeTransport = currentTransport;
-        }
-
-        public void Update()
-        {
-            // Disable this GUI when in game, or connecting
-            if (this.networkService.activeNetworkClient)
-            {
-                controlButtons.SetActive(false);
-            }
-            else
-            {
-                controlButtons.SetActive(true);
-            }
         }
     }
 }

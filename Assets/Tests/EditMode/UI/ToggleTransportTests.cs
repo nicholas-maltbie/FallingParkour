@@ -6,13 +6,11 @@ using UnityEngine;
 using kcp2k;
 using Mirror.FizzySteam;
 using Mirror;
-using UnityEngine.TestTools;
-using System.Collections;
 
 namespace Tests.EditMode.UI
 {
     /// <summary>
-    /// Tests the behaviour of the toggle transport for changing transport types
+    /// Tests the behaviour of the network action for manipulating the network manager
     /// </summary>
     [TestFixture]
     public class ToggleTransportTests
@@ -20,14 +18,11 @@ namespace Tests.EditMode.UI
         [Test]
         public void TestToggleTransportSettingsChanges()
         {
-            GameObject uiElements = new GameObject();
             // Create game object to hold our toggle transporter
             GameObject go = new GameObject();
             ToggleTransport toggle = go.AddComponent<ToggleTransport>();
             // Set default mode to kcp
             toggle.currentMode = MultiplayerMode.KcpTransport;
-            // Connect fake UI elements to toggle element
-            toggle.controlButtons = uiElements;
 
             // Setup mocked data for toggle to do unit testing
             // Create a mock network service for passing network service data
@@ -47,38 +42,23 @@ namespace Tests.EditMode.UI
             toggle.Start();
 
             // Assert that the current mode matches the selected transport
-            Assert.IsTrue(Transport.activeTransport == toggle.transportSettingsLookup[toggle.currentMode]);
+            Assert.IsTrue(Transport.activeTransport == kcpTransport);
 
             // Assert that the mode does not change when we update the mode to the current mode
             toggle.SetMultiplayerMode(toggle.currentMode);
-            Assert.IsTrue(Transport.activeTransport == toggle.transportSettingsLookup[toggle.currentMode]);
+            Assert.IsTrue(Transport.activeTransport == kcpTransport);
 
             // Assert that mode can change when we chant to a new mode
             toggle.SetMultiplayerMode(MultiplayerMode.FizzySteamworks);
             Assert.IsTrue(toggle.currentMode == MultiplayerMode.FizzySteamworks);
-            Assert.IsTrue(Transport.activeTransport == toggle.fizzySteamworksSettings);
+            Assert.IsTrue(Transport.activeTransport == fizzySteamworks);
 
             // Set multiplayer mode to KCP from string command
-            toggle.SetMultiplayerMode(MultiplayerMode.KcpTransport.ToString());
+            toggle.SetMultiplayerMode(MultiplayerMode.KcpTransport, true);
             Assert.IsTrue(toggle.currentMode == MultiplayerMode.KcpTransport);
-            Assert.IsTrue(Transport.activeTransport == toggle.kcpTransportSettings);
-
-            // Test to ensure buttons display or do not via update function with the network client
-            // Ensure elements are not displayed when connected
-            // Fake connecting to server
-            networkServiceMock.Setup(nms => nms.activeNetworkClient).Returns(true);
-            // Update then assert that elements are disabled
-            toggle.Update();
-            Assert.IsTrue(uiElements.activeSelf == false);
-            // Fake not connecting to server
-            networkServiceMock.Setup(nms => nms.activeNetworkClient).Returns(false);
-            // Update then assert that elements are NOT disabled
-            toggle.Update();
-            Assert.IsTrue(uiElements.activeSelf == true);
-
+            Assert.IsTrue(Transport.activeTransport == kcpTransport);
 
             // Cleanup created game objects
-            GameObject.DestroyImmediate(uiElements);
             GameObject.DestroyImmediate(go);
         }
     }

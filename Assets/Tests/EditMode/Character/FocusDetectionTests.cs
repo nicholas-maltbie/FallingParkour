@@ -6,7 +6,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace Tests.Character
+namespace Tests.EditMode.Character
 {
     /// <summary>
     /// Tests to verify behaviour of focus detection script
@@ -29,9 +29,13 @@ namespace Tests.Character
         /// </summary>
         GameObject focusTarget;
 
-        [SetUp]
-        public void SetUp()
+        [UnitySetUp]
+        public IEnumerator SetUp()
         {
+#if UNITY_EDITOR
+            var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
+#endif
+
             // Setup a game object for our player
             GameObject playerObject = new GameObject();
             // Add a FocusDetection Behaviour to our object
@@ -50,6 +54,9 @@ namespace Tests.Character
             BoxCollider box = focusTarget.AddComponent<BoxCollider>();
             // Move it to position (0, 0, 2), which is 2 units in front of the player
             box.transform.position = new Vector3(0, 0, 2);
+            focusTarget.name = "Box";
+
+            yield return null;
         }
 
         [TearDown]
@@ -60,45 +67,37 @@ namespace Tests.Character
             GameObject.DestroyImmediate(focusTarget);
         }
 
-        [UnityTest]
-        public IEnumerator TestDoNothingIfNotLocal()
+        [Test]
+        public void TestDoNothingIfNotLocal()
         {
-            // Wait a frame to update the physics world and load colliders
-            yield return null;
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(false);
             this.focusDetection.Update();
             // Make sure it didn't update to look at something
             Assert.IsTrue(this.focusDetection.focus == null);
         }
 
-        [UnityTest]
-        public IEnumerator TestLookingAtObject()
+        [Test]
+        public void TestLookingAtObject()
         {
-            // Wait a frame to update the physics world and load colliders
-            yield return null;
-
-            RaycastHit hit;
-            bool isSomethingThere = Physics.SphereCast(new Vector3(0, 0, 0), 0.1f, new Vector3(0, 0, 1), out hit, 5.0f);
-            Debug.Log(isSomethingThere + " " + hit);
-
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
+            // Wait a frame to update the physics world and load colliders
+            this.focusDetection.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
             this.focusDetection.Update();
             // Make sure is looking at the box
+            UnityEngine.Debug.Log(this.focusDetection.focus);
             Assert.IsTrue(this.focusDetection.focus == focusTarget);
         }
 
-        [UnityTest]
-        public IEnumerator TestLookingAwayFromObject()
+        [Test]
+        public void TestLookingAwayFromObject()
         {
-            // Wait a frame to update the physics world and load colliders
-            yield return null;
-
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
             // rotate the player so they are looking away from the box
             // rotate player 90 degrees to look away from box
-            this.focusDetection.transform.rotation = Quaternion.Euler(0, 90, 0);
+            this.focusDetection.gameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
             this.focusDetection.Update();
             // Make sure is looking at the box
+            UnityEngine.Debug.Log(this.focusDetection.focus);
             Assert.IsTrue(this.focusDetection.focus == null);
         }
     }

@@ -1,7 +1,7 @@
 using Mirror;
 using UnityEngine;
 
-namespace Tests.PlayMode.Utils
+namespace Tests.Common.Utils
 {
     /// <summary>
     /// Wait until client is connected or until a time expired

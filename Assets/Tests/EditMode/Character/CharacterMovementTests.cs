@@ -105,5 +105,28 @@ namespace Tests.EditMode.Character
             this.unityServiceMock.Setup(e => e.GetButton("Jump")).Returns(true);
             this.characterMovement.Update();
         }
+
+        [Test]
+        public void CharacterMovementNotAllowed()
+        {
+            // Stop movement allowed
+            PlayerInputManager.playerMovementState = PlayerInputState.Deny;
+            // Add some ground below the player
+            this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
+            // Create a floor below the player
+            GameObject floor = new GameObject();
+            BoxCollider floorCollider = floor.AddComponent<BoxCollider>();
+            floor.transform.transform.position = Vector3.zero;
+            this.characterMovement.gameObject.transform.position = Vector3.zero;
+
+            // Do a test when the character is turning, moving forward, and jumping
+            this.unityServiceMock.Setup(e => e.deltaTime).Returns(1.0f);
+            this.unityServiceMock.Setup(e => e.GetAxis("Horizontal")).Returns(0.0f);
+            this.unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(0.0f);
+            this.unityServiceMock.Setup(e => e.GetButton("Jump")).Returns(false);
+
+            // Update character movement script
+            this.characterMovement.Update();
+        }
     }
 }

@@ -1,7 +1,7 @@
 using Mirror;
 using NUnit.Framework;
 using System.Collections;
-using Tests.PlayMode.Utils;
+using Tests.Common.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;

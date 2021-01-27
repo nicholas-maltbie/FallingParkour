@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Tests.PlayMode.Utils
+namespace Tests.Common.Utils
 {
     /// <summary>
     /// Wait until a scene is loaded
