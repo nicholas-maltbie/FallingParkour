@@ -44,8 +44,8 @@ namespace PropHunt.UI
         {
             if (Initialized())
             {
+                manager.networkAddress = connectAddress.text.Trim();
                 manager.StartClient();
-                manager.networkAddress = connectAddress.text;
             }
         }
 
