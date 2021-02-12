@@ -38,6 +38,16 @@ namespace PropHunt.Character
         public float movementSpeed = 2.0f;
 
         /// <summary>
+        /// Player speed modifier while sprinting (in units per second)
+        /// </summary>
+        public float sprintSpeed = 3.5f;
+
+        /// <summary>
+        /// Current time player has been falling
+        /// </summary>
+        public float fallingTime = 0.0f;
+
+        /// <summary>
         /// Direction and magnitude of gravity
         /// </summary>
         public Vector3 gravity = new Vector3(0, -9.8f, 0);
@@ -72,6 +82,21 @@ namespace PropHunt.Character
         /// </summary>
         public Vector3 moveDirection;
 
+        /// <summary>
+        /// Parsed and normalized input of player movement on horizontal axis
+        /// </summary>
+        public Vector2 movementInput;
+
+        /// <summary>
+        /// Is the character sprinting this frame
+        /// </summary>
+        public bool isSprinting;
+
+        /// <summary>
+        /// How much the character rotated about the vertical axis this frame
+        /// </summary>
+        public float frameRotation;
+
         public void Start()
         {
             this.characterController = this.GetComponent<CharacterController>();
@@ -92,24 +117,29 @@ namespace PropHunt.Character
             if (!characterController.isGrounded)
             {
                 velocity += gravity * deltaTime;
+                fallingTime += unityService.deltaTime;
             }
             // If the character is grounded, set velocity to zero
             else
             {
                 velocity = Vector3.zero;
+                fallingTime = 0;
             }
 
             float yaw = transform.rotation.eulerAngles.y;
+            float yawChange = 0;
             // bound pitch between -180 and 180
             float pitch = (cameraTransform.rotation.eulerAngles.x % 360 + 180) % 360 - 180;
             // Only allow rotation if player is allowed to move
             if (PlayerInputManager.playerMovementState == PlayerInputState.Allow)
             {
-                yaw += rotationRate * deltaTime * unityService.GetAxis("Mouse X");
+                yawChange = rotationRate * deltaTime * unityService.GetAxis("Mouse X");
+                yaw += yawChange;
                 pitch += rotationRate * deltaTime * -1 * unityService.GetAxis("Mouse Y");
             }
             // Clamp rotation of camera between minimum and maximum specified pitch
             pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+            frameRotation = yawChange;
 
             // Set the player's rotation to be that of the camera's yaw
             transform.rotation = Quaternion.Euler(0, yaw, 0);
@@ -131,13 +161,20 @@ namespace PropHunt.Character
             {
                 movement = Vector3.zero;
             }
+            // Normalize movement vector to be a max of 1 if greater than one
+            movement = movement.magnitude > 1 ? movement / movement.magnitude : movement;
+
+            // Set player movement based on this input
+            this.movementInput = new Vector2(movement.x, movement.z);
+
+            // Read in sprinting state
+            this.isSprinting = unityService.GetButton("Sprint");
+            // Speed modifier based on sprinting state
+            float speedModifier = this.isSprinting ? this.sprintSpeed : this.movementSpeed;
 
             // Rotate movement vector by player yaw (rotation about vertical axis)
             Quaternion horizPlaneView = transform.rotation;
-            Vector3 movementVelocity = horizPlaneView * movement * movementSpeed;
-
-            // Normalize movement vector to be a max of 1 if greater than one
-            movement = movement.magnitude > 1 ? movement / movement.magnitude : movement;
+            Vector3 movementVelocity = horizPlaneView * movement * speedModifier;
             // Set how this character intended to move this frame
             this.moveDirection = (movementVelocity + velocity);
             // Move player by displacement
