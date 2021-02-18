@@ -20,6 +20,8 @@ namespace Tests.EditMode.Character
         CharacterMovement characterMovement;
         /// <summary>Mock of network service attached to the player game object script</summary>
         Mock<INetworkService> networkServiceMock;
+        /// <summary>Mock of camera controller attached to the player game object script</summary>
+        CameraController cameraController;
 
         [SetUp]
         public void Setup()
@@ -29,11 +31,13 @@ namespace Tests.EditMode.Character
             this.characterController = characterGo.AddComponent<CharacterController>();
             this.characterMovement = characterGo.AddComponent<CharacterMovement>();
             this.characterAnimator = characterGo.AddComponent<CharacterAnimator>();
+            this.cameraController = characterGo.AddComponent<CameraController>();
             Animator anim = characterGo.AddComponent<Animator>();
             this.characterMovement.Start();
             this.networkServiceMock = new Mock<INetworkService>();
             this.characterAnimator.animator = anim;
             this.characterAnimator.movement = characterMovement;
+            this.characterAnimator.cameraController = cameraController;
             this.characterAnimator.Start();
             this.characterAnimator.networkService = this.networkServiceMock.Object;
         }

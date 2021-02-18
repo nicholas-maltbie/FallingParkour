@@ -33,6 +33,11 @@ namespace PropHunt.Character
         public CharacterMovement movement;
 
         /// <summary>
+        /// Camera controller for getting player rotation information
+        /// </summary>
+        public CameraController cameraController;
+
+        /// <summary>
         /// Character controller to move character
         /// </summary>
         private CharacterController characterController;
@@ -68,8 +73,8 @@ namespace PropHunt.Character
             animator.SetBool("Moving", moving);
             animator.SetBool("Sprinting", !jumpingOrFalling && movement.isSprinting);
             // Set turning value based on turning direction
-            animator.SetFloat("Rotation", movement.frameRotation > 0 ? 1 : -1);
-            animator.SetBool("Turning", !moving && !jumpingOrFalling && Mathf.Abs(movement.frameRotation) > this.turningDeadZone);
+            animator.SetFloat("Rotation", cameraController.frameRotation > 0 ? 1 : -1);
+            animator.SetBool("Turning", !moving && !jumpingOrFalling && Mathf.Abs(cameraController.frameRotation) > this.turningDeadZone);
             animator.SetBool("Jumping", jumping);
             animator.SetBool("Falling", falling);
         }

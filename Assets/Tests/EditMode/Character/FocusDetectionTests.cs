@@ -1,6 +1,9 @@
+using Mirror;
+using Mirror.Tests.RemoteAttrributeTest;
 using Moq;
 using NUnit.Framework;
 using PropHunt.Character;
+using PropHunt.Environment;
 using PropHunt.Utils;
 using System.Collections;
 using UnityEngine;
@@ -8,6 +11,17 @@ using UnityEngine.TestTools;
 
 namespace Tests.EditMode.Character
 {
+    public class InteractTest : Interactable
+    {
+        public int timesInteracted;
+        public GameObject lastInteraction;
+        public override void Interact(GameObject source)
+        {
+            timesInteracted++;
+            lastInteraction = source;
+        }
+    }
+
     /// <summary>
     /// Tests to verify behaviour of focus detection script
     /// </summary>
@@ -23,6 +37,11 @@ namespace Tests.EditMode.Character
         /// Mock of network service attached to cameraFollow script
         /// </summary>
         Mock<INetworkService> networkServiceMock;
+
+        /// <summary>
+        /// Mock of unity service for player inputs
+        /// </summary>
+        Mock<IUnityService> unityServiceMock;
 
         /// <summary>
         /// What we want the player to look at
@@ -44,7 +63,9 @@ namespace Tests.EditMode.Character
             // Setup the fields for the focus detection
             // Setup and connect mocked network connection
             this.networkServiceMock = new Mock<INetworkService>();
+            this.unityServiceMock = new Mock<IUnityService>();
             this.focusDetection.networkService = this.networkServiceMock.Object;
+            this.focusDetection.unityService = this.unityServiceMock.Object;
             // Make player object it's own camera
             this.focusDetection.cameraTransform = playerObject.transform;
 
@@ -99,6 +120,78 @@ namespace Tests.EditMode.Character
             // Make sure is looking at the box
             UnityEngine.Debug.Log(this.focusDetection.focus);
             Assert.IsTrue(this.focusDetection.focus == null);
+        }
+
+        [Test]
+        public void TestInteractWithObject()
+        {
+            // Set local player state to true
+            this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
+            // Allow player to interact with box
+            this.unityServiceMock.Setup(e => e.GetButtonDown("Interact")).Returns(true);
+            this.networkServiceMock.Setup(e => e.isServer).Returns(true);
+            InteractTest testInteract = this.focusTarget.AddComponent<InteractTest>();
+            // Wait a frame to update the physics world and load colliders
+            this.focusDetection.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+            this.focusDetection.Update();
+            // Make sure is looking at the box
+            Assert.IsTrue(this.focusDetection.focus == focusTarget);
+            UnityEngine.Debug.Log(this.focusDetection.focus.GetComponent<Interactable>());
+            // Assert that the object was interacted with
+            Assert.IsTrue(testInteract.timesInteracted == 1);
+            Assert.IsTrue(testInteract.lastInteraction = this.focusDetection.gameObject);
+        }
+    }
+
+    /// <summary>
+    /// Tests to verify behaviour of commands in focus detection object
+    /// </summary>
+    [TestFixture]
+    public class FocusDetectionCommandTests : RemoteTestBase
+    {
+        [Test]
+        public void TestObjectInteractWhenCommandSentToServer()
+        {
+            Mock<INetworkService> networkServiceMock = new Mock<INetworkService>();
+            FocusDetection hostBehaviour = CreateHostObject<FocusDetection>(true);
+            hostBehaviour.networkService = networkServiceMock.Object;
+            networkServiceMock.Setup(e => e.isServer).Returns(true);
+
+            NetworkConnectionToClient connectionToClient = NetworkServer.connections[0];
+            Debug.Assert(connectionToClient != null, $"connectionToClient was null, This means that the test is broken and will give the wrong results");
+
+            GameObject focus = new GameObject();
+            InteractTest testInteract = focus.AddComponent<InteractTest>();
+            focus.AddComponent<NetworkIdentity>();
+            NetworkServer.Spawn(focus);
+            hostBehaviour.CmdInteractWithObject(focus, hostBehaviour.gameObject);
+            // Assert that the object was interacted with
+            Assert.IsTrue(testInteract.timesInteracted == 1);
+            Assert.IsTrue(testInteract.lastInteraction = hostBehaviour.gameObject);
+            GameObject.DestroyImmediate(focus);
+        }
+
+        [Test]
+        public void TestObjectInteractWhenCommandSentFromServer()
+        {
+            Mock<INetworkService> networkServiceMock = new Mock<INetworkService>();
+            FocusDetection hostBehaviour = CreateHostObject<FocusDetection>(true);
+            hostBehaviour.networkService = networkServiceMock.Object;
+            int calls = 0;
+            networkServiceMock.Setup(e => e.isServer).Callback(() => calls++).Returns(calls > 1);
+
+            NetworkConnectionToClient connectionToClient = NetworkServer.connections[0];
+            Debug.Assert(connectionToClient != null, $"connectionToClient was null, This means that the test is broken and will give the wrong results");
+
+            GameObject focus = new GameObject();
+            InteractTest testInteract = focus.AddComponent<InteractTest>();
+            focus.AddComponent<NetworkIdentity>();
+            NetworkServer.Spawn(focus);
+            hostBehaviour.InteractWithObject(focus, hostBehaviour.gameObject);
+            // Assert that the object was interacted with
+            // Assert.IsTrue(testInteract.timesInteracted == 1);
+            // Assert.IsTrue(testInteract.lastInteraction = hostBehaviour.gameObject);
+            GameObject.DestroyImmediate(focus);
         }
     }
 }

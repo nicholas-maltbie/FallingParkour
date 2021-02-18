@@ -23,11 +23,6 @@ namespace Tests.EditMode.Character
         CharacterController characterController;
 
         /// <summary>
-        /// Camera transform for camera movement and changes
-        /// </summary>
-        Transform cameraTransform;
-
-        /// <summary>
         /// Mock of network service attached to cameraFollow script
         /// </summary>
         Mock<INetworkService> networkServiceMock;
@@ -49,18 +44,12 @@ namespace Tests.EditMode.Character
             this.networkServiceMock = new Mock<INetworkService>();
             this.characterMovement.unityService = this.unityServiceMock.Object;
             this.characterMovement.networkService = this.networkServiceMock.Object;
-
-            // Setup camera transform
-            GameObject cameraPosition = new GameObject();
-            this.cameraTransform = cameraPosition.transform;
-            this.characterMovement.cameraTransform = this.cameraTransform;
         }
 
         [TearDown]
         public void TearDown()
         {
             GameObject.DestroyImmediate(this.characterMovement.gameObject);
-            GameObject.DestroyImmediate(this.cameraTransform.gameObject);
         }
 
         [Test]

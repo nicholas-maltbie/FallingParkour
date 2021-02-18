@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: -526833284236462530}
   - component: {fileID: 8022354081219173697}
   - component: {fileID: 90772896490692831}
+  - component: {fileID: -3121540945416706136}
+  - component: {fileID: 1509629139552447915}
   m_Layer: 0
   m_Name: BasicPlayer
   m_TagString: Untagged
@@ -159,19 +161,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  cameraTransform: {fileID: 8130394144415267709}
   movementSpeed: 5
   sprintSpeed: 7.5
   fallingTime: 0
   gravity: {x: 0, y: -9.8, z: 0}
   jumpVelocity: 5
-  maxPitch: 90
-  minPitch: -90
-  rotationRate: 180
   moveDirection: {x: 0, y: 0, z: 0}
   movementInput: {x: 0, y: 0}
   isSprinting: 0
-  frameRotation: 0
 --- !u!114 &-749921916936975090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,7 +256,43 @@ MonoBehaviour:
   turningDeadZone: 0.001
   fallingThreshold: 0.05
   movement: {fileID: 2268735473202633543}
+  cameraController: {fileID: -3121540945416706136}
   animator: {fileID: 2607359372259022575}
+--- !u!114 &-3121540945416706136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245587927565386927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88dccdbb9c3c8ed48ac11483313f02d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  maxPitch: 90
+  minPitch: -90
+  rotationRate: 180
+  frameRotation: 0
+  cameraTransform: {fileID: 8130394144415267709}
+  pitchBody: 0
+--- !u!114 &1509629139552447915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245587927565386927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79830135f57205c468671a3e44a7d6b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  playerTeam: hunter
 --- !u!1 &886816266439757742
 GameObject:
   m_ObjectHideFlags: 0
