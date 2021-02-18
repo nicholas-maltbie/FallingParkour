@@ -81,6 +81,8 @@ namespace Tests.EditMode.Prop
             yield return null;
             UnityEngine.Debug.Log(propDisguise.transform.GetChild(0).name);
             Assert.IsTrue(propDisguise.transform.GetChild(0).name == disguises[0].disguiseVisual.name + "(Clone)");
+            GameObject testObject = new GameObject("testObj");
+            testObject.transform.parent = propDisguise.transform;
             propDisguise.selectedDisguise = "1";
             propDisguise.SetDisguise("0", "1");
             // Wait a frame for disguise to change

@@ -98,11 +98,7 @@ namespace PropHunt.Prop
             Collider currentCollider = gameObject.GetComponent<Collider>();
             if (currentCollider != null)
             {
-#if UNITY_EDITOR
-                GameObject.DestroyImmediate(currentCollider);
-#else
                 GameObject.Destroy(currentCollider);
-#endif
                 yield return null;
             }
             // Setup new collider data
@@ -114,11 +110,7 @@ namespace PropHunt.Prop
             // Clear out old disguise
             while (disguiseBase.childCount > 0)
             {
-#if UNITY_EDITOR
-                GameObject.DestroyImmediate(disguiseBase.GetChild(0).gameObject);
-#else
                 GameObject.Destroy(disguiseBase.GetChild(0).gameObject);
-#endif
                 yield return null;
             }
 
