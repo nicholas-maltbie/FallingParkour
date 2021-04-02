@@ -29,14 +29,6 @@ namespace Mirror.Tests.RemoteAttrributeTest
         [TearDown]
         public void TearDown()
         {
-            // stop server/client
-            NetworkClient.DisconnectLocalServer();
-
-            NetworkClient.Disconnect();
-            NetworkClient.Shutdown();
-
-            NetworkServer.Shutdown();
-
             // destroy left over objects
             foreach (GameObject item in spawned)
             {
@@ -47,10 +39,14 @@ namespace Mirror.Tests.RemoteAttrributeTest
             }
 
             spawned.Clear();
-
             NetworkIdentity.spawned.Clear();
 
             GameObject.DestroyImmediate(Transport.activeTransport.gameObject);
+            // stop server/client
+            NetworkClient.DisconnectLocalServer();
+            NetworkClient.Shutdown();
+
+            NetworkServer.Shutdown();
         }
 
         protected T CreateHostObject<T>(bool spawnWithAuthority) where T : NetworkBehaviour

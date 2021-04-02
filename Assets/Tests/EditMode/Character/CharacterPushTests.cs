@@ -175,7 +175,6 @@ namespace Tests.EditMode.Character
             pushed.AddComponent<NetworkIdentity>();
             NetworkServer.Spawn(pushed);
             hostBehaviour.CmdPushWithForce(pushed, Vector3.zero, Vector3.zero);
-            GameObject.DestroyImmediate(pushed);
         }
     }
 }
