@@ -10,11 +10,6 @@ namespace PropHunt.Utils
     public interface IControllerColliderHit
     {
         /// <summary>
-        /// The controller that hit the collider.
-        /// </summary>
-        CharacterController controller { get; }
-
-        /// <summary>
         /// The collider that was hit by the controller.
         /// </summary>
         Collider collider { get; }
@@ -55,6 +50,46 @@ namespace PropHunt.Utils
         float moveLength { get; }
     }
 
+    public class KinematicCharacterControllerHit : IControllerColliderHit
+    {
+
+        /// <summary>
+        /// Create a hit event for a kinematic character controller
+        /// </summary>
+        /// <param name="hit">the collider hit by this character controller</param>
+        /// <param name="rigidbody">the rigidbody hit by this character controller</param>
+        /// <param name="gameObject">the game object that was hit by this character controller</param>
+        /// <param name="transform">the transform of the game object hit by this character controller</param>
+        /// <param name="point">the point that this character controller collided with the object</param>
+        /// <param name="normal">the normal vector of the hit between the character controller and the hit object</param>
+        /// <param name="moveDirection">the direction the player was moving</param>
+        /// <param name="moveLength">the distance the player was moving</param>
+        public KinematicCharacterControllerHit(
+            Collider hit, Rigidbody rigidbody, GameObject gameObject,
+            Transform transform, Vector3 point, Vector3 normal, Vector3 moveDirection,
+            float moveLength)
+        {
+            this.collider = collider;
+            this.rigidbody = rigidbody;
+            this.gameObject = gameObject;
+            this.transform = transform;
+            this.point = point;
+            this.normal = normal;
+            this.moveDirection = moveDirection;
+            this.moveLength = moveLength;
+        }
+
+        public Collider collider { get; private set; }
+        public Rigidbody rigidbody { get; private set; }
+        public GameObject gameObject { get; private set; }
+        public Transform transform { get; private set; }
+        public Vector3 point { get; private set; }
+        public Vector3 normal { get; private set; }
+        public Vector3 moveDirection { get; private set; }
+        public float moveLength { get; private set; }
+
+    }
+
     /// <summary>
     /// Wrapper for the data in a ControllerColliderHit
     /// </summary>
@@ -62,36 +97,21 @@ namespace PropHunt.Utils
     {
         ControllerColliderHit colliderHit;
 
-        public ControllerColliderHitWrapper(ControllerColliderHit colliderHit)
+        Vector3 moveVector;
+
+        public ControllerColliderHitWrapper(ControllerColliderHit colliderHit, Vector3 moveVector)
         {
             this.colliderHit = colliderHit;
+            this.moveVector = moveVector;
         }
 
-        /// <inheritdoc/>
-        public CharacterController controller => colliderHit.controller;
-
-        /// <inheritdoc/>
         public Collider collider => colliderHit.collider;
-
-        /// <inheritdoc/>
         public Rigidbody rigidbody => colliderHit.rigidbody;
-
-        /// <inheritdoc/>
         public GameObject gameObject => colliderHit.gameObject;
-
-        /// <inheritdoc/>
         public Transform transform => colliderHit.transform;
-
-        /// <inheritdoc/>
         public Vector3 point => colliderHit.point;
-
-        /// <inheritdoc/>
         public Vector3 normal => colliderHit.normal;
-
-        /// <inheritdoc/>
-        public Vector3 moveDirection => colliderHit.normal;
-
-        /// <inheritdoc/>
-        public float moveLength => colliderHit.moveLength;
+        public Vector3 moveDirection => moveVector.normalized;
+        public float moveLength => moveVector.magnitude;
     }
 }

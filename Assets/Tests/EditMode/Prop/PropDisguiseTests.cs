@@ -19,6 +19,15 @@ namespace Tests.EditMode.Prop
 
         Disguise[] disguises;
 
+        public Disguise CreateDisguise<E>(string name) where E : Collider
+        {
+            GameObject disguise = new GameObject();
+            disguise.name = name;
+            Collider disguiseCollider = disguise.AddComponent<E>();
+
+            return new Disguise { disguiseVisual = disguise, disguiseCollider = disguiseCollider };
+        }
+
         [SetUp]
         public void Setup()
         {
@@ -32,14 +41,7 @@ namespace Tests.EditMode.Prop
             disguises = new Disguise[2];
             for (int i = 0; i < disguises.Length; i++)
             {
-                GameObject disguise = new GameObject();
-                disguise.name = "Disguise-" + i.ToString();
-                Collider disguiseCollider = disguise.AddComponent<BoxCollider>();
-                disguises[i] = new Disguise
-                {
-                    disguiseVisual = disguise,
-                    disguiseCollider = disguiseCollider
-                };
+                disguises[i] = CreateDisguise<BoxCollider>("Disguise-" + i.ToString());
                 PropDatabase.AddDisguiseIfNonExists(i.ToString(), disguises[i]);
             }
             // Test adding a duplicated disguise
@@ -88,7 +90,36 @@ namespace Tests.EditMode.Prop
             // Wait a frame for disguise to change
             yield return null;
             yield return null;
+            yield return null;
+            yield return null;
             // Assert.IsTrue(propDisguise.transform.GetChild(0).name == disguises[1].disguiseVisual.name+"(Clone)");
+        }
+
+        [UnityTest]
+        public IEnumerator TestChangeDisguiseSphere()
+        {
+            PropDatabase.ClearDisguises();
+            disguises[0] = CreateDisguise<SphereCollider>(disguises[0].disguiseCollider.gameObject.name);
+            PropDatabase.AddDisguiseIfNonExists("0", disguises[0]);
+            return TestChangeDisguiseInGame();
+        }
+
+        [UnityTest]
+        public IEnumerator TestChangeDisguiseCapsule()
+        {
+            PropDatabase.ClearDisguises();
+            disguises[0] = CreateDisguise<CapsuleCollider>(disguises[0].disguiseCollider.gameObject.name);
+            PropDatabase.AddDisguiseIfNonExists("0", disguises[0]);
+            return TestChangeDisguiseInGame();
+        }
+
+        [UnityTest]
+        public IEnumerator TestChangeDisguiseMesh()
+        {
+            PropDatabase.ClearDisguises();
+            disguises[0] = CreateDisguise<MeshCollider>(disguises[0].disguiseCollider.gameObject.name);
+            PropDatabase.AddDisguiseIfNonExists("0", disguises[0]);
+            return TestChangeDisguiseInGame();
         }
     }
 }

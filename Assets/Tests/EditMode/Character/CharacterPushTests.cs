@@ -67,15 +67,6 @@ namespace Tests.EditMode.Character
         }
 
         /// <summary>
-        /// Test what happenes when a character we don't control hits an object
-        /// </summary>
-        [Test]
-        public void TestCharacterNotLocal()
-        {
-            this.characterPush.OnControllerColliderHit(new ControllerColliderHit());
-        }
-
-        /// <summary>
         /// Test what happenes when the character hits something it can't push
         /// </summary>
         [Test]
@@ -98,7 +89,40 @@ namespace Tests.EditMode.Character
 
             // Cleanup created object
             GameObject.DestroyImmediate(hitObject);
+        }
 
+        /// <summary>
+        /// Test what happens when an object without a rigidbody is attempted to be pushed
+        /// </summary>
+        [Test]
+        public void TestPueshWithoutRigidbody()
+        {
+            // Push object without rigidbody
+            GameObject hitObject = new GameObject();
+            this.characterPush.PushWithForce(hitObject, Vector3.up, Vector3.zero);
+            // Cleanup created object
+            GameObject.DestroyImmediate(hitObject);
+        }
+
+        /// <summary>
+        /// Test what happenes when the character pushes and is not local player
+        /// </summary>
+        [Test]
+        public void TestCharacterHitPushableNotLocal()
+        {
+            // mock being the local player to allow for push events
+            networkServiceMock.Setup(e => e.isLocalPlayer).Returns(false);
+
+            GameObject hitObject = new GameObject();
+            Rigidbody hitRigidbody = hitObject.AddComponent<Rigidbody>();
+            hitRigidbody.isKinematic = false;
+
+            // Mock the controller hit event of a kinematic object
+            Mock<IControllerColliderHit> mockHitEvent = new Mock<IControllerColliderHit>();
+            this.characterPush.PushObject(mockHitEvent.Object);
+
+            // Cleanup created object
+            GameObject.DestroyImmediate(hitObject);
         }
 
         /// <summary>

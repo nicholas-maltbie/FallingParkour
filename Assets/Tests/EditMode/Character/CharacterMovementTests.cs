@@ -1,3 +1,4 @@
+using System;
 using Moq;
 using NUnit.Framework;
 using PropHunt.Character;
@@ -93,6 +94,14 @@ namespace Tests.EditMode.Character
             this.characterMovement.Update();
             this.unityServiceMock.Setup(e => e.GetButton("Jump")).Returns(true);
             this.characterMovement.Update();
+        }
+
+        [Test]
+        public void CharacterMovementHitObject()
+        {
+            this.characterMovement.OnControllerColliderHit(new ControllerColliderHit());
+            CharacterPush push = this.characterMovement.gameObject.AddComponent<CharacterPush>();
+            Assert.Throws<NullReferenceException>(() => this.characterMovement.OnControllerColliderHit(new ControllerColliderHit()));
         }
 
         [Test]

@@ -102,7 +102,34 @@ namespace PropHunt.Prop
                 yield return null;
             }
             // Setup new collider data
-            ComponentUtils.CopyComponent<Collider>(collider, gameObject);
+            if (collider is BoxCollider)
+            {
+                BoxCollider baseCollider = (BoxCollider)collider;
+                BoxCollider newCollider = ComponentUtils.CopyComponent<BoxCollider>(baseCollider, gameObject);
+                newCollider.center = baseCollider.center;
+                newCollider.size = baseCollider.size;
+            }
+            else if (collider is SphereCollider)
+            {
+                SphereCollider baseCollider = (SphereCollider)collider;
+                SphereCollider newCollider = ComponentUtils.CopyComponent<SphereCollider>(baseCollider, gameObject);
+                newCollider.radius = baseCollider.radius;
+                newCollider.center = baseCollider.center;
+            }
+            else if (collider is CapsuleCollider)
+            {
+                CapsuleCollider baseCollider = (CapsuleCollider)collider;
+                CapsuleCollider newCollider = ComponentUtils.CopyComponent<CapsuleCollider>(baseCollider, gameObject);
+                newCollider.height = baseCollider.height;
+                newCollider.radius = baseCollider.radius;
+                newCollider.center = baseCollider.center;
+            }
+            else if (collider is MeshCollider)
+            {
+                MeshCollider baseCollider = (MeshCollider)collider;
+                MeshCollider newCollider = ComponentUtils.CopyComponent<MeshCollider>(baseCollider, gameObject);
+                newCollider.sharedMesh = baseCollider.sharedMesh;
+            }
         }
 
         public IEnumerator ChangeDisguise(GameObject disguise)

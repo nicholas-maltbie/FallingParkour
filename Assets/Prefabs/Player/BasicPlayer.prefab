@@ -198,7 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  pushPower: 10
+  pushPower: 50
   weight: 20
 --- !u!114 &-526833284236462530
 MonoBehaviour:

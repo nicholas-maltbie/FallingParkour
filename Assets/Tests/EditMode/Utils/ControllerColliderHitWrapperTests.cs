@@ -12,8 +12,7 @@ namespace Tests.EditMode.Utils
         public void VerifyControllerColliderHitWrapperInvokeWithoutErrors()
         {
             ControllerColliderHit hit = new ControllerColliderHit();
-            IControllerColliderHit hitWrapper = new ControllerColliderHitWrapper(hit);
-            Assert.IsTrue(hitWrapper.controller == null);
+            IControllerColliderHit hitWrapper = new ControllerColliderHitWrapper(hit, Vector3.zero);
             Assert.IsTrue(hitWrapper.collider == null);
             Assert.Throws<NullReferenceException>(() => hitWrapper.gameObject.ToString());
             Assert.Throws<NullReferenceException>(() => hitWrapper.rigidbody.ToString());
