@@ -289,7 +289,7 @@ namespace PropHunt.Prop
                 {
                     distance = maxPushDistance;
                 }
-                transform.position += direction.normalized * maxPushDistance;
+                transform.position += direction.normalized * distance;
             }
         }
 

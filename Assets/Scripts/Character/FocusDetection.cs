@@ -15,14 +15,16 @@ namespace PropHunt.Character
         public float sphereRadius = 0.1f;
         /// <summary>Determines how far the player can look</summary>
         public float viewDistance = 5.0f;
-        ///<summary>Create layermask I guess -J</summary>
-        public LayerMask layerMask;
         /// <summary>What direction is the player looking</summary>
         public Transform cameraTransform;
         /// <summary>What the player is looking at</summary>
         public GameObject focus;
         /// <summary>How far away the hit from the spherecast is</summary>
         public float currentHitDistance;
+        /// <summary>What does view interaction able to hit</summary>
+        public LayerMask viewLayermask = ~0;
+        /// <summary>How does view intearaction interact with triggers</summary>
+        public QueryTriggerInteraction focusTriggerInteraction;
 
         /// <summary> Start is called before the first frame update</summary>
         public void Start()
@@ -62,7 +64,8 @@ namespace PropHunt.Character
             Vector3 direction = cameraTransform.forward;
             RaycastHit hit;
             // if spherecast hits something, update the player's focus and distance variables -J
-            if (Physics.SphereCast(origin, sphereRadius, direction, out hit, viewDistance))
+            if (PhysicsUtils.SpherecastFirstHitIgnore(gameObject, origin, sphereRadius, direction, viewDistance,
+                viewLayermask, focusTriggerInteraction, out hit))
             {
                 focus = hit.transform.gameObject;
                 currentHitDistance = hit.distance;

@@ -5,8 +5,6 @@ namespace PropHunt.Utils
 {
     public class PrimitiveColliderCast : ColliderCast
     {
-        private static Collider[] Empty = new Collider[] { };
-
         public LayerMask layerMask = 0;
 
         public QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.Ignore;
@@ -119,7 +117,7 @@ namespace PropHunt.Utils
             }
             else
             {
-                return Empty;
+                return new Collider[] { };
             }
         }
     }
