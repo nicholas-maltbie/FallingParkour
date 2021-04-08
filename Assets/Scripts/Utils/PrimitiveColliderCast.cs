@@ -18,7 +18,8 @@ namespace PropHunt.Utils
             RaycastHit[] hits;
             if (sphereCollider != null)
             {
-                hits = Physics.SphereCastAll(transform.position + sphereCollider.center, sphereCollider.radius, direction, distance);
+                hits = Physics.SphereCastAll(transform.position + sphereCollider.center, sphereCollider.radius,
+                    direction, distance, layerMask, queryTriggerInteraction);
             }
             else if (capsuleCollider != null)
             {

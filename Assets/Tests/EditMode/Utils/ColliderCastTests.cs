@@ -1,10 +1,5 @@
 using System.Collections;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using Moq;
 using NUnit.Framework;
-using PropHunt.Character;
-using PropHunt.Prop;
 using PropHunt.Utils;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -114,6 +109,23 @@ namespace Tests.EditMode.Utils
             Assert.IsTrue(hit.distance > 0);
             Assert.IsTrue(hit.normal != Vector3.zero);
             Assert.IsTrue(hit.fraction == hit.distance / 10.0f);
+        }
+
+        [Test]
+        public void TestTriggerColliderBehaviour()
+        {
+            this.hitGo.GetComponent<Collider>().isTrigger = true;
+            this.primitiveColliderCast.queryTriggerInteraction = QueryTriggerInteraction.Ignore;
+            // Test hitting the object
+            ColliderCastHit hit = this.primitiveColliderCast.CastSelf(Vector3.forward, 10.0f);
+            Assert.IsTrue(hit.hit == false);
+            this.hitGo.GetComponent<Collider>().isTrigger = false;
+            hit = this.rigidbodyColliderCast.CastSelf(Vector3.forward, 10.0f);
+            Assert.IsTrue(hit.hit == true);
+            Assert.IsTrue(hit.distance > 0);
+            Assert.IsTrue(hit.normal != Vector3.zero);
+            Assert.IsTrue(hit.fraction == hit.distance / 10.0f);
+            Assert.IsTrue(hit.collider.gameObject == this.hitGo);
         }
 
         [Test]
