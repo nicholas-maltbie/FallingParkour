@@ -1,4 +1,5 @@
-﻿using Mirror;
+﻿using System;
+using Mirror;
 using PropHunt.Utils;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace PropHunt.Character
     /// This is the character movement script. It handles moving a character
     /// that a player controls on the client.
     /// </summary>
+    [Obsolete("This has been replaced with Kinematic Character Controller")]
     [RequireComponent(typeof(CharacterController))]
     public class CharacterMovement : NetworkBehaviour
     {

@@ -14,10 +14,8 @@ namespace Tests.EditMode.Character
     {
         /// <summary>Character animator component for this test </summary>
         CharacterAnimator characterAnimator;
-        /// <summary>Character controller for character movement management</summary>
-        CharacterController characterController;
         /// <summary>Character movement for reading character info for this test</summary>
-        CharacterMovement characterMovement;
+        KinematicCharacterController kcc;
         /// <summary>Mock of network service attached to the player game object script</summary>
         Mock<INetworkService> networkServiceMock;
         /// <summary>Mock of camera controller attached to the player game object script</summary>
@@ -28,15 +26,14 @@ namespace Tests.EditMode.Character
         {
             // Setup character movement player
             GameObject characterGo = new GameObject();
-            this.characterController = characterGo.AddComponent<CharacterController>();
-            this.characterMovement = characterGo.AddComponent<CharacterMovement>();
+            this.kcc = characterGo.AddComponent<KinematicCharacterController>();
             this.characterAnimator = characterGo.AddComponent<CharacterAnimator>();
             this.cameraController = characterGo.AddComponent<CameraController>();
             Animator anim = characterGo.AddComponent<Animator>();
-            this.characterMovement.Start();
+            this.kcc.Start();
             this.networkServiceMock = new Mock<INetworkService>();
             this.characterAnimator.animator = anim;
-            this.characterAnimator.movement = characterMovement;
+            this.characterAnimator.kcc = kcc;
             this.characterAnimator.cameraController = cameraController;
             this.characterAnimator.Start();
             this.characterAnimator.networkService = this.networkServiceMock.Object;

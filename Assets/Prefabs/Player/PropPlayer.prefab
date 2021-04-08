@@ -16,13 +16,13 @@ GameObject:
   - component: {fileID: -749921916936975090}
   - component: {fileID: 4402717801493103246}
   - component: {fileID: -6989314143880944393}
-  - component: {fileID: 5068185544392948995}
   - component: {fileID: -4329039560205243657}
   - component: {fileID: 6442824621798150539}
   - component: {fileID: 8169163611564138093}
   - component: {fileID: -316765144373666350}
   - component: {fileID: 5592021185975902138}
   - component: {fileID: -4343623551026766709}
+  - component: {fileID: 5348990939057730075}
   m_Layer: 8
   m_Name: PropPlayer
   m_TagString: Untagged
@@ -157,10 +157,18 @@ MonoBehaviour:
   frameRotation: 0
   cameraTransform: {fileID: 8130394144415267709}
   pitchBody: 1
+  baseCameraOffset: {x: 0, y: 0, z: 0}
   minCameraDistance: 0
   maxCameraDistance: 4
   currentDistance: 0
   zoomSpeed: 100
+  cameraRaycastMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  shadowOnlyDistance: 0.35
+  ditherDistance: 1.5
+  thirdPersonCharacterBase: {fileID: 245587927565386927}
+  transitionTime: 0.1
 --- !u!114 &-6989314143880944393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,46 +185,13 @@ MonoBehaviour:
   syncInterval: 0.1
   sphereRadius: 0.1
   viewDistance: 5
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 256
   cameraTransform: {fileID: 8130394144415267709}
   focus: {fileID: 0}
   currentHitDistance: 0
---- !u!114 &5068185544392948995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 245587927565386927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47afaa0ab7e2cf945a2104438a91eb2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  movementSpeed: 5
-  groundedDistance: 0.01
-  groundCheckDistance: 2
-  maxWalkAngle: 60
-  maxBounces: 5
-  gravity: {x: 0, y: -9.807, z: 0}
-  inputMovement: {x: 0, y: 0, z: 0}
-  velocity: {x: 0, y: 0, z: 0}
-  jumpVelocity: 5
-  attemptingJump: 0
-  maxPushSpeed: 10
-  pushDecay: 0.9
-  anglePower: 0.5
-  verticalSnapDown: 0.35
-  onGround: 0
-  stepUpDepth: 0.05
-  verticalSnapUp: 0.3
-  distanceToGround: 0
-  surfaceNormal: {x: 0, y: 0, z: 0}
-  angle: 0
+  viewLayermask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  focusTriggerInteraction: 0
 --- !u!114 &-4329039560205243657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,6 +290,43 @@ MonoBehaviour:
   syncInterval: 0.1
   pushPower: 30
   weight: 20
+--- !u!114 &5348990939057730075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245587927565386927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73555907382235c47a34fbf6dbc0d484, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  groundedDistance: 0.01
+  groundCheckDistance: 10
+  maxWalkAngle: 60
+  maxBounces: 5
+  gravity: {x: 0, y: -9.807, z: 0}
+  velocity: {x: 0, y: 0, z: 0}
+  jumpVelocity: 5
+  attemptingJump: 0
+  maxPushSpeed: 10
+  pushDecay: 0.9
+  anglePower: 0.5
+  verticalSnapDown: 0.2
+  onGround: 0
+  stepUpDepth: 0.1
+  verticalSnapUp: 0.3
+  distanceToGround: 0
+  surfaceNormal: {x: 0, y: 0, z: 0}
+  angle: 0
+  movementSpeed: 5
+  sprintSpeed: 6.5
+  inputMovement: {x: 0, y: 0, z: 0}
+  isSprinting: 0
+  elapsedFalling: 0
 --- !u!1 &457463035878123438
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,7 +382,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 886816266439757742}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.8, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2691377025762807458}
@@ -435,7 +447,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 1d6d20ca6d3177846bd2a38eeb6f0b16, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

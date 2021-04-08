@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
+using PropHunt.Character;
 using PropHunt.Utils;
 using UnityEngine;
 
@@ -20,6 +21,11 @@ namespace PropHunt.Prop
         /// Collider associated with the disguise
         /// </summary>
         public Collider disguiseCollider;
+
+        /// <summary>
+        /// Offset of camera from the props center
+        /// </summary>
+        public Vector3 cameraOffset;
     }
 
     /// <summary>
@@ -72,6 +78,12 @@ namespace PropHunt.Prop
                 Disguise disguiseInformation = PropDatabase.GetDisguise(newDisguise);
                 StartCoroutine(ChangeDisguise(disguiseInformation.disguiseVisual));
                 StartCoroutine(ChangeCollider(disguiseInformation.disguiseCollider));
+                // Change camera position
+                CameraController cameraController = gameObject.GetComponent<CameraController>();
+                if (cameraController != null)
+                {
+                    cameraController.baseCameraOffset = disguiseInformation.cameraOffset;
+                }
             }
         }
 

@@ -24,7 +24,7 @@ namespace PropHunt.Character
             this.networkService = new NetworkService(this);
         }
 
-        public void Update()
+        public void LateUpdate()
         {
             if (!this.networkService.isLocalPlayer)
             {

@@ -12,10 +12,8 @@ GameObject:
   - component: {fileID: 862515080123173751}
   - component: {fileID: 2783129140683207964}
   - component: {fileID: 4483632544835906298}
-  - component: {fileID: 3476835983905974511}
   - component: {fileID: 6171931363343755929}
   - component: {fileID: 7569778208588101987}
-  - component: {fileID: 2268735473202633543}
   - component: {fileID: -749921916936975090}
   - component: {fileID: 6982824905100499536}
   - component: {fileID: -526833284236462530}
@@ -23,6 +21,8 @@ GameObject:
   - component: {fileID: 90772896490692831}
   - component: {fileID: -3121540945416706136}
   - component: {fileID: 1509629139552447915}
+  - component: {fileID: 8481329674398737299}
+  - component: {fileID: 4965862787272249836}
   m_Layer: 0
   m_Name: BasicPlayer
   m_TagString: Untagged
@@ -106,24 +106,6 @@ MonoBehaviour:
   interpolateScale: 0
   syncScale: 0
   target: {fileID: 8130394144415267709}
---- !u!143 &3476835983905974511
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 245587927565386927}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 1.8
-  m_Radius: 0.45
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!54 &6171931363343755929
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -150,32 +132,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.2138955
+  m_Radius: 0.45
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
---- !u!114 &2268735473202633543
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 245587927565386927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2881019fe43bf5419a539a5baf35481, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  movementSpeed: 5
-  sprintSpeed: 7.5
-  fallingTime: 0
-  gravity: {x: 0, y: -9.8, z: 0}
-  jumpVelocity: 5
-  moveDirection: {x: 0, y: 0, z: 0}
-  movementInput: {x: 0, y: 0}
-  isSprinting: 0
 --- !u!114 &-749921916936975090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,12 +183,13 @@ MonoBehaviour:
   syncInterval: 0.1
   sphereRadius: 0.1
   viewDistance: 5
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 0
   cameraTransform: {fileID: 8130394144415267709}
   focus: {fileID: 0}
   currentHitDistance: 0
+  viewLayermask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  focusTriggerInteraction: 0
 --- !u!114 &8022354081219173697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,7 +223,7 @@ MonoBehaviour:
   movementDeadZone: 0.001
   turningDeadZone: 0.001
   fallingThreshold: 0.05
-  movement: {fileID: 2268735473202633543}
+  kcc: {fileID: 8481329674398737299}
   cameraController: {fileID: -3121540945416706136}
   animator: {fileID: 2607359372259022575}
 --- !u!114 &-3121540945416706136
@@ -286,9 +247,16 @@ MonoBehaviour:
   cameraTransform: {fileID: 8130394144415267709}
   pitchBody: 0
   minCameraDistance: 0
-  maxCameraDistance: 4
+  maxCameraDistance: 2
   currentDistance: 0
   zoomSpeed: 100
+  cameraRaycastMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  shadowOnlyDistance: 0.2
+  ditherDistance: 0.45
+  thirdPersonCharacterBase: {fileID: 8756352209484338735}
+  transitionTime: 0.1
 --- !u!114 &1509629139552447915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -304,6 +272,59 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   playerTeam: hunter
+--- !u!114 &8481329674398737299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245587927565386927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73555907382235c47a34fbf6dbc0d484, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  groundedDistance: 0.01
+  groundCheckDistance: 10
+  maxWalkAngle: 60
+  maxBounces: 5
+  gravity: {x: 0, y: -9.807, z: 0}
+  velocity: {x: 0, y: 0, z: 0}
+  jumpVelocity: 5
+  attemptingJump: 0
+  maxPushSpeed: 1
+  pushDecay: 0.9
+  anglePower: 0.5
+  verticalSnapDown: 0.2
+  onGround: 0
+  stepUpDepth: 0.1
+  verticalSnapUp: 0.3
+  distanceToGround: 0
+  surfaceNormal: {x: 0, y: 0, z: 0}
+  angle: 0
+  movementSpeed: 5
+  sprintSpeed: 7.5
+  inputMovement: {x: 0, y: 0, z: 0}
+  isSprinting: 0
+  elapsedFalling: 0
+--- !u!114 &4965862787272249836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245587927565386927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc8b4123465f2bc4ea55a1360da7b4f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  queryTriggerInteraction: 1
 --- !u!1 &886816266439757742
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,7 +349,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 886816266439757742}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.8000001, z: 0}
+  m_LocalPosition: {x: 0, y: 1.65, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2691377025762807458}
@@ -401,6 +422,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpacePerson
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2fe50b90de0f56b429fe6e254cc0441e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 2fe50b90de0f56b429fe6e254cc0441e, type: 3}
       propertyPath: m_Controller
       value: 
@@ -411,6 +436,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2fe50b90de0f56b429fe6e254cc0441e, type: 3}
+--- !u!1 &8756352209484338735 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2fe50b90de0f56b429fe6e254cc0441e, type: 3}
+  m_PrefabInstance: {fileID: 8450342936939883390}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8272865522181541013 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2fe50b90de0f56b429fe6e254cc0441e, type: 3}

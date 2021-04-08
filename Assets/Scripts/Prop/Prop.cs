@@ -11,13 +11,16 @@ namespace PropHunt.Prop
 
         public Collider disguiseCollider;
 
+        public Transform cameraOffset;
+
         public void Start()
         {
             PropDatabase.AddDisguiseIfNonExists(propName,
                 new Disguise
                 {
                     disguiseVisual = disguiseVisual,
-                    disguiseCollider = disguiseCollider
+                    disguiseCollider = disguiseCollider,
+                    cameraOffset = cameraOffset.localPosition
                 }
             );
         }

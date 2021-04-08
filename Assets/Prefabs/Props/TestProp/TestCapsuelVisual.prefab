@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2945878455963463458}
   - component: {fileID: 1748016024811201076}
   m_Layer: 0
-  m_Name: TestCapsuleVisual
+  m_Name: TestCapsuelVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,10 +47,11 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 309c46694339ded4ea6d37d58eda5b85, type: 2}
+  - {fileID: 2100000, guid: 1d6d20ca6d3177846bd2a38eeb6f0b16, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -71,6 +72,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1748016024811201076
 MeshFilter:
   m_ObjectHideFlags: 0

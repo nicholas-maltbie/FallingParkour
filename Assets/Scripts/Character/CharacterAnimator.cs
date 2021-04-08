@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace PropHunt.Character
 {
-    [RequireComponent(typeof(CharacterController))]
     public class CharacterAnimator : NetworkBehaviour
     {
         /// <summary>
@@ -28,9 +27,9 @@ namespace PropHunt.Character
         public INetworkService networkService;
 
         /// <summary>
-        /// Character movement for getting character motion information
+        /// Character controller for getting character motion information
         /// </summary>
-        public CharacterMovement movement;
+        public KinematicCharacterController kcc;
 
         /// <summary>
         /// Camera controller for getting player rotation information
@@ -61,17 +60,17 @@ namespace PropHunt.Character
                 return;
             }
 
-            bool jumping = movement.moveDirection.y >= 0.1f;
-            bool falling = movement.fallingTime >= fallingThreshold;
+            bool jumping = kcc.velocity.y >= 0.1f;
+            bool falling = kcc.elapsedFalling >= fallingThreshold;
             bool jumpingOrFalling = jumping || falling;
-            bool moving = !jumpingOrFalling && movement.movementInput.magnitude > this.movementDeadZone;
+            bool moving = !jumpingOrFalling && kcc.inputMovement.magnitude > this.movementDeadZone;
 
             // Set animator fields based on information
-            animator.SetFloat("MoveX", movement.movementInput.x);
-            animator.SetFloat("MoveY", movement.movementInput.y);
+            animator.SetFloat("MoveX", kcc.inputMovement.x);
+            animator.SetFloat("MoveY", kcc.inputMovement.z);
             // Set moving if movement is greater than dead zone
             animator.SetBool("Moving", moving);
-            animator.SetBool("Sprinting", !jumpingOrFalling && movement.isSprinting);
+            animator.SetBool("Sprinting", moving && kcc.isSprinting);
             // Set turning value based on turning direction
             animator.SetFloat("Rotation", cameraController.frameRotation > 0 ? 1 : -1);
             animator.SetBool("Turning", !moving && !jumpingOrFalling && Mathf.Abs(cameraController.frameRotation) > this.turningDeadZone);

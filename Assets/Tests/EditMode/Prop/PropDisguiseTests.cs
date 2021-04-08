@@ -2,6 +2,7 @@ using System.Collections;
 using System.Text.RegularExpressions;
 using Moq;
 using NUnit.Framework;
+using PropHunt.Character;
 using PropHunt.Prop;
 using PropHunt.Utils;
 using UnityEngine;
@@ -33,6 +34,7 @@ namespace Tests.EditMode.Prop
         {
             // Create a game object and setup camera follow component
             GameObject go = new GameObject();
+            go.AddComponent<CameraController>();
             this.propDisguise = go.AddComponent<PropDisguise>();
             this.propDisguise.disguiseBase = go.transform;
             this.propDisguise.selectedDisguise = "";

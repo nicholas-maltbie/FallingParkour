@@ -64,7 +64,7 @@ namespace PropHunt.Character
             Vector3 direction = cameraTransform.forward;
             RaycastHit hit;
             // if spherecast hits something, update the player's focus and distance variables -J
-            if (PhysicsUtils.SpherecastFirstHitIgnore(gameObject, origin, sphereRadius, direction, viewDistance,
+            if (PhysicsUtils.SphereCastFirstHitIgnore(gameObject, origin, sphereRadius, direction, viewDistance,
                 viewLayermask, focusTriggerInteraction, out hit))
             {
                 focus = hit.transform.gameObject;

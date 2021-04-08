@@ -77,7 +77,7 @@ namespace Tests.EditMode.Character
         public void TestCameraFollowNotLocal()
         {
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(false);
-            this.cameraFollow.Update();
+            this.cameraFollow.LateUpdate();
         }
 
         [Test]
@@ -86,14 +86,14 @@ namespace Tests.EditMode.Character
             GameObject.DestroyImmediate(this.mainCamera.gameObject);
             this.mainCamera = null;
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
-            this.cameraFollow.Update();
+            this.cameraFollow.LateUpdate();
         }
 
         [Test]
         public void TestFollowCharacter()
         {
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
-            this.cameraFollow.Update();
+            this.cameraFollow.LateUpdate();
             Assert.IsTrue(this.mainCamera.transform.position == cameraTransformTarget.transform.position);
             Assert.IsTrue(this.mainCamera.transform.rotation.eulerAngles == cameraTransformTarget.transform.rotation.eulerAngles);
         }

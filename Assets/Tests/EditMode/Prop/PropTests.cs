@@ -23,6 +23,7 @@ namespace Tests.EditMode.Prop
             this.testProp.disguiseVisual = go;
             this.testProp.disguiseCollider = go.AddComponent<BoxCollider>();
             this.testProp.propName = "TestProp";
+            this.testProp.cameraOffset = go.transform;
             this.testProp.Start();
         }
 

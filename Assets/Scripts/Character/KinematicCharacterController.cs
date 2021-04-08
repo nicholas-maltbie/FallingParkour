@@ -3,9 +3,9 @@ using PropHunt.Character;
 using PropHunt.Utils;
 using UnityEngine;
 
-namespace PropHunt.Prop
+namespace PropHunt.Character
 {
-    public class PropMovement : NetworkBehaviour
+    public class KinematicCharacterController : NetworkBehaviour
     {
         /// <summary>
         /// Small offset for computing when player has stopped moving
@@ -16,11 +16,6 @@ namespace PropHunt.Prop
         /// Maximum angle between two colliding objects
         /// </summary>
         public const float MaxAngleShoveRadians = 90.0f;
-
-        /// <summary>
-        /// Movement speed (in units per second)
-        /// </summary>
-        public float movementSpeed = 2.0f;
 
         /// <summary>
         /// Distance to ground at which player is considered grounded
@@ -57,11 +52,6 @@ namespace PropHunt.Prop
         /// Direction and strength of gravity
         /// </summary>
         public Vector3 gravity = new Vector3(0, -9.807f, 0);
-
-        /// <summary>
-        /// Player input movement from controller
-        /// </summary>
-        public Vector3 inputMovement;
 
         /// <summary>
         /// Current player velocity
@@ -154,6 +144,31 @@ namespace PropHunt.Prop
         /// </summary>
         public IColliderCast colliderCast;
 
+        /// <summary>
+        /// Speed of player movement
+        /// </summary>
+        public float movementSpeed = 5.0f;
+
+        /// <summary>
+        /// Speed of player when sprinting
+        /// </summary>
+        public float sprintSpeed = 7.5f;
+
+        /// <summary>
+        /// Player's given input movement for this frame
+        /// </summary>
+        public Vector3 inputMovement;
+
+        /// <summary>
+        /// Is the player sprinting
+        /// </summary>
+        public bool isSprinting;
+
+        /// <summary>
+        /// How long has the player been falling
+        /// </summary>
+        public float elapsedFalling;
+
         public void Start()
         {
             this.networkService = new NetworkService(this);
@@ -174,6 +189,7 @@ namespace PropHunt.Prop
 
             // Get other movemen inputs
             this.attemptingJump = unityService.GetButton("Jump");
+            this.isSprinting = unityService.GetButton("Sprint");
         }
 
         public void FixedUpdate()
@@ -199,17 +215,19 @@ namespace PropHunt.Prop
             Quaternion horizPlaneView = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
             Vector3 playerMovementDirection = horizPlaneView * inputMovement;
 
-            Vector3 movement = playerMovementDirection * movementSpeed;
+            Vector3 movement = playerMovementDirection * (isSprinting ? sprintSpeed : movementSpeed);
 
             // Update grounded state and increase velocity if falling
             CheckGrounded();
             if (!Falling && !attemptingJump)
             {
                 velocity = Vector3.zero;
+                this.elapsedFalling = 0.0f;
             }
             else if (Falling)
             {
                 velocity += gravity * deltaTime;
+                this.elapsedFalling += deltaTime;
             }
 
             // Give the player some vertical velocity if they are jumping and grounded

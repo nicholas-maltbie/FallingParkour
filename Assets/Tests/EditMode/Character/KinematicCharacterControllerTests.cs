@@ -9,12 +9,12 @@ using UnityEngine;
 namespace Tests.EditMode.Prop
 {
     /// <summary>
-    /// Tests to verify behaviour of PropMovement script
+    /// Tests to verify behaviour of KinematicCharacterController script
     /// </summary>
     [TestFixture]
-    public class PropMovementTests
+    public class KinematicCharacterControllerTests
     {
-        private PropMovement propMovement;
+        private KinematicCharacterController kcc;
 
         /// <summary>
         /// Mock of network service attached to cameraFollow script
@@ -37,38 +37,38 @@ namespace Tests.EditMode.Prop
             // Setup character movement player
             GameObject characterGo = new GameObject();
             characterGo.AddComponent<SphereCollider>();
-            this.propMovement = characterGo.AddComponent<PropMovement>();
-            this.propMovement.Start();
+            this.kcc = characterGo.AddComponent<KinematicCharacterController>();
+            this.kcc.Start();
             this.unityServiceMock = new Mock<IUnityService>();
             this.networkServiceMock = new Mock<INetworkService>();
             this.colliderCastMock = new Mock<IColliderCast>();
-            this.propMovement.unityService = this.unityServiceMock.Object;
-            this.propMovement.networkService = this.networkServiceMock.Object;
-            this.propMovement.colliderCast = this.colliderCastMock.Object;
+            this.kcc.unityService = this.unityServiceMock.Object;
+            this.kcc.networkService = this.networkServiceMock.Object;
+            this.kcc.colliderCast = this.colliderCastMock.Object;
         }
 
         [TearDown]
         public void TearDown()
         {
-            GameObject.DestroyImmediate(this.propMovement.gameObject);
+            GameObject.DestroyImmediate(this.kcc.gameObject);
         }
 
         [Test]
         public void TestWithRigidbody()
         {
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
-            this.propMovement.gameObject.AddComponent<Rigidbody>();
-            this.propMovement.inputMovement = Vector3.one;
-            this.propMovement.FixedUpdate();
-            Assert.IsTrue(this.propMovement.transform.position == Vector3.zero);
+            this.kcc.gameObject.AddComponent<Rigidbody>();
+            this.kcc.inputMovement = Vector3.one;
+            this.kcc.FixedUpdate();
+            Assert.IsTrue(this.kcc.transform.position == Vector3.zero);
         }
 
         [Test]
         public void TestNotLocal()
         {
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(false);
-            this.propMovement.Update();
-            this.propMovement.FixedUpdate();
+            this.kcc.Update();
+            this.kcc.FixedUpdate();
         }
 
         [Test]
@@ -76,9 +76,9 @@ namespace Tests.EditMode.Prop
         {
             PlayerInputManager.playerMovementState = PlayerInputState.Deny;
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
-            this.propMovement.inputMovement = Vector3.one;
-            this.propMovement.FixedUpdate();
-            Assert.IsTrue(this.propMovement.transform.position == Vector3.zero);
+            this.kcc.inputMovement = Vector3.one;
+            this.kcc.FixedUpdate();
+            Assert.IsTrue(this.kcc.transform.position == Vector3.zero);
             PlayerInputManager.playerMovementState = PlayerInputState.Allow;
         }
 
@@ -88,15 +88,15 @@ namespace Tests.EditMode.Prop
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
             this.unityServiceMock.Setup(e => e.GetAxis("Horizontal")).Returns(1.0f);
             this.unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(1.0f);
-            this.propMovement.Update();
-            Assert.IsTrue(this.propMovement.inputMovement.magnitude <= 1.0f);
-            Assert.IsTrue(this.propMovement.inputMovement.x == this.propMovement.inputMovement.z);
+            this.kcc.Update();
+            Assert.IsTrue(this.kcc.inputMovement.magnitude <= 1.0f);
+            Assert.IsTrue(this.kcc.inputMovement.x == this.kcc.inputMovement.z);
             this.unityServiceMock.Setup(e => e.GetAxis("Horizontal")).Returns(1.0f);
             this.unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(0.0f);
-            this.propMovement.Update();
-            Assert.IsTrue(this.propMovement.inputMovement.magnitude <= 1.0f);
-            Assert.IsTrue(this.propMovement.inputMovement.x == 1.0f);
-            Assert.IsTrue(this.propMovement.inputMovement.z == 0.0f);
+            this.kcc.Update();
+            Assert.IsTrue(this.kcc.inputMovement.magnitude <= 1.0f);
+            Assert.IsTrue(this.kcc.inputMovement.x == 1.0f);
+            Assert.IsTrue(this.kcc.inputMovement.z == 0.0f);
         }
 
         [Test]
@@ -113,16 +113,16 @@ namespace Tests.EditMode.Prop
                     normal = Vector3.up
                 }
             );
-            this.propMovement.FixedUpdate();
-            Assert.IsTrue(this.propMovement.StandingOnGround);
-            Assert.IsTrue(!this.propMovement.Falling);
+            this.kcc.FixedUpdate();
+            Assert.IsTrue(this.kcc.StandingOnGround);
+            Assert.IsTrue(!this.kcc.Falling);
 
             // Allow player to attempt to jump
-            this.propMovement.attemptingJump = true;
-            this.propMovement.FixedUpdate();
+            this.kcc.attemptingJump = true;
+            this.kcc.FixedUpdate();
 
             // Assert that we are jumping
-            Assert.IsTrue(Vector3.Project(this.propMovement.velocity, -this.propMovement.gravity).magnitude > 0);
+            Assert.IsTrue(Vector3.Project(this.kcc.velocity, -this.kcc.gravity).magnitude > 0);
         }
 
         [Test]
@@ -132,7 +132,7 @@ namespace Tests.EditMode.Prop
 
             // When grounded
             this.unityServiceMock.Setup(e => e.deltaTime).Returns(1.0f);
-            this.colliderCastMock.Setup(e => e.CastSelf(Vector3.down, this.propMovement.groundCheckDistance)).Returns(
+            this.colliderCastMock.Setup(e => e.CastSelf(Vector3.down, this.kcc.groundCheckDistance)).Returns(
                 new ColliderCastHit
                 {
                     hit = true,
@@ -140,13 +140,13 @@ namespace Tests.EditMode.Prop
                     normal = Vector3.up
                 }
             );
-            this.propMovement.FixedUpdate();
-            Assert.IsTrue(this.propMovement.StandingOnGround);
-            Assert.IsTrue(!this.propMovement.Falling);
+            this.kcc.FixedUpdate();
+            Assert.IsTrue(this.kcc.StandingOnGround);
+            Assert.IsTrue(!this.kcc.Falling);
 
             // When on slope
             this.unityServiceMock.Setup(e => e.deltaTime).Returns(1.0f);
-            this.colliderCastMock.Setup(e => e.CastSelf(Vector3.down, this.propMovement.groundCheckDistance)).Returns(
+            this.colliderCastMock.Setup(e => e.CastSelf(Vector3.down, this.kcc.groundCheckDistance)).Returns(
                 new ColliderCastHit
                 {
                     hit = true,
@@ -154,21 +154,21 @@ namespace Tests.EditMode.Prop
                     normal = Vector3.right
                 }
             );
-            this.propMovement.FixedUpdate();
-            Assert.IsTrue(this.propMovement.StandingOnGround);
-            Assert.IsTrue(this.propMovement.Falling);
+            this.kcc.FixedUpdate();
+            Assert.IsTrue(this.kcc.StandingOnGround);
+            Assert.IsTrue(this.kcc.Falling);
 
             // When falling
             this.unityServiceMock.Setup(e => e.deltaTime).Returns(1.0f);
-            this.colliderCastMock.Setup(e => e.CastSelf(Vector3.down, this.propMovement.groundCheckDistance)).Returns(
+            this.colliderCastMock.Setup(e => e.CastSelf(Vector3.down, this.kcc.groundCheckDistance)).Returns(
                 new ColliderCastHit
                 {
                     hit = false
                 }
             );
-            this.propMovement.FixedUpdate();
-            Assert.IsTrue(!this.propMovement.StandingOnGround);
-            Assert.IsTrue(this.propMovement.Falling);
+            this.kcc.FixedUpdate();
+            Assert.IsTrue(!this.kcc.StandingOnGround);
+            Assert.IsTrue(this.kcc.Falling);
         }
 
         [Test]
@@ -180,7 +180,7 @@ namespace Tests.EditMode.Prop
                 distance = 1.0f
             });
 
-            this.propMovement.SnapPlayerDown();
+            this.kcc.SnapPlayerDown();
         }
 
         [Test]
@@ -200,14 +200,14 @@ namespace Tests.EditMode.Prop
             });
 
             // Test push overlapping
-            this.propMovement.PushOutOverlapping();
+            this.kcc.PushOutOverlapping();
 
             // Assert that there is some push
-            Assert.IsTrue(this.propMovement.transform.position != Vector3.zero);
+            Assert.IsTrue(this.kcc.transform.position != Vector3.zero);
 
             // Test without collider
-            GameObject.DestroyImmediate(this.propMovement.GetComponent<Collider>());
-            this.propMovement.PushOutOverlapping();
+            GameObject.DestroyImmediate(this.kcc.GetComponent<Collider>());
+            this.kcc.PushOutOverlapping();
 
             // Cleanup
             GameObject.DestroyImmediate(overlap);
@@ -216,7 +216,7 @@ namespace Tests.EditMode.Prop
         [Test]
         public void TestPushAnotherObject()
         {
-            var push = this.propMovement.gameObject.AddComponent<CharacterPush>();
+            var push = this.kcc.gameObject.AddComponent<CharacterPush>();
             push.networkService = networkServiceMock.Object;
 
             GameObject otherObject = new GameObject();
@@ -225,14 +225,14 @@ namespace Tests.EditMode.Prop
 
             rigidbody.isKinematic = false;
 
-            this.propMovement.onGround = true;
-            this.propMovement.distanceToGround = 0.01f;
-            this.propMovement.angle = 0.0f;
+            this.kcc.onGround = true;
+            this.kcc.distanceToGround = 0.01f;
+            this.kcc.angle = 0.0f;
 
             // Simulate hitting the object
-            this.propMovement.maxBounces = 1;
-            this.propMovement.verticalSnapUp = 1.0f;
-            float hitHeight = (this.propMovement.transform.position - this.propMovement.GetComponent<Collider>().bounds.extents).y + 0.1f;
+            this.kcc.maxBounces = 1;
+            this.kcc.verticalSnapUp = 1.0f;
+            float hitHeight = (this.kcc.transform.position - this.kcc.GetComponent<Collider>().bounds.extents).y + 0.1f;
             this.colliderCastMock.Setup(e => e.CastSelf(It.IsAny<Vector3>(), It.IsAny<float>())).Returns(
                 new ColliderCastHit
                 {
@@ -241,21 +241,21 @@ namespace Tests.EditMode.Prop
                     collider = collider
                 }
             );
-            this.propMovement.MovePlayer(Vector3.forward);
+            this.kcc.MovePlayer(Vector3.forward);
         }
 
         [Test]
         public void TestSnappingUpWhileMoving()
         {
-            this.propMovement.onGround = true;
-            this.propMovement.distanceToGround = 0.01f;
-            this.propMovement.angle = 0.0f;
-            this.propMovement.stepUpDepth = 100.0f;
+            this.kcc.onGround = true;
+            this.kcc.distanceToGround = 0.01f;
+            this.kcc.angle = 0.0f;
+            this.kcc.stepUpDepth = 100.0f;
 
             // Simulate hitting a step
-            this.propMovement.maxBounces = 1;
-            this.propMovement.verticalSnapUp = 1.0f;
-            float hitHeight = (this.propMovement.transform.position - this.propMovement.GetComponent<Collider>().bounds.extents).y + 0.1f;
+            this.kcc.maxBounces = 1;
+            this.kcc.verticalSnapUp = 1.0f;
+            float hitHeight = (this.kcc.transform.position - this.kcc.GetComponent<Collider>().bounds.extents).y + 0.1f;
             this.colliderCastMock.Setup(e => e.CastSelf(It.IsAny<Vector3>(), It.IsAny<float>())).Returns(
                 new ColliderCastHit
                 {
@@ -264,28 +264,28 @@ namespace Tests.EditMode.Prop
                     pointHit = Vector3.up * hitHeight
                 }
             );
-            this.propMovement.MovePlayer(Vector3.forward);
+            this.kcc.MovePlayer(Vector3.forward);
         }
 
         [Test]
         public void TestAttemptSnapUpSteps()
         {
-            this.propMovement.onGround = true;
-            this.propMovement.distanceToGround = 0.01f;
-            this.propMovement.angle = 0.0f;
+            this.kcc.onGround = true;
+            this.kcc.distanceToGround = 0.01f;
+            this.kcc.angle = 0.0f;
 
             // Setup the hit when hitting a step and not being able to move forward
             this.colliderCastMock.Setup(e => e.CastSelf(It.IsAny<Vector3>(), It.IsAny<float>())).Returns(
                 new ColliderCastHit { hit = true, distance = 1.0f }
             );
-            UnityEngine.Debug.Log(!this.propMovement.Falling + " ");
-            this.propMovement.AttemptSnapUp(1.0f, new ColliderCastHit(), Vector3.forward);
+            UnityEngine.Debug.Log(!this.kcc.Falling + " ");
+            this.kcc.AttemptSnapUp(1.0f, new ColliderCastHit(), Vector3.forward);
 
             // Setup the event where they can walk forward
             this.colliderCastMock.Setup(e => e.CastSelf(It.IsAny<Vector3>(), It.IsAny<float>())).Returns(
                 new ColliderCastHit { hit = false, distance = 0 }
             );
-            this.propMovement.AttemptSnapUp(1.0f, new ColliderCastHit(), Vector3.forward);
+            this.kcc.AttemptSnapUp(1.0f, new ColliderCastHit(), Vector3.forward);
         }
     }
 }

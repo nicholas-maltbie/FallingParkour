@@ -1,4 +1,5 @@
 
+using System.Collections;
 using Mirror;
 using PropHunt.Utils;
 using UnityEngine;
@@ -51,7 +52,7 @@ namespace PropHunt.Character
         /// <summary>
         /// Camera offset from character center
         /// </summary>        
-        private Vector3 baseCameraOffset;
+        public Vector3 baseCameraOffset;
 
         /// <summary>
         /// Minimum distance (closest zoom) of player camera
@@ -78,6 +79,31 @@ namespace PropHunt.Character
         /// </summary>
         public LayerMask cameraRaycastMask = ~0;
 
+        /// <summary>
+        /// Distance in which the third person character will be completely transparent and only cast shadows
+        /// </summary>
+        public float shadowOnlyDistance = 0.5f;
+
+        /// <summary>
+        /// Distance where the player object will dither but still be visible
+        /// </summary>
+        public float ditherDistance = 1.0f;
+
+        /// <summary>
+        /// Base object where all the third person character is stored.
+        /// </summary>
+        public GameObject thirdPersonCharacterBase;
+
+        /// <summary>
+        /// Time in seconds it takes to transition between opacity states
+        /// </summary>
+        public float transitionTime = 0.1f;
+
+        /// <summary>
+        /// Previous player opacity for dithering
+        /// </summary>
+        private float previousOpacity = 0.0f;
+
         public void Start()
         {
             this.networkService = new NetworkService(this);
@@ -92,7 +118,6 @@ namespace PropHunt.Character
                 // exit from update if this is not the local player
                 return;
             }
-
             float deltaTime = unityService.deltaTime;
 
             float yaw = transform.rotation.eulerAngles.y;
@@ -136,6 +161,39 @@ namespace PropHunt.Character
             }
 
             cameraTransform.position = cameraSource + cameraDirection;
+
+            bool hittingSelf = PhysicsUtils.SphereCastAllow(gameObject, cameraSource + cameraDirection, 0.01f, -cameraDirection.normalized,
+                cameraDirection.magnitude, ~0, QueryTriggerInteraction.Ignore, out RaycastHit selfHit);
+
+            // float actualDistance = Mathf.Cos(Mathf.Deg2Rad * pitch) * cameraDirection.magnitude;
+            float actualDistance = hittingSelf ? selfHit.distance : cameraDirection.magnitude;
+
+            if (thirdPersonCharacterBase != null)
+            {
+                if (actualDistance < shadowOnlyDistance)
+                {
+                    MaterialUtils.RecursiveSetShadowCasingMode(thirdPersonCharacterBase, UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly);
+                }
+                else
+                {
+                    MaterialUtils.RecursiveSetShadowCasingMode(thirdPersonCharacterBase, UnityEngine.Rendering.ShadowCastingMode.On);
+                }
+
+                if (actualDistance > shadowOnlyDistance && actualDistance < ditherDistance)
+                {
+                    float newOpacity = (actualDistance - shadowOnlyDistance) / (ditherDistance - minCameraDistance);
+                    float lerpPosition = transitionTime > 0 ? deltaTime * 1 / transitionTime : 1;
+                    previousOpacity = Mathf.Lerp(previousOpacity, newOpacity, lerpPosition);
+                    // Set opacity of character based on how close the camera is
+                    MaterialUtils.RecursiveSetFloatProperty(thirdPersonCharacterBase, "_Opacity", previousOpacity);
+                }
+                else
+                {
+                    // Set opacity of character based on how close the camera is
+                    MaterialUtils.RecursiveSetFloatProperty(thirdPersonCharacterBase, "_Opacity", 1);
+                    previousOpacity = actualDistance > shadowOnlyDistance ? 1 : 0;
+                }
+            }
         }
     }
 }

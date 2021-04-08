@@ -13,7 +13,7 @@ namespace Tests.PlayMode.Character
         [UnityTest]
         public IEnumerator TestPlayerMoveForward()
         {
-            CharacterMovement characterMovement = GameObject.FindObjectOfType<CharacterMovement>();
+            KinematicCharacterController characterMovement = GameObject.FindObjectOfType<KinematicCharacterController>();
             Vector3 forward = characterMovement.transform.forward;
             Vector3 start = characterMovement.transform.position;
 

@@ -29,6 +29,7 @@ namespace Tests.EditMode.Character
             this.networkServiceMock = new Mock<INetworkService>();
             this.cameraController.networkService = this.networkServiceMock.Object;
             this.cameraController.cameraTransform = go.transform;
+            this.cameraController.thirdPersonCharacterBase = go;
 
             GameObject wall = new GameObject();
             wall.transform.position = Vector3.back;
@@ -64,6 +65,19 @@ namespace Tests.EditMode.Character
             this.cameraController.maxCameraDistance = 2.0f;
             this.cameraController.currentDistance = 2.0f;
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
+            this.cameraController.Update();
+        }
+
+        [Test]
+        public void TestVariousDitherThresholds()
+        {
+            this.cameraController.maxCameraDistance = 2.0f;
+            this.cameraController.currentDistance = 2.0f;
+            this.cameraController.shadowOnlyDistance = 0.0f;
+            this.cameraController.ditherDistance = 5.0f;
+            this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
+            this.cameraController.Update();
+            this.cameraController.ditherDistance = 0.0f;
             this.cameraController.Update();
         }
     }
