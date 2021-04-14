@@ -39,9 +39,9 @@ namespace Tests.EditMode.Character
 
             this.playerPrefab = new GameObject();
             this.playerPrefab.AddComponent<NetworkIdentity>();
-            this.playerPrefab.AddComponent<PlayerTeam>().playerTeam = "newTeam";
+            this.playerPrefab.AddComponent<PlayerTeam>().playerTeam = Team.Hunter;
             this.changeTeam = go.AddComponent<ChangePlayerTeam>();
-            this.changeTeam.setTeam = "newTeam";
+            this.changeTeam.setTeam = Team.Prop;
             this.changeTeam.newPrefab = playerPrefab;
         }
 

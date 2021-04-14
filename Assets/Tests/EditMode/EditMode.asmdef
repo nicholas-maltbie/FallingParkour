@@ -1,12 +1,14 @@
 {
     "name": "EditMode",
+    "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "PropHunt",
         "Mirror",
         "kcp2k",
-        "Tests.Common"
+        "Tests.Common",
+        "QuickOutline"
     ],
     "includePlatforms": [
         "Editor"

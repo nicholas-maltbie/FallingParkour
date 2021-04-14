@@ -222,7 +222,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  playerTeam: prop
+  playerTeam: 1
 --- !u!135 &8169163611564138093
 SphereCollider:
   m_ObjectHideFlags: 0

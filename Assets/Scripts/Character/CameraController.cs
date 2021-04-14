@@ -104,6 +104,11 @@ namespace PropHunt.Character
         /// </summary>
         private float previousOpacity = 0.0f;
 
+        /// <summary>
+        /// Get the current distance of the camera from the player camera location
+        /// </summary>
+        public float CameraDistance { get; private set; }
+
         public void Start()
         {
             this.networkService = new NetworkService(this);
@@ -160,6 +165,7 @@ namespace PropHunt.Character
                 cameraDirection = cameraDirection.normalized * hit.distance;
             }
 
+            this.CameraDistance = cameraDirection.magnitude;
             cameraTransform.position = cameraSource + cameraDirection;
 
             bool hittingSelf = PhysicsUtils.SphereCastAllow(gameObject, cameraSource + cameraDirection, 0.01f, -cameraDirection.normalized,

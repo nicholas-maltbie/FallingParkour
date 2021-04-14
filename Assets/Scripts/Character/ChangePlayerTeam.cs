@@ -8,7 +8,7 @@ namespace PropHunt.Character
     {
 
         public INetworkService networkService;
-        public string setTeam;
+        public Team setTeam;
         public GameObject newPrefab;
 
         public void Start()

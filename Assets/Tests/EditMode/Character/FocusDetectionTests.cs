@@ -11,6 +11,18 @@ using UnityEngine.TestTools;
 
 namespace Tests.EditMode.Character
 {
+    public class FocusableTest : Focusable
+    {
+        public int framesFocused;
+        public GameObject lastFocusSender;
+
+        public override void Focus(GameObject sender)
+        {
+            framesFocused += 1;
+            this.lastFocusSender = sender;
+        }
+    }
+
     public class InteractTest : Interactable
     {
         public int timesInteracted;
@@ -100,18 +112,24 @@ namespace Tests.EditMode.Character
         [Test]
         public void TestLookingAtObject()
         {
+            // Setup player settings
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
+            // Add focusable component to object
+            FocusableTest test = this.focusTarget.AddComponent<FocusableTest>();
             // Wait a frame to update the physics world and load colliders
             this.focusDetection.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
             this.focusDetection.Update();
             // Make sure is looking at the box
             UnityEngine.Debug.Log(this.focusDetection.focus);
             Assert.IsTrue(this.focusDetection.focus == focusTarget);
+            Assert.IsTrue(test.framesFocused == 1);
+            Assert.IsTrue(test.lastFocusSender == this.focusDetection.gameObject);
         }
 
         [Test]
         public void TestLookingAwayFromObject()
         {
+            // Setup player settings
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
             // rotate the player so they are looking away from the box
             // rotate player 90 degrees to look away from box

@@ -53,7 +53,11 @@ namespace PropHunt.Character
         /// <summary>Update is called once per frame</summary>
         public void Update()
         {
-            // Only upadte if IsLocalPlayer is true
+            // Increase view distance by the current camera zoom distance
+            CameraController controller = GetComponent<CameraController>();
+            float cameraDistance = controller != null ? controller.CameraDistance : 0;
+            float focusRange = viewDistance + cameraDistance;
+            // Only update if IsLocalPlayer is true
             if (!this.networkService.isLocalPlayer)
             {
                 // exit from update if this is not the local player
@@ -64,11 +68,18 @@ namespace PropHunt.Character
             Vector3 direction = cameraTransform.forward;
             RaycastHit hit;
             // if spherecast hits something, update the player's focus and distance variables -J
-            if (PhysicsUtils.SphereCastFirstHitIgnore(gameObject, origin, sphereRadius, direction, viewDistance,
+            if (PhysicsUtils.SphereCastFirstHitIgnore(gameObject, origin, sphereRadius, direction, focusRange,
                 viewLayermask, focusTriggerInteraction, out hit))
             {
                 focus = hit.transform.gameObject;
-                currentHitDistance = hit.distance;
+                // If the object has a focus component, tell the object it is 'focused'
+                Focusable focusable = focus.GetComponent<Focusable>();
+                if (focusable != null)
+                {
+                    // Invoke focus every frame locally
+                    focusable.Focus(gameObject);
+                }
+                currentHitDistance = hit.distance - cameraDistance;
                 // If player interacts with what they're looking at
                 if (unityService.GetButtonDown("Interact") && focus.GetComponent<Interactable>() != null)
                 {
