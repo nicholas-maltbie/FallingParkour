@@ -50,51 +50,6 @@ namespace Tests.EditMode.Utils
             GameObject.DestroyImmediate(this.hitGo);
         }
 
-        private void VerifyOverlapping(ColliderCast cast, int minimum)
-        {
-            int count = 0;
-            foreach (var h in cast.GetOverlappingDirectional())
-            {
-                count++;
-            }
-            Assert.IsTrue(count >= minimum);
-            count = 0;
-            foreach (var h in cast.GetOverlapping())
-            {
-                count++;
-            }
-            Assert.IsTrue(count >= minimum);
-        }
-
-        [Test]
-        public void TestOverlappingCollider()
-        {
-            this.go.transform.position = this.hitGo.transform.position;
-            // Simulate hitting an object
-            var collision = new Collision();
-            this.rigidbodyColliderCast.OnCollisionEnter(collision);
-            this.VerifyOverlapping(this.primitiveColliderCast, 1);
-            this.VerifyOverlapping(this.rigidbodyColliderCast, 1);
-            this.rigidbodyColliderCast.OnCollisionExit(collision);
-
-            // Try with each kind of collider
-            // No collider
-            GameObject.DestroyImmediate(this.go.GetComponent<Collider>());
-            this.VerifyOverlapping(this.primitiveColliderCast, -1);
-            // Box Collider
-            this.go.AddComponent<BoxCollider>();
-            this.VerifyOverlapping(this.primitiveColliderCast, 1);
-            GameObject.DestroyImmediate(this.go.GetComponent<Collider>());
-            // Sphere Collider
-            this.go.AddComponent<SphereCollider>();
-            this.VerifyOverlapping(this.primitiveColliderCast, 1);
-            GameObject.DestroyImmediate(this.go.GetComponent<Collider>());
-            // Capsule Collider
-            this.go.AddComponent<CapsuleCollider>();
-            this.VerifyOverlapping(this.primitiveColliderCast, 1);
-            GameObject.DestroyImmediate(this.go.GetComponent<Collider>());
-        }
-
         [Test]
         public void TestCastCollider()
         {
@@ -148,6 +103,93 @@ namespace Tests.EditMode.Utils
             CapsuleCollider capsuleCollider = this.go.AddComponent<CapsuleCollider>();
             this.primitiveColliderCast.GetHits(Vector3.forward, 1.0f);
             GameObject.DestroyImmediate(capsuleCollider);
+        }
+    }
+    /// <summary>
+    /// Tests to verify behaviour of Collider cast scripts
+    /// </summary>
+    [TestFixture]
+    public class ColliderCastOverlappingTests
+    {
+        private GameObject go;
+        private GameObject hitGo;
+        private PrimitiveColliderCast primitiveColliderCast;
+        private RigidbodyColliderCast rigidbodyColliderCast;
+
+        [UnitySetUp]
+        public IEnumerator SetUp()
+        {
+#if UNITY_EDITOR
+            var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
+#endif
+            // Setup character movement player
+            this.go = new GameObject();
+            this.go.AddComponent<BoxCollider>();
+            this.go.AddComponent<Rigidbody>();
+            this.primitiveColliderCast = this.go.AddComponent<PrimitiveColliderCast>();
+            this.rigidbodyColliderCast = this.go.AddComponent<RigidbodyColliderCast>();
+
+            this.primitiveColliderCast.layerMask = ~0;
+
+            // Setup thing for player to look at
+            hitGo = new GameObject();
+            // Make it a box
+            BoxCollider box = hitGo.AddComponent<BoxCollider>();
+            hitGo.name = "Box";
+
+            yield return null;
+        }
+
+        private void VerifyOverlapping(ColliderCast cast, int minimum)
+        {
+            int count = 0;
+            foreach (var h in cast.GetOverlappingDirectional())
+            {
+                count++;
+            }
+            Assert.IsTrue(count >= minimum);
+            count = 0;
+            foreach (var h in cast.GetOverlapping())
+            {
+                count++;
+            }
+            Assert.IsTrue(count >= minimum);
+        }
+
+        [Test]
+        public void TestOverlappingCollider()
+        {
+            // Simulate hitting an object
+            var collision = new Collision();
+            this.rigidbodyColliderCast.OnCollisionEnter(collision);
+            this.VerifyOverlapping(this.primitiveColliderCast, 1);
+            this.VerifyOverlapping(this.rigidbodyColliderCast, 1);
+            this.rigidbodyColliderCast.OnCollisionExit(collision);
+
+            // Try with each kind of collider
+            // No collider
+            GameObject.DestroyImmediate(this.go.GetComponent<Collider>());
+            this.VerifyOverlapping(this.primitiveColliderCast, -1);
+            // Box Collider
+            this.go.AddComponent<BoxCollider>();
+            this.VerifyOverlapping(this.primitiveColliderCast, 1);
+            GameObject.DestroyImmediate(this.go.GetComponent<Collider>());
+            // Sphere Collider
+            this.go.AddComponent<SphereCollider>();
+            this.VerifyOverlapping(this.primitiveColliderCast, 1);
+            GameObject.DestroyImmediate(this.go.GetComponent<Collider>());
+            // Capsule Collider
+            this.go.AddComponent<CapsuleCollider>();
+            this.VerifyOverlapping(this.primitiveColliderCast, 1);
+            GameObject.DestroyImmediate(this.go.GetComponent<Collider>());
+        }
+
+        [Test]
+        public void ColliderCastHitOverlapping()
+        {
+            var colliderCastHit = this.rigidbodyColliderCast.CastSelf(Vector3.down, 1.0f);
+            Assert.IsTrue(colliderCastHit.collider.gameObject == hitGo);
+            Assert.IsTrue(colliderCastHit.distance == 0);
         }
     }
 }

@@ -10,12 +10,6 @@ namespace PropHunt.Animation
     /// </summary>
     public class NetworkIKControl : NetworkBehaviour
     {
-        public static readonly AvatarIKGoal[] avatarIKGoals = {AvatarIKGoal.LeftFoot, AvatarIKGoal.RightFoot,
-            AvatarIKGoal.LeftHand, AvatarIKGoal.RightHand};
-
-        public static readonly AvatarIKHint[] avatarIKHints = {AvatarIKHint.LeftElbow, AvatarIKHint.LeftKnee,
-            AvatarIKHint.RightElbow, AvatarIKHint.RightKnee};
-
         /// <summary>
         /// Target for player looking
         /// </summary>
@@ -196,6 +190,9 @@ namespace PropHunt.Animation
 
         public void Awake()
         {
+            AvatarIKGoal[] avatarIKGoals = { AvatarIKGoal.LeftFoot, AvatarIKGoal.RightFoot, AvatarIKGoal.LeftHand, AvatarIKGoal.RightHand };
+            AvatarIKHint[] avatarIKHints = { AvatarIKHint.LeftElbow, AvatarIKHint.LeftKnee, AvatarIKHint.RightElbow, AvatarIKHint.RightKnee };
+
             networkService = new NetworkService(this);
 
             // Setup look target
@@ -262,6 +259,8 @@ namespace PropHunt.Animation
 
         public override void OnStartServer()
         {
+            AvatarIKGoal[] avatarIKGoals = { AvatarIKGoal.LeftFoot, AvatarIKGoal.RightFoot, AvatarIKGoal.LeftHand, AvatarIKGoal.RightHand };
+            AvatarIKHint[] avatarIKHints = { AvatarIKHint.LeftElbow, AvatarIKHint.LeftKnee, AvatarIKHint.RightElbow, AvatarIKHint.RightKnee };
             foreach (AvatarIKGoal goal in avatarIKGoals)
             {
                 this.avatarIKGoalStates[goal] = false;

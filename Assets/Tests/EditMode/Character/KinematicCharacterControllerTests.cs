@@ -80,6 +80,9 @@ namespace Tests.EditMode.Prop
             this.kcc.FixedUpdate();
             Assert.IsTrue(this.kcc.transform.position == Vector3.zero);
             PlayerInputManager.playerMovementState = PlayerInputState.Allow;
+            this.kcc.inputMovement = Vector3.one;
+            this.kcc.FixedUpdate();
+            Assert.IsTrue(this.kcc.transform.position == Vector3.zero);
         }
 
         [Test]

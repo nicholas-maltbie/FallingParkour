@@ -24,6 +24,12 @@ namespace PropHunt.Utils
         {
             RaycastHit closest = new RaycastHit() { distance = Mathf.Infinity };
             bool hitSomething = false;
+
+            foreach (var overlapping in GetOverlappingDirectional())
+            {
+                return overlapping;
+            }
+
             foreach (RaycastHit hit in GetHits(direction, distance))
             {
                 if (hit.collider.gameObject.transform != gameObject.transform)
@@ -67,7 +73,8 @@ namespace PropHunt.Utils
             List<ColliderCastHit> hits = new List<ColliderCastHit>();
             Collider collider = GetComponent<Collider>();
             var boundingBox = collider.bounds;
-            foreach (Collider otherCollider in Physics.OverlapBox(transform.position + boundingBox.center, boundingBox.size / 2, Quaternion.identity, ~0, queryTriggerInteraction))
+            UnityEngine.Debug.Log(transform.position + boundingBox.center);
+            foreach (Collider otherCollider in Physics.OverlapBox(boundingBox.center, boundingBox.size / 2, Quaternion.identity, ~0, queryTriggerInteraction))
             {
                 Physics.ComputePenetration(collider,
                     collider.transform.position, collider.transform.rotation, otherCollider,

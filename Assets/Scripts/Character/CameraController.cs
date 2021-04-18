@@ -158,7 +158,7 @@ namespace PropHunt.Character
             // Draw a line from our camera source in the camera direction. If the line hits anything that isn't us
             // Limit the distance by how far away that object is
             // If we hit something
-            if (PhysicsUtils.RaycastFirstHitIgnore(gameObject, cameraSource, cameraDirection, cameraDirection.magnitude,
+            if (PhysicsUtils.SphereCastFirstHitIgnore(gameObject, cameraSource, 0.01f, cameraDirection, cameraDirection.magnitude,
                 this.cameraRaycastMask, QueryTriggerInteraction.Ignore, out RaycastHit hit))
             {
                 // limit the movement by that hit

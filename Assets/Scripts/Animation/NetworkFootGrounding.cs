@@ -44,7 +44,6 @@ namespace PropHunt.Animation
 
         public void SetFootGroundedState(bool newState)
         {
-            UnityEngine.Debug.Log(networkService.isServer);
             if (!networkService.isServer)
             {
                 CmdSetFootGroundedState(newState);

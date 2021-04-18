@@ -60,11 +60,11 @@ jobs:
             -debugCodeOptimization
             -burst-disable-compilation 
             -coverageResultsPath ${{ matrix.testMode }}-artifacts
-            -coverageOptions "generateBadgeReport;assemblyFilters:-Assembly*,-Mirror*,-Tests*,-SimpleWebTransport,-Telepathy,-kcp2k,-QuickOutline;pathFilters:-*/Assets/Mirror/*,-*/Assets/Tests/*"
+            -coverageOptions "generateBadgeReport;assemblyFilters:-Assembly*,-Mirror*,-Tests*,-SimpleWebTransport,-Telepathy,-kcp2k,-QuickOutline;pathFilters:-*/Assets/Mirror/*.-*/Assets/SteamAudio/*,-*/Assets/Tests/*"
             -nographics
 
-      - name: Upload Results
-        uses: actions/upload-artifact@v1
-        with:
-          name: Test results for ${{ matrix.testMode }}
-          path: ${{ steps.tests.outputs.artifactsPath }}
+      # - name: Upload Results
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: Test results for ${{ matrix.testMode }}
+      #     path: ${{ steps.tests.outputs.artifactsPath }}

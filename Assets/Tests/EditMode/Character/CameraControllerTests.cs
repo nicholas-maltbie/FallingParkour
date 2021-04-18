@@ -35,6 +35,8 @@ namespace Tests.EditMode.Character
             wall.transform.position = Vector3.back;
             wall.AddComponent<BoxCollider>();
 
+            PlayerInputManager.playerMovementState = PlayerInputState.Allow;
+
             yield return null;
         }
 
