@@ -1,5 +1,5 @@
 using Mirror;
-using Mirror.Tests.RemoteAttrributeTest;
+using Mirror.Tests.RemoteAttributeTest;
 using Moq;
 using NUnit.Framework;
 using PropHunt.Character;

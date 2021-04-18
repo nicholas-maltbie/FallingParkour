@@ -51,7 +51,8 @@ MonoBehaviour:
   SendWindowSize: 128
   ReceiveWindowSize: 128
   debugLog: 0
-  debugGUI: 0
+  statisticsGUI: 0
+  statisticsLog: 0
 --- !u!1 &3526196192389498832
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,6 +113,7 @@ MonoBehaviour:
   Timeout: 25
   SteamAppID: 480
   AllowSteamRelay: 1
+  UseNextGenSteamNetworking: 1
   SteamUserID: 0
 --- !u!1 &8542409671753137158
 GameObject:
@@ -160,10 +162,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
+  PersistNetworkManagerToOfflineScene: 0
   runInBackground: 1
   autoStartServerBuild: 1
-  showDebugMessages: 0
   serverTickRate: 30
+  serverBatching: 1
+  serverBatchInterval: 0
   offlineScene: 
   onlineScene: 
   transport: {fileID: 3526196192005313033}
@@ -172,8 +176,7 @@ MonoBehaviour:
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 245587927565386927, guid: 042d651bd63ca1d42bf47ae427994384,
-    type: 3}
+  playerPrefab: {fileID: 245587927565386927, guid: 042d651bd63ca1d42bf47ae427994384, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:
