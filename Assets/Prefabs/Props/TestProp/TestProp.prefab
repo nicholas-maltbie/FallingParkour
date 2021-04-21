@@ -272,7 +272,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 993694c929834e44e8d77ac482d3f579, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 07fde23d1ac772d4996b60175ca530c1, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -378,13 +378,13 @@ MonoBehaviour:
   dipolePower: 0
   occlusionMode: 1
   occlusionMethod: 1
-  sourceRadius: 1
+  sourceRadius: 1.5
   occlusionSamples: 16
   directMixLevel: 1
   reflections: 1
-  indirectBinaural: 0
+  indirectBinaural: 1
   physicsBasedAttenuationForIndirect: 1
-  indirectMixLevel: 1
+  indirectMixLevel: 0.2
   simulationType: 0
   uniqueIdentifier: 
   avoidSilenceDuringInit: 0

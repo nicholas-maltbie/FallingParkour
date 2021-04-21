@@ -24,8 +24,8 @@ GameObject:
   - component: {fileID: 8481329674398737299}
   - component: {fileID: 4965862787272249836}
   - component: {fileID: 9146407159294641169}
-  - component: {fileID: 5860327242025993134}
   - component: {fileID: 7122104008381147}
+  - component: {fileID: 5860327242025993134}
   m_Layer: 0
   m_Name: BasicPlayer
   m_TagString: Untagged
@@ -294,14 +294,14 @@ MonoBehaviour:
   groundCheckDistance: 10
   maxWalkAngle: 60
   maxBounces: 5
-  gravity: {x: 0, y: -9.807, z: 0}
+  gravity: {x: 0, y: -20, z: 0}
   velocity: {x: 0, y: 0, z: 0}
-  jumpVelocity: 5
+  jumpVelocity: 8
   attemptingJump: 0
   maxPushSpeed: 1
   pushDecay: 0.9
   anglePower: 0.5
-  verticalSnapDown: 0.2
+  verticalSnapDown: 0.35
   onGround: 0
   stepUpDepth: 0.1
   verticalSnapUp: 0.3
@@ -343,22 +343,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
---- !u!114 &5860327242025993134
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 245587927565386927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9832560dc55dac84484e162163ada677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  groundFeet: 1
-  playerFootGrounded: {fileID: 6956521044681878227}
 --- !u!114 &7122104008381147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,6 +361,22 @@ MonoBehaviour:
   lookState: 0
   lookWeight: 0
   controller: {fileID: 7864551958040144730}
+--- !u!114 &5860327242025993134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245587927565386927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9832560dc55dac84484e162163ada677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  groundFeet: 1
+  playerFootGrounded: {fileID: 6956521044681878227}
 --- !u!1 &886816266439757742
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,7 +480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6782980285679d34a8f78cfd600be950, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableFootGrounded: 0
+  enableFootGrounded: 1
   footHeight: 0.1
   kneeHeight: 0.45
   footGroundedThreshold: 0.075

@@ -309,14 +309,14 @@ MonoBehaviour:
   groundCheckDistance: 10
   maxWalkAngle: 60
   maxBounces: 5
-  gravity: {x: 0, y: -9.807, z: 0}
+  gravity: {x: 0, y: -20, z: 0}
   velocity: {x: 0, y: 0, z: 0}
-  jumpVelocity: 5
+  jumpVelocity: 8
   attemptingJump: 0
   maxPushSpeed: 10
   pushDecay: 0.9
   anglePower: 0.5
-  verticalSnapDown: 0.2
+  verticalSnapDown: 0.35
   onGround: 0
   stepUpDepth: 0.1
   verticalSnapUp: 0.3

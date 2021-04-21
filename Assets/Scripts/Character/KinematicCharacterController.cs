@@ -297,7 +297,7 @@ namespace PropHunt.Character
             foreach (ColliderCastHit overlap in colliderCast.GetOverlappingDirectional())
             {
                 Physics.ComputePenetration(
-                    collider, transform.position, transform.rotation,
+                    collider, collider.bounds.center, transform.rotation,
                     overlap.collider, overlap.collider.transform.position, overlap.collider.transform.rotation,
                     out Vector3 direction, out float distance
                 );

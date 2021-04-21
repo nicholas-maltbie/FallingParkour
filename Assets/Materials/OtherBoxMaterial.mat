@@ -80,12 +80,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_14014c78caf9496c8fc4d8087541ace1_Texture_1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2D:
-        m_Texture: {fileID: 2800000, guid: 113f73142ba95c34abc074fab50b09df, type: 3}
+        m_Texture: {fileID: 2800000, guid: 16896f3af805cb54dac227d27852d570, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -144,7 +148,7 @@ Material:
     - Vector2_57A569B6: {r: 0, g: 0, b: 0, a: 0}
     - _AlbedoColor: {r: 1, g: 0.24754307, b: 0, a: 1}
     - _BaseColor: {r: 0.9150943, g: 0.331296, b: 0.11654504, a: 1}
-    - _Color: {r: 1, g: 0.5529412, b: 0, a: 1}
+    - _Color: {r: 1, g: 0.5087234, b: 0, a: 1}
     - _Emission: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0.8627451, g: 0.7058824, b: 0, a: 1}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}

@@ -73,7 +73,7 @@ namespace PropHunt.Utils
             List<ColliderCastHit> hits = new List<ColliderCastHit>();
             Collider collider = GetComponent<Collider>();
             var boundingBox = collider.bounds;
-            UnityEngine.Debug.Log(transform.position + boundingBox.center);
+            // UnityEngine.Debug.Log(transform.position + boundingBox.center);
             foreach (Collider otherCollider in Physics.OverlapBox(boundingBox.center, boundingBox.size / 2, Quaternion.identity, ~0, queryTriggerInteraction))
             {
                 Physics.ComputePenetration(collider,

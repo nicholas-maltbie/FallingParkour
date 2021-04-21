@@ -11,7 +11,7 @@ namespace PropHunt.Prop
 
         public Collider disguiseCollider;
 
-        public Transform cameraOffset;
+        public Vector3 cameraOffset;
 
         public void Start()
         {
@@ -20,7 +20,7 @@ namespace PropHunt.Prop
                 {
                     disguiseVisual = disguiseVisual,
                     disguiseCollider = disguiseCollider,
-                    cameraOffset = cameraOffset.localPosition
+                    cameraOffset = cameraOffset
                 }
             );
         }
