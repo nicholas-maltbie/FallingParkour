@@ -86,8 +86,8 @@ CodeCoverage
 /[Aa]ssets/SceneDependencyCache.meta
 
 # Temporary assets creating for builds
-/[Aa]ssets/StreamingAssets
-/[Aa]ssets/StreamingAssets.meta
+# /[Aa]ssets/StreamingAssets
+# /[Aa]ssets/StreamingAssets.meta
 
 # Ignore package settings
 /ProjectSettings/Packages
