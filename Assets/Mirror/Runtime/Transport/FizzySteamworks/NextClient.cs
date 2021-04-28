@@ -120,11 +120,11 @@ namespace Mirror.FizzySteam
         OnConnected.Invoke();
         Debug.Log("Connection established.");
 
-        if(BufferedData.Count > 0)
+        if (BufferedData.Count > 0)
         {
           Debug.Log($"{BufferedData.Count} received before connection was established. Processing now.");
           {
-            foreach(Action a in BufferedData)
+            foreach (Action a in BufferedData)
             {
               a();
             }
@@ -133,10 +133,7 @@ namespace Mirror.FizzySteam
       }
       else if (param.m_info.m_eState == ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_ClosedByPeer)
       {
-        Connected = false;
-        OnDisconnected.Invoke();
-        Debug.Log("Disconnected.");
-        SteamNetworkingSockets.CloseConnection(param.m_hConn, 0, "Disconnected", false);
+        Disconnect();
       }
       else
       {
@@ -166,6 +163,14 @@ namespace Mirror.FizzySteam
       }
     }
 
+    private void InternalDisconnect()
+    {
+      Connected = false;
+      OnDisconnected.Invoke();
+      Debug.Log("Disconnected.");
+      SteamNetworkingSockets.CloseConnection(HostConnection, 0, "Disconnected", false);
+    }
+
     public void ReceiveData()
     {
       IntPtr[] ptrs = new IntPtr[MAX_MESSAGES];
@@ -192,7 +197,12 @@ namespace Mirror.FizzySteam
     {
       EResult res = SendSocket(HostConnection, data, channelId);
 
-      if (res != EResult.k_EResultOK)
+      if(res == EResult.k_EResultNoConnection || res == EResult.k_EResultInvalidParam)
+      {
+        Debug.Log($"Connection to server was lost.");
+        InternalDisconnect();
+      }
+      else if (res != EResult.k_EResultOK)
       {
         Debug.LogError($"Could not send: {res.ToString()}");
       }

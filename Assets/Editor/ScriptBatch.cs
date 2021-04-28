@@ -27,9 +27,9 @@ public class ScriptBatch : IPostprocessBuildWithReport
     {
 #if UNITY_STANDALONE_OSX
         UnityEngine.Debug.Log("Signing files for MacOS Build");
-        UnityEditor.OSXStandalone.MacOSCodeSigning.CodeSignAppBundle(report.summary.outputPath + "/Contents/PlugIns/steam_api.bundle");
         UnityEditor.OSXStandalone.MacOSCodeSigning.CodeSignAppBundle(report.summary.outputPath + "/Contents/PlugIns/phonon.bundle");
         UnityEditor.OSXStandalone.MacOSCodeSigning.CodeSignAppBundle(report.summary.outputPath + "/Contents/PlugIns/audioplugin_phonon.bundle");
+        UnityEditor.OSXStandalone.MacOSCodeSigning.CodeSignAppBundle(report.summary.outputPath + "/Contents/PlugIns/steam_api.bundle");
         UnityEditor.OSXStandalone.MacOSCodeSigning.CodeSignAppBundle(report.summary.outputPath); 
 #endif
         UnityEngine.Debug.Log("MyCustomBuildProcessor.OnPostprocessBuild for target " + report.summary.platform + " at path " + report.summary.outputPath);
@@ -43,8 +43,6 @@ public class ScriptBatch : IPostprocessBuildWithReport
         string[] levels = GetScenes();
 
         string appFolder = path + "/PropHunt.app";
-
-        PlayerSettings.SetArchitecture(BuildTargetGroup.Standalone, 1);
 
         // Build player.
         BuildPipeline.BuildPlayer(levels, appFolder, BuildTarget.StandaloneOSX, BuildOptions.Development);

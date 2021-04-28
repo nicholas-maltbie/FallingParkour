@@ -47,14 +47,11 @@ namespace Mirror.FizzySteam
         File.WriteAllText(fileName, SteamAppID.ToString());
         Debug.Log($"New {fileName} written with SteamAppID {SteamAppID}");
       }
+    }
 
-      if(UseNextGenSteamNetworking)
-      {
-        SteamNetworkingUtils.InitRelayNetworkAccess();
-      }
-
+    private void OnEnable()
+    {
       Debug.Assert(Channels != null && Channels.Length > 0, "No channel configured for FizzySteamworks.");
-
       Invoke(nameof(FetchSteamID), 1f);
     }
 
@@ -274,6 +271,11 @@ namespace Mirror.FizzySteam
     {
       if (SteamManager.Initialized)
       {
+        if (UseNextGenSteamNetworking)
+        {
+          SteamNetworkingUtils.InitRelayNetworkAccess();
+        }
+
         SteamUserID = SteamUser.GetSteamID().m_SteamID;
       }
     }
