@@ -14,9 +14,9 @@ namespace PropHunt.Character
         public void Start()
         {
             this.networkService = new NetworkService(this);
-            if (!ClientScene.prefabs.ContainsValue(newPrefab))
+            if (!NetworkClient.prefabs.ContainsValue(newPrefab))
             {
-                ClientScene.RegisterPrefab(newPrefab);
+                NetworkClient.RegisterPrefab(newPrefab);
             }
         }
 

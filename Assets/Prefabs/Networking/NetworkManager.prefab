@@ -124,7 +124,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8542409671753137208}
-  - component: {fileID: 8542409671753137210}
+  - component: {fileID: -2923298690912514389}
   - component: {fileID: 8542409671753137159}
   m_Layer: 0
   m_Name: NetworkManager
@@ -149,7 +149,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8542409671753137210
+--- !u!114 &-2923298690912514389
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -158,7 +158,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8542409671753137158}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aab4c8111b7c411b9b92cf3dbc5bd4e, type: 3}
+  m_Script: {fileID: 11500000, guid: be6f86be5c1859d4a9ef0aa513ee6e82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
@@ -172,7 +172,7 @@ MonoBehaviour:
   onlineScene: 
   transport: {fileID: 3526196192005313033}
   networkAddress: localhost
-  maxConnections: 16
+  maxConnections: 100
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
