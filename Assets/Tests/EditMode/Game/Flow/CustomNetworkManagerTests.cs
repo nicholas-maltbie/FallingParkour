@@ -1,24 +1,17 @@
-
-
-using System.Collections;
 using Mirror;
 using Mirror.Tests;
-using Mirror.Tests.RemoteAttributeTest;
 using NUnit.Framework;
-using PropHunt.Game.Communication;
 using PropHunt.Game.Flow;
 using UnityEngine;
-using UnityEngine.TestTools;
 
 namespace Tests.EditMode.Game.Flow
 {
-    [TestFixture]
-    public class DebugChatCommunicationTests
+    public class CustomNetworkManagerTest
     {
         CustomNetworkManager networkManager;
 
         [SetUp]
-        public void Setup()
+        public virtual void Setup()
         {
             GameObject go = new GameObject();
             Transport.activeTransport = go.AddComponent<MemoryTransport>();
@@ -28,13 +21,17 @@ namespace Tests.EditMode.Game.Flow
         }
 
         [TearDown]
-        public void TearDown()
+        public virtual void TearDown()
         {
             networkManager.StopHost();
 
             GameObject.DestroyImmediate(networkManager.gameObject);
         }
+    }
 
+    [TestFixture]
+    public class DebugChatCommunicationTests : CustomNetworkManagerTest
+    {
         [Test]
         public void TestDebugLogUpdates()
         {

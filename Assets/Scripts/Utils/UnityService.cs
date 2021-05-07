@@ -14,6 +14,12 @@ namespace PropHunt.Utils
         float deltaTime { get; }
 
         /// <summary>
+        /// Gets the current time in seconds since start of the game
+        /// </summary>
+        /// <value>Time in seconds since the start of the game</value>
+        float time { get; }
+
+        /// <summary>
         /// Get the raw axis movement for a given axis (by name)
         /// </summary>
         /// <param name="axisName">Name of selected axis</param>
@@ -42,6 +48,9 @@ namespace PropHunt.Utils
     {
         /// <inheritdoc/>
         public float deltaTime => Time.deltaTime;
+
+        /// <inheritdoc/>
+        public float time => Time.time;
 
         /// <inheritdoc/>
         public float GetAxis(string axisName)

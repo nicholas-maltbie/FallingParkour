@@ -26,6 +26,7 @@ GameObject:
   - component: {fileID: 9146407159294641169}
   - component: {fileID: 7122104008381147}
   - component: {fileID: 5860327242025993134}
+  - component: {fileID: 4831536649252138190}
   m_Layer: 0
   m_Name: BasicPlayer
   m_TagString: Untagged
@@ -377,6 +378,21 @@ MonoBehaviour:
   syncInterval: 0.1
   groundFeet: 1
   playerFootGrounded: {fileID: 6956521044681878227}
+--- !u!114 &4831536649252138190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245587927565386927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8e379efe9a7f924d9ec712f3b75ad9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  enableOnLocalPlayer: {fileID: 6004249445925865796}
 --- !u!1 &886816266439757742
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,7 +441,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2648021938205662071
 Transform:
   m_ObjectHideFlags: 0
@@ -600,6 +616,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2fe50b90de0f56b429fe6e254cc0441e, type: 3}
+--- !u!95 &2607359372259022575 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 2fe50b90de0f56b429fe6e254cc0441e, type: 3}
+  m_PrefabInstance: {fileID: 8450342936939883390}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8756352209484338735 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2fe50b90de0f56b429fe6e254cc0441e, type: 3}
@@ -608,11 +629,6 @@ GameObject:
 --- !u!4 &8272865522181541013 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2fe50b90de0f56b429fe6e254cc0441e, type: 3}
-  m_PrefabInstance: {fileID: 8450342936939883390}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &2607359372259022575 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 2fe50b90de0f56b429fe6e254cc0441e, type: 3}
   m_PrefabInstance: {fileID: 8450342936939883390}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &2096275806088051630

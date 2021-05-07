@@ -2,6 +2,7 @@ using UnityEngine;
 using Mirror;
 using PropHunt.Game.Communication;
 using System;
+using PropHunt.Environment.Sound;
 
 namespace PropHunt.Game.Flow
 {
@@ -18,6 +19,7 @@ namespace PropHunt.Game.Flow
             base.OnStartClient();
             DebugChatLog.ClearChatLog();
             NetworkClient.RegisterHandler<ChatMessage>(DebugChatLog.OnMessage);
+            NetworkClient.RegisterHandler<SoundEffectEvent>(SoundEffectManager.CreateSoundEffectAtPoint);
         }
 
         public override void OnStopClient()

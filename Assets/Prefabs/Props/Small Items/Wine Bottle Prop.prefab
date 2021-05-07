@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 4400330216933705357}
   - component: {fileID: 4400330216933705358}
   - component: {fileID: 4400330216933705359}
+  - component: {fileID: 2624452221997808873}
   m_Layer: 0
   m_Name: Wine Bottle Prop
   m_TagString: Untagged
@@ -728,6 +729,27 @@ MonoBehaviour:
     - {x: 0.7063923, y: 0.04494747, z: 0.706392}
     - {x: 0.34110048, y: 0.6646991, z: 0.6646996}
     - {x: 0.17692533, y: 0.69595146, z: 0.6959518}
+--- !u!114 &2624452221997808873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4400330216933705366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c08297e4b3940974bbd0e0aa886efc82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  minCollisionVelocity: 0.2
+  soundMaterial: 0
+  minimumDelay: 0.25
+  minPitch: 0.6
+  maxPitch: 1.4
+  volumeVariation: 0.01
+  maximumSpeed: 10
 --- !u!1001 &5316854365861146945
 PrefabInstance:
   m_ObjectHideFlags: 0

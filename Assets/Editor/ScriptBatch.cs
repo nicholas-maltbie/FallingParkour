@@ -63,7 +63,7 @@ public class ScriptBatch : IPostprocessBuildWithReport
     public static void WindowsBuild()
     {
         // Get filename.
-        string path = "Builds/Wins64";
+        string path = "Builds/Win64";
         string[] levels = GetScenes();
 
         // Build player.
