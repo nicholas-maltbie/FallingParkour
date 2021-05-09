@@ -9,6 +9,7 @@ using Tests.EditMode.Game.Flow;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.TestTools;
 
 namespace Tests.EditMode.Environment.Sound
 {
@@ -31,6 +32,12 @@ namespace Tests.EditMode.Environment.Sound
             {
                 GameObject.DestroyImmediate(source);
             }
+            SetupSoundEffectManager(out this.soundEffectPrefab, out this.library, out this.manager);
+        }
+
+        public static void SetupSoundEffectManager(out GameObject soundEffectPrefab,
+            out SoundEffectLibrary library, out SoundEffectManager manager)
+        {
             soundEffectPrefab = new GameObject();
             soundEffectPrefab.AddComponent<AudioSource>();
 
@@ -41,7 +48,7 @@ namespace Tests.EditMode.Environment.Sound
             {
                 soundMaterial = SoundMaterial.Glass,
                 soundType = SoundType.Hit,
-                audioClip = null,
+                audioClip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/SFX/Hits/glass-hit-1.wav"),
                 soundId = "testSound1",
             };
             library.sounds = new LabeledSFX[] { glassHit };
@@ -51,6 +58,7 @@ namespace Tests.EditMode.Environment.Sound
             manager.soundEffectPrefab = soundEffectPrefab;
             manager.audioMixer = mixer;
             manager.Awake();
+            Assert.IsTrue(manager.AvailableSources == manager.maxSFXSources);
         }
 
         public override void TearDown()
@@ -67,7 +75,7 @@ namespace Tests.EditMode.Environment.Sound
             List<AudioSource> filtered = new List<AudioSource>();
             foreach (AudioSource source in sources)
             {
-                if (source.gameObject != soundEffectPrefab)
+                if (source.gameObject != soundEffectPrefab && source.gameObject.activeInHierarchy)
                 {
                     filtered.Add(source);
                 }
@@ -87,18 +95,13 @@ namespace Tests.EditMode.Environment.Sound
             SoundEffectManager.CreateNetworkedSoundEffectAtPoint(
                 Vector3.zero, SoundMaterial.Glass, SoundType.Hit
             );
-            GameObject created = null;
-            AudioSource[] sources = GameObject.FindObjectsOfType<AudioSource>();
-            foreach (AudioSource source in sources)
-            {
-                if (source.gameObject != soundEffectPrefab)
-                {
-                    created = source.gameObject;
-                }
-            }
             // check there was no created game object
-            List<AudioSource> createdSources = GetNonPrefabSources();
-            Assert.IsTrue(createdSources.Count == 0);
+            Assert.IsTrue(manager.UsedSources == 0);
+            SoundEffectManager.CreateNetworkedSoundEffectAtPoint(
+                new SoundEffectEvent()
+            );
+            // check there was no created game object
+            Assert.IsTrue(manager.UsedSources == 0);
         }
 
         [Test]
@@ -115,11 +118,39 @@ namespace Tests.EditMode.Environment.Sound
             // Test creating via other methodology
             GameObject created2 = SoundEffectManager.CreateSoundEffectAtPoint(Vector3.zero,
                 SoundMaterial.Glass, SoundType.Hit);
+            Assert.IsTrue(manager.UsedSources == 1);
             GameObject.DestroyImmediate(created2);
         }
 
         [Test]
-        public void TestCreateSoundFromEffect()
+        public void TestPlaySFXEnumerator()
+        {
+            AudioSource source = SoundEffectManager.CreateSoundEffectAtPoint(Vector3.zero, library.sounds[0].audioClip).GetComponent<AudioSource>();
+            IEnumerator enumerator = SoundEffectManager.PlaySFX(source, SoundEffectManager.defaultAudioMixerGroup);
+            while (enumerator.MoveNext()) { }
+            Assert.IsTrue(source.isPlaying);
+        }
+
+        [Test]
+        public void TestFillQueue()
+        {
+            GameObject[] created = new GameObject[manager.maxSFXSources];
+            for (int i = 0; i < manager.maxSFXSources; i++)
+            {
+                created[i] = SoundEffectManager.CreateSoundEffectAtPoint(Vector3.zero, library.sounds[0].audioClip);
+            }
+            GameObject fullQueue = SoundEffectManager.CreateSoundEffectAtPoint(Vector3.zero, library.sounds[0].audioClip);
+            Assert.IsTrue(fullQueue == null);
+
+            GameObject.DestroyImmediate(fullQueue);
+            for (int i = 0; i < manager.maxSFXSources; i++)
+            {
+                GameObject.DestroyImmediate(created[i]);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator TestCreateSoundFromEffect()
         {
             // Test creating via sound effect event
             SoundEffectManager.CreateSoundEffectAtPoint(new SoundEffectEvent
@@ -130,8 +161,17 @@ namespace Tests.EditMode.Environment.Sound
                 volume = 0.8f,
             });
             // Find the created game object
+            Assert.IsTrue(manager.UsedSources == 1);
             List<AudioSource> createdSources = GetNonPrefabSources();
-            Assert.IsTrue(createdSources.Count > 0);
+            int maxLoops = 100;
+            int iters = 0;
+            while (GetNonPrefabSources().Count == 0)
+            {
+                yield return null;
+                createdSources = GetNonPrefabSources();
+                iters++;
+                Assert.IsTrue(iters <= maxLoops);
+            }
             GameObject created = createdSources[0].gameObject;
             // Assert that object was created with correct settings
             AudioSource createdSound = created.GetComponent<AudioSource>();
@@ -139,10 +179,6 @@ namespace Tests.EditMode.Environment.Sound
             Assert.IsTrue(createdSound.volume == 0.8f);
             Assert.IsTrue(created.transform.position == new Vector3(1, 5, 1));
 
-            // Ensure that the delayed start works as expected
-            Assert.IsFalse(createdSound.isPlaying);
-            IEnumerator eventEnum = SoundEffectManager.DelayedStartAudioClip(createdSound);
-            while (eventEnum.MoveNext()) { }
             GameObject.DestroyImmediate(created);
         }
     }

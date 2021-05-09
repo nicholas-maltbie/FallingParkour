@@ -9,7 +9,7 @@ namespace Mirror.Tests.RemoteAttributeTest
         protected List<GameObject> spawned = new List<GameObject>();
 
         [SetUp]
-        public void Setup()
+        public virtual void SetUp()
         {
             Transport.activeTransport = new GameObject().AddComponent<MemoryTransport>();
 
@@ -27,7 +27,7 @@ namespace Mirror.Tests.RemoteAttributeTest
         }
 
         [TearDown]
-        public void TearDown()
+        public virtual void TearDown()
         {
             // destroy left over objects
             foreach (GameObject item in spawned)

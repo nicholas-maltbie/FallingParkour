@@ -745,7 +745,7 @@ MonoBehaviour:
   syncInterval: 0.1
   minCollisionVelocity: 0.2
   soundMaterial: 0
-  minimumDelay: 0.25
+  minimumDelay: 1
   minPitch: 0.6
   maxPitch: 1.4
   volumeVariation: 0.01

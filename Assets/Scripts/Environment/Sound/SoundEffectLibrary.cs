@@ -77,6 +77,7 @@ namespace PropHunt.Environment.Sound
         {
             foreach (LabeledSFX labeled in sounds)
             {
+                labeled.audioClip.LoadAudioData();
                 Tuple<SoundMaterial, SoundType> tupleKey = new Tuple<SoundMaterial, SoundType>(labeled.soundMaterial, labeled.soundType);
                 if (!soundMaterialLookup.ContainsKey(labeled.soundMaterial))
                 {

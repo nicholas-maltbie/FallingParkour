@@ -7,10 +7,10 @@ using UnityEngine.TestTools;
 namespace Tests.EditMode.Environment.Sound
 {
     [TestFixture]
-    public class DeleteAudioClipOnFinishTests
+    public class ReturnAudioClipOnFinishTests : SoundEffectManagerTestBase
     {
         [Test]
-        public void TestDeleteAction()
+        public void TestReturnAction()
         {
             // Ignroe warning of delete in edit mode
             LogAssert.ignoreFailingMessages = true;
@@ -18,17 +18,16 @@ namespace Tests.EditMode.Environment.Sound
             // Create and setup test
             GameObject go = new GameObject();
             var audioSource = go.AddComponent<AudioSource>();
-            var deleteOnFinish = go.AddComponent<DeleteOnAudioClipFinish>();
+            var deleteOnFinish = go.AddComponent<ReturnAudioSourceOnFinish>();
+
+            deleteOnFinish.inUse = true;
 
             audioSource.Stop();
 
-            deleteOnFinish.Awake();
+            deleteOnFinish.Start();
             deleteOnFinish.Update();
 
-            IEnumerator destroyAction = deleteOnFinish.DestorySelf();
-            destroyAction.MoveNext();
-            destroyAction.MoveNext();
-            destroyAction.MoveNext();
+            Assert.IsFalse(deleteOnFinish.inUse);
 
             GameObject.DestroyImmediate(go);
         }

@@ -1,5 +1,7 @@
 using NUnit.Framework;
 using PropHunt.Environment.Sound;
+using UnityEditor;
+using UnityEngine;
 
 namespace Tests.EditMode.Environment.Sound
 {
@@ -15,14 +17,14 @@ namespace Tests.EditMode.Environment.Sound
             {
                 soundMaterial = SoundMaterial.Glass,
                 soundType = SoundType.Hit,
-                audioClip = null,
+                audioClip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/SFX/Hits/glass-hit-1.wav"),
                 soundId = "testSound1",
             };
             LabeledSFX concreteHit = new LabeledSFX
             {
                 soundMaterial = SoundMaterial.Concrete,
                 soundType = SoundType.Hit,
-                audioClip = null,
+                audioClip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Sound/SFX/Hits/glass-hit-2.wav"),
                 soundId = "testSound2",
             };
             LabeledSFX[] sounds = new LabeledSFX[]{

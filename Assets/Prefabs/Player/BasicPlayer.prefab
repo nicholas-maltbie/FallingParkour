@@ -27,6 +27,7 @@ GameObject:
   - component: {fileID: 7122104008381147}
   - component: {fileID: 5860327242025993134}
   - component: {fileID: 4831536649252138190}
+  - component: {fileID: -1222635204622539188}
   m_Layer: 0
   m_Name: BasicPlayer
   m_TagString: Untagged
@@ -299,7 +300,7 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   jumpVelocity: 8
   attemptingJump: 0
-  maxPushSpeed: 1
+  maxPushSpeed: 10
   pushDecay: 0.9
   anglePower: 0.5
   verticalSnapDown: 0.35
@@ -308,6 +309,7 @@ MonoBehaviour:
   verticalSnapUp: 0.3
   distanceToGround: 0
   surfaceNormal: {x: 0, y: 0, z: 0}
+  floor: {fileID: 0}
   angle: 0
   movementSpeed: 5
   sprintSpeed: 7.5
@@ -385,7 +387,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 245587927565386927}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e8e379efe9a7f924d9ec712f3b75ad9d, type: 3}
   m_Name: 
@@ -393,6 +395,27 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   enableOnLocalPlayer: {fileID: 6004249445925865796}
+--- !u!114 &-1222635204622539188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245587927565386927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e0b575595bd111479a47007728de4bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  footGrounded: {fileID: 6956521044681878227}
+  sprintVolume: 0.95
+  walkVolume: 0.45
+  minPitchRange: 0.85
+  maxPitchRange: 1.15
+  maxFootstepSoundDelay: 0.75
+  minFootstepSoundDelay: 0.25
 --- !u!1 &886816266439757742
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,6 +527,7 @@ MonoBehaviour:
   rotationWeight: 0.65
   positionWeight: 0.95
   movementThreshold: 0.05
+  footRadius: 0.05
 --- !u!114 &7864551958040144730
 MonoBehaviour:
   m_ObjectHideFlags: 0

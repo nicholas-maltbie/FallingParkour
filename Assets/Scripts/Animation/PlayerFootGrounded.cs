@@ -1,14 +1,82 @@
+using System;
 using PropHunt.Utils;
 using UnityEngine;
 
 namespace PropHunt.Animation
 {
     /// <summary>
+    /// Enum describing left and right foot
+    /// </summary>
+    public enum PlayerFoot
+    {
+        LeftFoot,
+        RightFoot
+    }
+
+    /// <summary>
+    /// Type of footstep when the player either goes down "Down" and sets
+    /// their foot on the ground or goes "Up" and lifts their foot
+    /// off of the ground
+    /// </summary>
+    public enum FootstepState
+    {
+        Down,
+        Up
+    }
+
+    /// <summary>
+    /// Footstep event describing whenever a player's foot sets down or lifts
+    /// up from the ground.
+    /// </summary>
+    public class FootstepEvent : EventArgs
+    {
+        /// <summary>
+        /// Foostep position hitting the ground
+        /// </summary>
+        public Vector3 footstepPosition;
+
+        /// <summary>
+        /// Which foot hit the ground
+        /// </summary>
+        public PlayerFoot foot;
+
+        /// <summary>
+        /// Is the player's foot being put down or lifted up
+        /// </summary>
+        public FootstepState state;
+
+        /// <summary>
+        /// Object the player is standing on
+        /// </summary>
+        public GameObject floor;
+
+        /// <summary>
+        /// Create a footstep event form the given parameters
+        /// </summary>
+        /// <param name="position">Foostep position hitting the ground</param>
+        /// <param name="foot">Which foot hit the ground</param>
+        /// <param name="state">Is the player's foot being put down or lifted up</param>
+        /// <param name="floor">Object that the player's foot hit</param>
+        public FootstepEvent(Vector3 position, PlayerFoot foot, FootstepState state, GameObject floor)
+        {
+            this.footstepPosition = position;
+            this.foot = foot;
+            this.state = state;
+            this.floor = floor;
+        }
+    }
+
+    /// <summary>
     /// Allow for player feet to stick on ground
     /// </summary>
     [RequireComponent(typeof(Animator))]
     public class PlayerFootGrounded : MonoBehaviour
     {
+        /// <summary>
+        /// Event for whenever a footstep event occurs
+        /// </summary>
+        public event EventHandler<FootstepEvent> PlayerFootstep;
+
         /// <summary>
         /// Animator for getting current bone positions
         /// </summary>
@@ -63,14 +131,29 @@ namespace PropHunt.Animation
         public float movementThreshold = 0.01f;
 
         /// <summary>
+        /// Radius of foot sphere
+        /// </summary>
+        public float footRadius = 0.05f;
+
+        /// <summary>
         /// Previous position for left foot
         /// </summary>
-        private Vector3 previousLeftFoot;
+        public Vector3 leftFootPosition { get; private set; }
 
         /// <summary>
         /// Previous position for right foot
         /// </summary>
-        private Vector3 previousRightFoot;
+        public Vector3 rightFootPosition { get; private set; }
+
+        /// <summary>
+        /// Previous grounded state for left foot
+        /// </summary>
+        private bool previousLeftFootGrounded;
+
+        /// <summary>
+        /// Previous grounded state for right foot
+        /// </summary>
+        private bool previousRightFootGrounded;
 
         public IUnityService unityService = new UnityService();
 
@@ -81,41 +164,41 @@ namespace PropHunt.Animation
 
         public void OnAnimatorIK()
         {
+            Transform leftFootTransform = animator.GetBoneTransform(HumanBodyBones.LeftFoot);
+            Transform rightFootTransform = animator.GetBoneTransform(HumanBodyBones.RightFoot);
+            Vector3 leftFoot = leftFootTransform.position;
+            Vector3 rightFoot = rightFootTransform.position;
+
+            bool leftMoving = (leftFoot - leftFootPosition).magnitude / unityService.deltaTime >= movementThreshold;
+            bool rightMoving = (rightFoot - rightFootPosition).magnitude / unityService.deltaTime >= movementThreshold;
+
+            leftFootPosition = leftFoot;
+            rightFootPosition = rightFoot;
+
+            bool leftHit = Physics.SphereCast(leftFoot + up * (kneeHeight + footHeight), footRadius, -up,
+                out RaycastHit leftFootRaycastHit, maximumFootReach + kneeHeight + footHeight - footRadius);
+            bool rightHit = Physics.SphereCast(rightFoot + up * (kneeHeight + footHeight), footRadius, -up,
+                out RaycastHit rightFootRaycastHit, maximumFootReach + kneeHeight + footHeight - footRadius);
+            if (!leftHit)
+            {
+                leftFootRaycastHit.point = leftFoot + up * (kneeHeight + footHeight) -
+                    up * (maximumFootReach + kneeHeight + footHeight);
+            }
+            if (!rightHit)
+            {
+                rightFootRaycastHit.point = rightFoot + up * (kneeHeight + footHeight) -
+                    up * (maximumFootReach + kneeHeight + footHeight);
+            }
+
+            // UnityEngine.Debug.DrawRay(leftFoot + up * (kneeHeight), -up * (maximumFootReach + kneeHeight + footHeight), Color.red);
+            // UnityEngine.Debug.DrawRay(rightFoot + up * (kneeHeight), -up * (maximumFootReach + kneeHeight + footHeight), Color.red);
+
+            // Decide state of left foot if distance to hit <= kneeHeight + footHeight
+            bool leftGrounded = leftHit && leftFootRaycastHit.distance <= kneeHeight + footHeight + footGroundedThreshold;
+            bool rightGrounded = rightHit && rightFootRaycastHit.distance <= kneeHeight + footHeight + footGroundedThreshold;
+
             if (enableFootGrounded)
             {
-                Transform leftFootTransform = animator.GetBoneTransform(HumanBodyBones.LeftFoot);
-                Transform rightFootTransform = animator.GetBoneTransform(HumanBodyBones.RightFoot);
-                Vector3 leftFoot = leftFootTransform.position;
-                Vector3 rightFoot = rightFootTransform.position;
-
-                bool leftMoving = (leftFoot - previousLeftFoot).magnitude / unityService.deltaTime >= movementThreshold;
-                bool rightMoving = (rightFoot - previousRightFoot).magnitude / unityService.deltaTime >= movementThreshold;
-
-                previousLeftFoot = leftFoot;
-                previousRightFoot = rightFoot;
-
-                bool leftHit = Physics.Raycast(leftFoot + up * (kneeHeight + footHeight), -up,
-                    out RaycastHit leftFootRaycastHit, maximumFootReach + kneeHeight + footHeight);
-                bool rightHit = Physics.Raycast(rightFoot + up * (kneeHeight + footHeight), -up,
-                    out RaycastHit rightFootRaycastHit, maximumFootReach + kneeHeight + footHeight);
-                if (!leftHit)
-                {
-                    leftFootRaycastHit.point = leftFoot + up * (kneeHeight + footHeight) -
-                        up * (maximumFootReach + kneeHeight + footHeight);
-                }
-                if (!rightHit)
-                {
-                    rightFootRaycastHit.point = rightFoot + up * (kneeHeight + footHeight) -
-                        up * (maximumFootReach + kneeHeight + footHeight);
-                }
-
-                // UnityEngine.Debug.DrawRay(leftFoot + up * (kneeHeight), -up * (maximumFootReach + kneeHeight + footHeight), Color.red);
-                // UnityEngine.Debug.DrawRay(rightFoot + up * (kneeHeight), -up * (maximumFootReach + kneeHeight + footHeight), Color.red);
-
-                // Decide state of left foot if distance to hit <= kneeHeight + footHeight
-                bool leftGrounded = leftHit && leftFootRaycastHit.distance <= kneeHeight + footHeight + footGroundedThreshold;
-                bool rightGrounded = rightHit && rightFootRaycastHit.distance <= kneeHeight + footHeight + footGroundedThreshold;
-
                 // If it is not grounded, set IK position weight to zero
                 animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, leftGrounded ? positionWeight : 0);
                 animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, rightGrounded ? positionWeight : 0);
@@ -172,6 +255,24 @@ namespace PropHunt.Animation
                         Quaternion.Euler(targetRotation) * transform.rotation);
                 }
             }
+
+            if (leftGrounded != previousLeftFootGrounded)
+            {
+                PlayerFootstep?.Invoke(this, new FootstepEvent(
+                    leftFootPosition, PlayerFoot.LeftFoot,
+                    leftGrounded ? FootstepState.Down : FootstepState.Up,
+                    leftFootRaycastHit.collider != null ? leftFootRaycastHit.collider.gameObject : null));
+            }
+            if (rightGrounded != previousRightFootGrounded)
+            {
+                PlayerFootstep?.Invoke(this, new FootstepEvent(
+                    rightFootPosition, PlayerFoot.RightFoot,
+                    rightGrounded ? FootstepState.Down : FootstepState.Up,
+                    rightFootRaycastHit.collider != null ? rightFootRaycastHit.collider.gameObject : null));
+            }
+
+            previousLeftFootGrounded = leftGrounded;
+            previousRightFootGrounded = rightGrounded;
         }
     }
 }
