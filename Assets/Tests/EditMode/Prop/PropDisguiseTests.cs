@@ -35,6 +35,8 @@ namespace Tests.EditMode.Prop
             // Create a game object and setup camera follow component
             GameObject go = new GameObject();
             go.AddComponent<CameraController>();
+            // Setup the Prop Database
+            go.AddComponent<PropDatabase>().Awake();
             this.propDisguise = go.AddComponent<PropDisguise>();
             this.propDisguise.disguiseBase = go.transform;
             this.propDisguise.selectedDisguise = "";

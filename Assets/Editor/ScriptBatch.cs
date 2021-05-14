@@ -12,7 +12,12 @@ public class ScriptBatch : IPostprocessBuildWithReport
 
     public static string[] GetScenes()
     {
-        return new string[] { "Assets/Scenes/BasicHouse.unity" };
+        return new string[]
+        {
+            "Assets/Scenes/MainMenu.unity",
+            "Assets/Scenes/LobbyScene.unity",
+            "Assets/Scenes/BasicHouse.unity"
+        };
     }
 
     [MenuItem("Build/Build All")]
@@ -62,12 +67,17 @@ public class ScriptBatch : IPostprocessBuildWithReport
     [MenuItem("Build/Windows64 Build")]
     public static void WindowsBuild()
     {
-        // Get filename.
-        string path = "Builds/Win64";
-        string[] levels = GetScenes();
+        BuildPlayerOptions options = new BuildPlayerOptions
+        {
+            scenes = GetScenes(),
+            locationPathName = "Builds/Win64/PropHunt.exe",
+            targetGroup = BuildTargetGroup.Standalone,
+            target = BuildTarget.StandaloneWindows64,
+            options = BuildOptions.Development
+        };
 
         // Build player.
-        BuildPipeline.BuildPlayer(levels, path + "/PropHunt.exe", BuildTarget.StandaloneWindows64, BuildOptions.Development);
+        BuildPipeline.BuildPlayer(options);
     }
 
     // [MenuItem("Build/Windows Build")]

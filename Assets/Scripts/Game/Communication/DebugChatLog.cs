@@ -79,6 +79,10 @@ namespace PropHunt.Game.Communication
             DebugChatEvents?.Invoke(null, new ChatMessageEvent { message = new ChatMessage() });
         }
 
+        /// <summary>
+        /// Send a chat message from the server to all clients
+        /// </summary>
+        /// <param name="chatMessage">Chat message to send to all clients</param>
         public static void SendChatMessage(ChatMessage chatMessage)
         {
             AdjustMessageLogServer(chatMessage);

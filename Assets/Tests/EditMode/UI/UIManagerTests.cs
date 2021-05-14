@@ -1,7 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using PropHunt.UI;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace Tests.EditMode.UI
 {
@@ -31,31 +33,35 @@ namespace Tests.EditMode.UI
         /// </summary>
         private int screenChangeEvents = 0;
 
+        private void HandleTestScreenChange(object source, ScreenChangeEventArgs args)
+        {
+            this.currentScreen = args.newScreen;
+            this.screenChangeEvents++;
+        }
+
         [SetUp]
         public void Setup()
         {
+            UIManager.Instance = null;
+
             this.uiManagerObject = new GameObject();
             this.uiManager = this.uiManagerObject.AddComponent<UIManager>();
-
-            this.uiManager.OnEnable();
 
             this.currentScreen = "";
             this.screenChangeEvents = 0;
 
             // Listen to requested screen change events
-            UIManager.ScreenChangeOccur += (object source, ScreenChangeEventArgs args) =>
-            {
-                this.currentScreen = args.newScreen;
-                this.screenChangeEvents++;
-            };
+            UIManager.ScreenChangeOccur += HandleTestScreenChange;
         }
 
         [TearDown]
         public void TearDown()
         {
             // Disable and cleanup UIManager
-            this.uiManager.OnDisable();
+            this.uiManager.OnDestroy();
             GameObject.DestroyImmediate(this.uiManagerObject);
+            UIManager.Instance = null;
+            UIManager.ScreenChangeOccur -= HandleTestScreenChange;
         }
 
         [Test]
@@ -70,6 +76,25 @@ namespace Tests.EditMode.UI
         }
 
         [Test]
+        public void UIManagerDestoryDuplicate()
+        {
+            this.uiManager.screenPrefabs = new List<Canvas>();
+            this.uiManager.initialScreen = -1;
+
+            this.uiManager.Start();
+            this.uiManager.OnDestroy();
+            this.uiManager.Start();
+            this.uiManager.OnDestroy();
+
+            // Assert that the destory works as expected
+            LogAssert.ignoreFailingMessages = true;
+            IEnumerator enumerator = this.uiManager.DestorySelf();
+            while (enumerator.MoveNext()) { }
+
+            Assert.IsTrue(this.uiManager.initialScreen == -1);
+        }
+
+        [Test]
         public void UIManagerSetupSelectedNegativeInvalidScreens()
         {
             this.uiManager.screenPrefabs = new List<Canvas>();
@@ -77,7 +102,7 @@ namespace Tests.EditMode.UI
             this.uiManager.screenPrefabs.Add(screen.AddComponent<Canvas>());
             this.uiManager.initialScreen = -10;
 
-            this.uiManager.Start();
+            Assert.Throws<System.InvalidOperationException>(() => this.uiManager.Start());
 
             foreach (Canvas canvasObject in this.uiManager.screenPrefabs)
             {
@@ -97,7 +122,7 @@ namespace Tests.EditMode.UI
             this.uiManager.screenPrefabs.Add(screen.AddComponent<Canvas>());
             this.uiManager.initialScreen = 10;
 
-            this.uiManager.Start();
+            Assert.Throws<System.InvalidOperationException>(() => this.uiManager.Start());
 
             foreach (Canvas canvasObject in this.uiManager.screenPrefabs)
             {
@@ -125,14 +150,16 @@ namespace Tests.EditMode.UI
             }
             this.uiManager.initialScreen = 2;
 
-            this.uiManager.Start();
+            Assert.Throws<System.InvalidOperationException>(() => this.uiManager.Start());
 
             // Assert that the correct screen is still loaded
             Assert.IsTrue(this.uiManager.initialScreen == 2);
+            this.screenChangeEvents = 0;
 
             // Request that screen 0 be loaded
             UIManager.RequestNewScreen(this, screenNames[0]);
 
+            UnityEngine.Debug.Log(this.screenChangeEvents);
             Assert.IsTrue(this.screenChangeEvents == 1);
             Assert.IsTrue(this.currentScreen == screenNames[0]);
 

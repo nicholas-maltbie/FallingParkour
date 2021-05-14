@@ -1,4 +1,5 @@
 using Mirror;
+using UnityEngine;
 
 namespace PropHunt.Utils
 {
@@ -71,6 +72,11 @@ namespace PropHunt.Utils
         /// Is the network server currently active
         /// </summary>
         bool activeNetworkServer { get; }
+
+        /// <summary>
+        /// Is the network manager loading a scene currently?
+        /// </summary>
+        AsyncOperation networkManagerLoadingScene { get; }
     }
 
     /// <summary>
@@ -127,5 +133,8 @@ namespace PropHunt.Utils
 
         /// <inheritdoc/>
         public bool activeNetworkServer => NetworkServer.active;
+
+        /// <inheritdoc/>
+        public AsyncOperation networkManagerLoadingScene => NetworkManager.loadingSceneAsync;
     }
 }

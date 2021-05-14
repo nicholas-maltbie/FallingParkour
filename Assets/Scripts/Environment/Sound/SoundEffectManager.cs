@@ -107,6 +107,11 @@ namespace PropHunt.Environment.Sound
             sfxPool.Enqueue(source);
         }
 
+        public void OnDestroy()
+        {
+            Instance = null;
+        }
+
         public void Awake()
         {
             if (Instance == null)

@@ -1,10 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Mirror;
-using Mirror.Tests;
 using NUnit.Framework;
 using PropHunt.Environment.Sound;
-using PropHunt.Game.Flow;
 using Tests.EditMode.Game.Flow;
 using UnityEditor;
 using UnityEngine;
@@ -13,20 +10,20 @@ using UnityEngine.TestTools;
 
 namespace Tests.EditMode.Environment.Sound
 {
-    public class SoundEffectManagerTestBase : CustomNetworkManagerTest
+    public class SoundEffectManagerTestBase : CustomNetworkManagerTestBase
     {
         protected GameObject soundEffectPrefab;
         protected SoundEffectLibrary library;
         protected SoundEffectManager manager;
 
         [SetUp]
-        public override void Setup()
+        public override void SetUp()
         {
             // Load up an empty scene
 #if UNITY_EDITOR
             var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
 #endif
-            base.Setup();
+            base.SetUp();
             // Clear out all audio sources
             foreach (AudioSource source in GameObject.FindObjectsOfType<AudioSource>())
             {
@@ -64,6 +61,7 @@ namespace Tests.EditMode.Environment.Sound
         public override void TearDown()
         {
             base.TearDown();
+            manager.OnDestroy();
             GameObject.DestroyImmediate(manager.gameObject);
             GameObject.DestroyImmediate(soundEffectPrefab);
             ScriptableObject.DestroyImmediate(library);

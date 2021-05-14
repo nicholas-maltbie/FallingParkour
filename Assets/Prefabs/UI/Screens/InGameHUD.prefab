@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6101108449083475880}
   - component: {fileID: 6101108449083475881}
+  - component: {fileID: 3677147509884030994}
   - component: {fileID: 6101108449083475882}
-  - component: {fileID: 6101108449083475883}
   - component: {fileID: 6496672550345548457}
   - component: {fileID: 1292730286106825495}
   - component: {fileID: 1811976908144868216}
@@ -63,6 +63,23 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &3677147509884030994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6101108449083475876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &6101108449083475882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,23 +103,6 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
---- !u!114 &6101108449083475883
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6101108449083475876}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &6496672550345548457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,6 +235,14 @@ PrefabInstance:
     - target: {fileID: 2356862399510046666, guid: de8522a1e9d09354e975135408a22560, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2444658691296664761, guid: de8522a1e9d09354e975135408a22560, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6108486980034106675, guid: de8522a1e9d09354e975135408a22560, type: 3}
+      propertyPath: m_Value
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7742637735198277325, guid: de8522a1e9d09354e975135408a22560, type: 3}
       propertyPath: m_AnchorMax.x

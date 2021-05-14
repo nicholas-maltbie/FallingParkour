@@ -24,7 +24,10 @@ namespace PropHunt.Character
         {
             var team = other.GetComponent<PlayerTeam>();
             var networkIdentity = other.GetComponent<NetworkIdentity>();
-            if (this.networkService.isServer && team != null && team.playerTeam != setTeam && networkIdentity.connectionToClient != null)
+            if (this.networkService.isServer &&
+                team != null && team.playerTeam != setTeam &&
+                networkIdentity != null &&
+                networkIdentity.connectionToClient != null)
             {
                 NetworkConnection conn = networkIdentity.connectionToClient;
                 GameObject oldPlayer = other.gameObject;

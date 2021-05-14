@@ -13,9 +13,9 @@ namespace Tests.EditMode.Environment.Sound
         SoundEffectOnHit soundOnHit = new SoundEffectOnHit();
 
         [SetUp]
-        public override void Setup()
+        public override void SetUp()
         {
-            base.Setup();
+            base.SetUp();
             soundOnHit = new GameObject().AddComponent<SoundEffectOnHit>();
             soundOnHit.Awake();
         }

@@ -26,9 +26,9 @@ namespace Tests.EditMode.Character
         PlayerFootGrounded footGrounded;
 
         [SetUp]
-        public override void Setup()
+        public override void SetUp()
         {
-            base.Setup();
+            base.SetUp();
             library.sounds = library.sounds.Concat(new LabeledSFX[]{
                 new LabeledSFX
                 {

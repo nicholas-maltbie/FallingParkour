@@ -9,6 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/BasicHouse.unity
     guid: a26e39a3a68aae544afd1477b801ef87
   - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 3184ac61989852c4794c6cc9aefd32b3
+  - enabled: 1
+    path: Assets/Scenes/LobbyScene.unity
+    guid: b8f52b36a19ab084eb7a927ff69c6f24
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: d1c3109bdb54ad54c8a2b2838528e640
   - enabled: 1

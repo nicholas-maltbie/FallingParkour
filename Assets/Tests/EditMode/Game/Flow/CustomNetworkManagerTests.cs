@@ -1,23 +1,30 @@
+using System.Collections;
 using Mirror;
 using Mirror.Tests;
 using NUnit.Framework;
 using PropHunt.Game.Flow;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace Tests.EditMode.Game.Flow
 {
-    public class CustomNetworkManagerTest
+    public class CustomNetworkManagerTestBase
     {
-        CustomNetworkManager networkManager;
+        protected CustomNetworkManager networkManager;
 
         [SetUp]
-        public virtual void Setup()
+        public virtual void SetUp()
         {
+            var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
             GameObject go = new GameObject();
             Transport.activeTransport = go.AddComponent<MemoryTransport>();
             networkManager = go.AddComponent<CustomNetworkManager>();
+            networkManager.playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Tests/EditMode/TestPlayer.prefabs");
 
             networkManager.StartHost();
+
+            NetworkClient.Ready();
         }
 
         [TearDown]
@@ -25,17 +32,41 @@ namespace Tests.EditMode.Game.Flow
         {
             networkManager.StopHost();
 
+            GameObject.DestroyImmediate(networkManager.playerPrefab);
             GameObject.DestroyImmediate(networkManager.gameObject);
         }
     }
 
-    [TestFixture]
-    public class DebugChatCommunicationTests : CustomNetworkManagerTest
+    public class CustomNewtworkManagerFlowTest : CustomNetworkManagerTestBase
     {
         [Test]
-        public void TestDebugLogUpdates()
+        public void TestSingletonBehaviour()
         {
-            // Don't do anything here, test is ensuring setup and tear down don't create errors
+            LogAssert.ignoreFailingMessages = true;
+            base.networkManager.Start();
+            base.networkManager.Start();
+
+            // Verify delete behaviour
+            IEnumerator enumerator = base.networkManager.DestorySelf();
+            while (enumerator.MoveNext()) { }
+        }
+
+        [Test]
+        public void TestHandleConnection()
+        {
+            int connects = 0;
+            CustomNetworkManager.OnPlayerConnect += (object sender, PlayerConnectEvent connectEvent) => { connects++; };
+            this.networkManager.OnServerReady(NetworkClient.connection);
+            Assert.IsTrue(connects == 1);
+        }
+
+        [Test]
+        public void TestLoadScene()
+        {
+            LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
+            this.networkManager.LoadLobbyScene();
+            LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
+            this.networkManager.LoadGameScene();
         }
     }
 }

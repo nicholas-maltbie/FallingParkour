@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using Mirror;
 using PropHunt.Character;
 using PropHunt.Utils;
@@ -26,39 +25,6 @@ namespace PropHunt.Prop
         /// Offset of camera from the props center
         /// </summary>
         public Vector3 cameraOffset;
-    }
-
-    /// <summary>
-    /// Lookup table for all props
-    /// </summary>
-    public static class PropDatabase
-    {
-        private static Dictionary<string, Disguise> disguiseLookup = new Dictionary<string, Disguise>();
-
-        public static void ClearDisguises()
-        {
-            disguiseLookup.Clear();
-        }
-
-        public static Disguise GetDisguise(string name)
-        {
-            return disguiseLookup[name];
-        }
-
-        public static bool HasDisguise(string name)
-        {
-            return disguiseLookup.ContainsKey(name);
-        }
-
-        public static bool AddDisguiseIfNonExists(string name, Disguise disguise)
-        {
-            if (HasDisguise(name))
-            {
-                return false;
-            }
-            disguiseLookup[name] = disguise;
-            return true;
-        }
     }
 
     /// <summary>
