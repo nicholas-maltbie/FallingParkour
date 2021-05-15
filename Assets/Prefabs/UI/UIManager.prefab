@@ -52,6 +52,7 @@ MonoBehaviour:
   - {fileID: 4151337882126337141, guid: 09e4cd27b3cce1849887002c2e6e0639, type: 3}
   - {fileID: 6637053135914170325, guid: de594f0ca0c7e164fbcaade84840570f, type: 3}
   - {fileID: 6637053135914170325, guid: 67537ab50a08bde4b8617a7d55f2563d, type: 3}
+  - {fileID: 3816567771485690121, guid: a8b22df97f8dd144aabce008ac60e871, type: 3}
   initialScreen: 0
 --- !u!114 &7569278591705480162
 MonoBehaviour:
@@ -67,5 +68,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offlineScreen: {fileID: 8543157476786906886, guid: d7e0cec9d46eff341ad598031aeba302, type: 3}
   connectingScreen: {fileID: 5674224039144228343, guid: 3cf2c1b6756d7954098700a0085ef674, type: 3}
-  onlineScreen: {fileID: 6101108449083475876, guid: a6b724ce986920c46859b833b6f1bc83, type: 3}
+  onlineScreen: {fileID: 0}
   serverScreen: {fileID: 4151337882126337144, guid: 09e4cd27b3cce1849887002c2e6e0639, type: 3}

@@ -3,6 +3,7 @@ using PropHunt.Game.Flow;
 using PropHunt.UI;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace Tests.EditMode.UI
 {
@@ -14,23 +15,24 @@ namespace Tests.EditMode.UI
         {
             GameObject testObj = new GameObject();
             ChangeGamePhaseButton buttonPhase = testObj.AddComponent<ChangeGamePhaseButton>();
-            GameManager gameManager = testObj.AddComponent<GameManager>();
-            gameManager.playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Tests/EditMode/TestPlayer.prefab");
-            Assert.Throws<System.InvalidOperationException>(() => gameManager.Start());
+            GameManager.playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Tests/EditMode/TestPlayer.prefab");
             // Test exiting lobby while in or not in lobby phase
-            gameManager.ChangePhase(GamePhase.Lobby);
+            GameManager.ChangePhase(GamePhase.Lobby);
+            LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
             buttonPhase.ExitLobby();
-            gameManager.ChangePhase(GamePhase.Setup);
+            GameManager.ChangePhase(GamePhase.Setup);
             buttonPhase.ExitLobby();
             // Test exiting while in and not in game
-            gameManager.ChangePhase(GamePhase.InGame);
+            GameManager.ChangePhase(GamePhase.InGame);
             buttonPhase.ExitGame();
-            gameManager.ChangePhase(GamePhase.Lobby);
+            GameManager.ChangePhase(GamePhase.Lobby);
             buttonPhase.ExitGame();
             // Test exiting while in and not in score
-            gameManager.ChangePhase(GamePhase.Score);
+            GameManager.ChangePhase(GamePhase.Score);
+            LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
+            LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
             buttonPhase.ExitScore();
-            gameManager.ChangePhase(GamePhase.Lobby);
+            GameManager.ChangePhase(GamePhase.Lobby);
             buttonPhase.ExitScore();
 
             GameObject.DestroyImmediate(testObj);

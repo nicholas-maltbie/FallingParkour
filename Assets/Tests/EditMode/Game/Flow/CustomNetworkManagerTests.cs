@@ -21,6 +21,7 @@ namespace Tests.EditMode.Game.Flow
             Transport.activeTransport = go.AddComponent<MemoryTransport>();
             networkManager = go.AddComponent<CustomNetworkManager>();
             networkManager.playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Tests/EditMode/TestPlayer.prefabs");
+            networkManager.Awake();
 
             networkManager.StartHost();
 
@@ -43,12 +44,8 @@ namespace Tests.EditMode.Game.Flow
         public void TestSingletonBehaviour()
         {
             LogAssert.ignoreFailingMessages = true;
-            base.networkManager.Start();
-            base.networkManager.Start();
-
-            // Verify delete behaviour
-            IEnumerator enumerator = base.networkManager.DestorySelf();
-            while (enumerator.MoveNext()) { }
+            base.networkManager.Awake();
+            base.networkManager.Awake();
         }
 
         [Test]
@@ -58,6 +55,31 @@ namespace Tests.EditMode.Game.Flow
             CustomNetworkManager.OnPlayerConnect += (object sender, PlayerConnectEvent connectEvent) => { connects++; };
             this.networkManager.OnServerReady(NetworkClient.connection);
             Assert.IsTrue(connects == 1);
+        }
+
+        [Test]
+        public void TestStateChangeNotServer()
+        {
+            NetworkServer.Shutdown();
+            base.networkManager.Update();
+        }
+
+        [Test]
+        public void TestStateChangeAsServer()
+        {
+            base.networkManager.Update();
+            LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
+            GameManager.ChangePhase(GamePhase.Setup);
+            while (GameManager.gamePhase == GamePhase.Setup)
+            {
+                base.networkManager.Update();
+            }
+            LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
+            GameManager.ChangePhase(GamePhase.Reset);
+            while (GameManager.gamePhase == GamePhase.Reset)
+            {
+                base.networkManager.Update();
+            }
         }
 
         [Test]

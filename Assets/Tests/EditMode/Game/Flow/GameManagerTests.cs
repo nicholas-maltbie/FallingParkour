@@ -9,18 +9,14 @@ using UnityEngine.TestTools;
 
 namespace Tests.EditMode.Game.Flow
 {
+    [TestFixture]
     public class GameManagerTests : CustomNetworkManagerTestBase
     {
-        GameManager gameManager;
-
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
-            GameObject go = new GameObject();
-            gameManager = go.AddComponent<GameManager>();
-            gameManager.playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Tests/EditMode/TestPlayer.prefab");
-            Assert.Throws<System.InvalidOperationException>(() => gameManager.Start());
+            GameManager.playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Tests/EditMode/TestPlayer.prefab");
         }
 
         [TearDown]
@@ -28,68 +24,36 @@ namespace Tests.EditMode.Game.Flow
         {
             LogAssert.ignoreFailingMessages = true;
             base.TearDown();
-            gameManager.OnDestory();
-            GameObject.DestroyImmediate(gameManager.gameObject);
+            GameManager.playerPrefab = null;
         }
 
         [Test]
-        public void TestSetupBehaviour()
+        public void HandleVariousPhaseChanges()
         {
-            // Duplicate setup
-            gameManager.Start();
-        }
-
-        [Test]
-        public void HandlePlayerConnectInLobbyTest()
-        {
-            // Test connecting durring lobby phase
-            gameManager.ChangePhase(GamePhase.Lobby);
-            gameManager.HandlePlayerConnect(null, new PlayerConnectEvent(
-                NetworkServer.connections[0]
-            ));
-        }
-
-        [Test]
-        public void HandlePlayerConnectInGameTest()
-        {
-            LogAssert.ignoreFailingMessages = true;
-            // Evaluate connecting during in game phase
-            gameManager.ChangePhase(GamePhase.InGame);
-            gameManager.HandlePlayerConnect(null, new PlayerConnectEvent(
-                NetworkServer.connections[0]
-            ));
-        }
-
-        [Test]
-        public void HandleVariousStateTransitions()
-        {
-            LogAssert.ignoreFailingMessages = true;
-
-            gameManager.ChangePhase(GamePhase.Lobby);
-            gameManager.Update();
-
+            GameManager.HandleGamePhaseChange(this, new GamePhaseChange(GamePhase.Lobby, GamePhase.Lobby));
             LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
-            gameManager.ChangePhase(GamePhase.Setup);
-            gameManager.Update();
-
-            gameManager.ChangePhase(GamePhase.InGame);
-            gameManager.Update();
-
-            gameManager.ChangePhase(GamePhase.Score);
-            gameManager.Update();
-
+            GameManager.HandleGamePhaseChange(this, new GamePhaseChange(GamePhase.Lobby, GamePhase.Setup));
+            GameManager.HandleGamePhaseChange(this, new GamePhaseChange(GamePhase.Lobby, GamePhase.InGame));
+            GameManager.HandleGamePhaseChange(this, new GamePhaseChange(GamePhase.Lobby, GamePhase.Score));
             LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
-            gameManager.ChangePhase(GamePhase.Reset);
-            gameManager.Update();
+            GameManager.HandleGamePhaseChange(this, new GamePhaseChange(GamePhase.Lobby, GamePhase.Reset));
         }
 
         [Test]
-        public void TestNonActiveServer()
+        public void SpawnCharacterOnJoin()
         {
-            NetworkServer.Shutdown();
+            GameManager.ChangePhase(GamePhase.InGame);
+            GameManager.HandlePlayerConnect(this, new PlayerConnectEvent(NetworkServer.connections[0]));
+        }
 
-            gameManager.ChangePhase(GamePhase.Lobby);
-            gameManager.Update();
+        [Test]
+        public void HandleSpawningCharacter()
+        {
+            NetworkConnection conn = NetworkServer.connections[0];
+            IEnumerator spawnCharacter = GameManager.SpawnPlayerCharacter(conn);
+            conn.isReady = false;
+            int i = 0;
+            while (spawnCharacter.MoveNext()) { i++; conn.isReady = i > 10; }
         }
     }
 }

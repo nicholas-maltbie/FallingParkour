@@ -81,19 +81,19 @@ namespace PropHunt.UI
             // only on state changes
             if (currentState != previousNetworkState)
             {
-                if (currentState == NetworkState.Offline)
+                if (currentState == NetworkState.Offline && this.offlineScreen != null)
                 {
                     UIManager.RequestNewScreen(this, this.offlineScreen.name);
                 }
-                else if (currentState == NetworkState.Connecting)
+                else if (currentState == NetworkState.Connecting && this.connectingScreen != null)
                 {
                     UIManager.RequestNewScreen(this, this.connectingScreen.name);
                 }
-                else if (currentState == NetworkState.Online)
+                else if (currentState == NetworkState.Online && this.onlineScreen != null)
                 {
                     UIManager.RequestNewScreen(this, this.onlineScreen.name);
                 }
-                else if (currentState == NetworkState.ServerOnly)
+                else if (currentState == NetworkState.ServerOnly && this.serverScreen != null)
                 {
                     UIManager.RequestNewScreen(this, this.serverScreen.name);
                 }

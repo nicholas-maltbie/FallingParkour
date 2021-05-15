@@ -4,6 +4,7 @@ using PropHunt.Game.Communication;
 using System;
 using PropHunt.Utils;
 using PropHunt.Prop;
+using System.Collections;
 
 namespace PropHunt.Game.Flow
 {
@@ -46,56 +47,31 @@ namespace PropHunt.Game.Flow
     /// <summary>
     /// Game manager for managing phases of the game
     /// </summary>
-    public class GameManager : MonoBehaviour
+    public static class GameManager
     {
         public static event EventHandler<GamePhaseChange> OnGamePhaseChange;
 
-        public GamePhase gamePhase;
+        public static GamePhase gamePhase { get; private set; }
 
-        /// <summary>
-        /// How long have we been in the current phase
-        /// </summary>
-        public float phaseTime;
+        public static float phaseStart;
 
-        private CustomNetworkManager networkManager;
+        public static GameObject playerPrefab;
 
-        public GameObject playerPrefab;
+        public static IUnityService unityService = new UnityService();
 
-        public IUnityService unityService = new UnityService();
-
-        public INetworkService networkService = new NetworkService(null);
-
-        public static GameManager Instance;
-
-        public void Start()
+        public static void SetupHooks()
         {
-            if (GameManager.Instance == null)
-            {
-                GameManager.Instance = this;
-            }
-            else
-            {
-                return;
-            }
             CustomNetworkManager.OnPlayerConnect += HandlePlayerConnect;
             OnGamePhaseChange += HandleGamePhaseChange;
-
-            this.networkManager = GameObject.FindObjectOfType<CustomNetworkManager>();
-
-            if (!NetworkClient.prefabs.ContainsValue(playerPrefab))
-            {
-                NetworkClient.RegisterPrefab(playerPrefab);
-            }
-            DontDestroyOnLoad(gameObject);
         }
 
-        public void OnDestory()
+        public static void DisableHooks()
         {
             CustomNetworkManager.OnPlayerConnect -= HandlePlayerConnect;
-            Instance = null;
+            OnGamePhaseChange -= HandleGamePhaseChange;
         }
 
-        public void HandlePlayerConnect(object sender, PlayerConnectEvent joinEvent)
+        public static void HandlePlayerConnect(object sender, PlayerConnectEvent joinEvent)
         {
             // If in game, spawn a player for them... debug behaviour yay
             if (gamePhase == GamePhase.InGame || gamePhase == GamePhase.Score)
@@ -106,65 +82,29 @@ namespace PropHunt.Game.Flow
             }
         }
 
-        public void ChangePhase(GamePhase newPhase)
+        public static void ChangePhase(GamePhase newPhase)
         {
             GamePhaseChange changeEvent = new GamePhaseChange(gamePhase, newPhase);
-            OnGamePhaseChange?.Invoke(this, changeEvent);
             gamePhase = newPhase;
+            OnGamePhaseChange?.Invoke(null, changeEvent);
         }
 
-        public void Update()
+        public static IEnumerator SpawnPlayerCharacter(NetworkConnection conn)
         {
-            if (!networkService.activeNetworkServer)
+            yield return null;
+            while (!conn.isReady)
             {
-                return;
+                yield return null;
             }
-
-            // Increment current phase time
-            phaseTime += unityService.deltaTime;
-
-            switch (gamePhase)
-            {
-                // Do things differently based on phase
-                case GamePhase.Lobby:
-
-                    break;
-                case GamePhase.Setup:
-                    // Once loading is complete, go to InGame
-                    if (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone)
-                    {
-                        ChangePhase(GamePhase.InGame);
-                    }
-                    break;
-                case GamePhase.InGame:
-                    // Check for conditions to end in game phase
-                    //   i. Game timeout (time runs out)
-                    //  ii. Hunters win (enough props were caught)
-                    // iii. Props win (all props finished objectives)
-                    break;
-                case GamePhase.Score:
-                    // Display score screen to players
-                    //  End phase either when players have all hit continue or timeout has ocurred
-                    break;
-                case GamePhase.Reset:
-                    // Once laoding is complete, go to lobby
-                    if (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone)
-                    {
-                        ChangePhase(GamePhase.Lobby);
-                    }
-                    break;
-            }
+            GameObject newPlayer = GameObject.Instantiate(playerPrefab);
+            NetworkServer.DestroyPlayerForConnection(conn);
+            NetworkServer.AddPlayerForConnection(conn, newPlayer);
         }
 
-        public void HandleGamePhaseChange(object sender, GamePhaseChange change)
+        public static void HandleGamePhaseChange(object sender, GamePhaseChange change)
         {
-            if (!networkService.activeNetworkServer)
-            {
-                return;
-            }
-
             // Reset phase timer
-            phaseTime = 0;
+            phaseStart = unityService.time;
 
             // Handle whenever the game state changes
             switch (change.next)
@@ -176,7 +116,7 @@ namespace PropHunt.Game.Flow
                     break;
                 case GamePhase.Setup:
                     DebugChatLog.SendChatMessage(new ChatMessage("", "Entering Setup Phase"));
-                    networkManager.LoadGameScene();
+                    CustomNetworkManager.Instance.LoadGameScene();
                     // Once loading is complete, go to InGame
                     break;
                 case GamePhase.InGame:
@@ -184,9 +124,7 @@ namespace PropHunt.Game.Flow
                     // When in game starts, spawn a player for each connection
                     foreach (NetworkConnection conn in NetworkServer.connections.Values)
                     {
-                        GameObject newPlayer = GameObject.Instantiate(playerPrefab);
-                        NetworkServer.DestroyPlayerForConnection(conn);
-                        NetworkServer.AddPlayerForConnection(conn, newPlayer);
+                        SpawnPlayerCharacter(conn);
                     }
                     break;
                 case GamePhase.Score:
@@ -200,8 +138,7 @@ namespace PropHunt.Game.Flow
                         NetworkServer.DestroyPlayerForConnection(conn);
                     }
                     // Start loading the lobby scene
-                    UnityEngine.Debug.Log("Resetting game state back to lobby");
-                    networkManager.LoadLobbyScene();
+                    CustomNetworkManager.Instance.LoadLobbyScene();
                     // Once laoding is complete, go to lobby
                     break;
             }

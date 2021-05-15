@@ -7,11 +7,10 @@ namespace PropHunt.UI
     {
         public void ExitLobby()
         {
-            UnityEngine.Debug.Log($"{GameManager.Instance} {GameManager.Instance == null}");
             // If host and current phase is lobby, go to next phase
-            if (GameManager.Instance.gamePhase == GamePhase.Lobby)
+            if (GameManager.gamePhase == GamePhase.Lobby)
             {
-                GameManager.Instance.ChangePhase(GamePhase.Setup);
+                GameManager.ChangePhase(GamePhase.Setup);
             }
             else
             {
@@ -22,9 +21,9 @@ namespace PropHunt.UI
         public void ExitGame()
         {
             // If host and current phase is lobby, go to next phase
-            if (GameManager.Instance.gamePhase == GamePhase.InGame)
+            if (GameManager.gamePhase == GamePhase.InGame)
             {
-                GameManager.Instance.ChangePhase(GamePhase.Score);
+                GameManager.ChangePhase(GamePhase.Score);
             }
             else
             {
@@ -35,9 +34,9 @@ namespace PropHunt.UI
         public void ExitScore()
         {
             // If host and current phase is lobby, go to next phase
-            if (GameManager.Instance.gamePhase == GamePhase.Score)
+            if (GameManager.gamePhase == GamePhase.Score)
             {
-                GameManager.Instance.ChangePhase(GamePhase.Reset);
+                GameManager.ChangePhase(GamePhase.Reset);
             }
             else
             {

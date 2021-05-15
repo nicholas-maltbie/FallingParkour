@@ -184,6 +184,7 @@ MonoBehaviour:
   - {fileID: 245587927565386927, guid: cd466bba068e4af4885e6e346a44616a, type: 3}
   lobbyScene: Assets/Scenes/LobbyScene.unity
   gameScene: Assets/Scenes/BasicHouse.unity
+  gameManager: {fileID: 2564128500920165626, guid: a962043aad18d9e4ab2ce1363fff9b11, type: 3}
 --- !u!114 &8542409671753137159
 MonoBehaviour:
   m_ObjectHideFlags: 0

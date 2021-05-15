@@ -135,6 +135,37 @@ namespace Tests.EditMode.UI
         }
 
         [Test]
+        public void UIManagerLoadScreenOnEnable()
+        {
+            this.uiManager.screenPrefabs = new List<Canvas>();
+            GameObject screen1 = new GameObject();
+            screen1.name = "Screen 1";
+            GameObject screen2 = new GameObject();
+            screen2.name = "Screen 2";
+            this.uiManager.screenPrefabs.Add(screen1.AddComponent<Canvas>());
+            this.uiManager.screenPrefabs.Add(screen2.AddComponent<Canvas>());
+
+            this.uiManager.initialScreen = 0;
+
+            Assert.Throws<System.InvalidOperationException>(() => this.uiManager.Start());
+
+            LoadScreenOnEnable loadOnEnable = new GameObject().AddComponent<LoadScreenOnEnable>();
+
+            Assert.IsTrue(this.uiManager.CurrentScreen == "Screen 1");
+            loadOnEnable.selectedScreen = screen2;
+
+            // Simulate enabling the object
+            loadOnEnable.OnEnable();
+
+            // Ensure loaded screen is correct
+            Assert.IsTrue(this.uiManager.CurrentScreen == "Screen 2");
+
+            GameObject.DestroyImmediate(screen1);
+            GameObject.DestroyImmediate(screen2);
+            GameObject.DestroyImmediate(loadOnEnable);
+        }
+
+        [Test]
         public void UIManagerSetupCorrectlyAndSetScreens()
         {
             this.uiManager.screenPrefabs = new List<Canvas>();
