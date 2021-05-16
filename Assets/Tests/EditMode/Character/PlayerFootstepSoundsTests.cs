@@ -1,4 +1,5 @@
 using System.Linq;
+using Mirror;
 using Mirror.Tests.RemoteAttributeTest;
 using Moq;
 using NUnit.Framework;

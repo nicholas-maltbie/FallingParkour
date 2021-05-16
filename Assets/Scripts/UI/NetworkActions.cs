@@ -1,4 +1,5 @@
 using Mirror;
+using PropHunt.Character;
 using PropHunt.Game.Communication;
 using PropHunt.Utils;
 using UnityEngine;
@@ -33,6 +34,13 @@ namespace PropHunt.UI
 
         public void StartHost()
         {
+            // Check if player has valid username
+            if (!CharacterNameManagement.HasValidPlayerName())
+            {
+                DebugChatLog.AddInfoMessage("Must have valid player name must be between 2 and 16 alpha-numeric characters before starting host");
+                return;
+            }
+
             // Server + Client
             // Make sure to not host on web player, web player can't host I think...
             if (Application.platform != RuntimePlatform.WebGLPlayer && Initialized())
@@ -44,6 +52,13 @@ namespace PropHunt.UI
 
         public void StartClient()
         {
+            // Check if player has valid username
+            if (!CharacterNameManagement.HasValidPlayerName())
+            {
+                DebugChatLog.AddInfoMessage("Must have valid player name must be between 2 and 16 alpha-numeric characters before joining game");
+                return;
+            }
+
             if (Initialized())
             {
                 manager.networkAddress = connectAddress.text.Trim();

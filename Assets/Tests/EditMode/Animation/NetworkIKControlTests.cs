@@ -21,7 +21,10 @@ namespace Tests.EditMode.Animation
             Mock<INetworkService> networkServiceMock = new Mock<INetworkService>();
             ikControl.Start();
             networkIKControl.controller = ikControl;
+
             networkIKControl.Awake();
+            networkIKControl.OnStartClient();
+            networkIKControl.OnStartServer();
             networkIKControl.networkService = networkServiceMock.Object;
 
             NetworkConnectionToClient connectionToClient = NetworkServer.connections[0];

@@ -1,4 +1,3 @@
-using System.Collections;
 using Mirror;
 using Mirror.Tests;
 using NUnit.Framework;
@@ -16,7 +15,9 @@ namespace Tests.EditMode.Game.Flow
         [SetUp]
         public virtual void SetUp()
         {
+#if UNITY_EDITOR
             var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
+#endif
             GameObject go = new GameObject();
             Transport.activeTransport = go.AddComponent<MemoryTransport>();
             networkManager = go.AddComponent<CustomNetworkManager>();
@@ -25,7 +26,10 @@ namespace Tests.EditMode.Game.Flow
 
             networkManager.StartHost();
 
-            NetworkClient.Ready();
+            if (!NetworkClient.ready)
+            {
+                NetworkClient.Ready();
+            }
         }
 
         [TearDown]
@@ -44,8 +48,16 @@ namespace Tests.EditMode.Game.Flow
         public void TestSingletonBehaviour()
         {
             LogAssert.ignoreFailingMessages = true;
-            base.networkManager.Awake();
-            base.networkManager.Awake();
+            this.networkManager.Awake();
+        }
+
+        [Test]
+        public void TestEventFlow()
+        {
+            this.networkManager.OnStartClient();
+            this.networkManager.OnStartServer();
+            this.networkManager.OnStopClient();
+            this.networkManager.OnStopServer();
         }
 
         [Test]
@@ -55,40 +67,6 @@ namespace Tests.EditMode.Game.Flow
             CustomNetworkManager.OnPlayerConnect += (object sender, PlayerConnectEvent connectEvent) => { connects++; };
             this.networkManager.OnServerReady(NetworkClient.connection);
             Assert.IsTrue(connects == 1);
-        }
-
-        [Test]
-        public void TestStateChangeNotServer()
-        {
-            NetworkServer.Shutdown();
-            base.networkManager.Update();
-        }
-
-        [Test]
-        public void TestStateChangeAsServer()
-        {
-            base.networkManager.Update();
-            LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
-            GameManager.ChangePhase(GamePhase.Setup);
-            while (GameManager.gamePhase == GamePhase.Setup)
-            {
-                base.networkManager.Update();
-            }
-            LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
-            GameManager.ChangePhase(GamePhase.Reset);
-            while (GameManager.gamePhase == GamePhase.Reset)
-            {
-                base.networkManager.Update();
-            }
-        }
-
-        [Test]
-        public void TestLoadScene()
-        {
-            LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
-            this.networkManager.LoadLobbyScene();
-            LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
-            this.networkManager.LoadGameScene();
         }
     }
 }

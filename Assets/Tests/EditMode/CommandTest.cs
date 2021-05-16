@@ -23,7 +23,10 @@ namespace Mirror.Tests.RemoteAttributeTest
             NetworkServer.localConnection.isAuthenticated = true;
             NetworkClient.connection.isAuthenticated = true;
 
-            ClientScene.Ready(NetworkClient.connection);
+            if (!NetworkClient.ready)
+            {
+                NetworkClient.Ready();
+            }
         }
 
         [TearDown]

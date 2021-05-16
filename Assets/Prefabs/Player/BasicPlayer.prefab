@@ -27,6 +27,7 @@ GameObject:
   - component: {fileID: 7122104008381147}
   - component: {fileID: 5860327242025993134}
   - component: {fileID: -1222635204622539188}
+  - component: {fileID: 3584596455403864377}
   m_Layer: 0
   m_Name: BasicPlayer
   m_TagString: Untagged
@@ -400,6 +401,21 @@ MonoBehaviour:
   maxPitchRange: 1.15
   maxFootstepSoundDelay: 0.75
   minFootstepSoundDelay: 0.25
+--- !u!114 &3584596455403864377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245587927565386927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb864185cc1837e40a8b45affc6a65f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  characterName: Player
 --- !u!1 &886816266439757742
 GameObject:
   m_ObjectHideFlags: 0

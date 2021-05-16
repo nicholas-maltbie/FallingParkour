@@ -9,6 +9,7 @@ using PropHunt.Utils;
 using Tests.Common.Utils;
 using Mirror.Tests;
 using UnityEngine.UI;
+using PropHunt.Character;
 
 namespace Tests.EditMode.UI
 {
@@ -29,6 +30,9 @@ namespace Tests.EditMode.UI
 #if UNITY_EDITOR
             var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
 #endif
+            // Setup defalt player name
+            CharacterNameManagement.playerName = "Player";
+
             GameObject networkActionsGo = new GameObject();
             this.networkActions = networkActionsGo.AddComponent<NetworkActions>();
             // Setup connect address
@@ -54,6 +58,19 @@ namespace Tests.EditMode.UI
         {
             GameObject.DestroyImmediate(this.networkActions.gameObject);
             yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator StartActionsWithInvalidName()
+        {
+            CharacterNameManagement.playerName = "";
+            this.networkActions.StartClient();
+            yield return new WaitClientActiveState(true, newTimeout: 1);
+            Assert.IsFalse(NetworkClient.active);
+
+            this.networkActions.StartHost();
+            yield return new WaitClientActiveState(true, newTimeout: 1);
+            Assert.IsFalse(NetworkClient.active);
         }
 
         [UnityTest]

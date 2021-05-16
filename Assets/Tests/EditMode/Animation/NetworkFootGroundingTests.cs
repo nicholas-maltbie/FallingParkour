@@ -32,9 +32,11 @@ namespace Tests.EditMode.Animation
 
             networkServiceMock.Setup(e => e.isServer).Returns(true);
             networkFootGrounding.Start();
+            ProcessMessages();
 
             networkServiceMock.Setup(e => e.isServer).Returns(false);
             networkFootGrounding.SetFootGroundedState(true);
+            ProcessMessages();
 
             GameObject.DestroyImmediate(playerObj);
         }
