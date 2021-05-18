@@ -9797,11 +9797,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 052d599a015141b47a4d10676f2dac29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useAllProbeBoxes: 0
+  useAllProbeBoxes: 1
   probeBoxes: []
-  bakedProbeNames: []
-  bakedProbeDataSizes: 
-  bakedDataSize: 0
+  bakedProbeNames:
+  - ProbeBox
+  bakedProbeDataSizes: f4768600
+  bakedDataSize: 8812276
   bakedStatsFoldout: 1
   bakeToggle: 1
   currentStaticListenerNode: {fileID: 0}
@@ -39880,7 +39881,7 @@ MonoBehaviour:
   heightAboveFloor: 1.5
   maxNumTriangles: 64
   maxOctreeDepth: 2
-  dataSize: 4735172
+  dataSize: 13562056
   probeSpherePoints:
   - -9.999999
   - 8.2
@@ -47193,6 +47194,11 @@ MonoBehaviour:
       identifier: -2136302728
       type: 0
     size: 4690872
+  - name: reverb
+    identifier:
+      identifier: 0
+      type: 2
+    size: 8812276
 --- !u!43 &2008395537
 Mesh:
   m_ObjectHideFlags: 0
@@ -49534,7 +49540,7 @@ MonoBehaviour:
   bakedProbeDataSizes: b8934700
   bakedDataSize: 4690872
   bakedStatsFoldout: 1
-  bakeToggle: 1
+  bakeToggle: 0
   bakedDataIdentifier:
     identifier: -2136302728
     type: 0
