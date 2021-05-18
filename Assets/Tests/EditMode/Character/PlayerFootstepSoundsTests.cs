@@ -47,6 +47,7 @@ namespace Tests.EditMode.Character
             footGrounded = playerGo.AddComponent<PlayerFootGrounded>();
 
             footstepSounds = playerGo.AddComponent<PlayerFootstepSounds>();
+            footstepSounds.Awake();
 
             footstepSounds.footGrounded = footGrounded;
 

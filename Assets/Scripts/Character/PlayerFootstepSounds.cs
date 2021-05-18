@@ -62,9 +62,13 @@ namespace PropHunt.Character
         public INetworkService networkService;
         public IUnityService unityService = new UnityService();
 
-        public void Start()
+        public void Awake()
         {
             this.networkService = new NetworkService(this);
+        }
+
+        public void Start()
+        {
             this.kcc = GetComponent<KinematicCharacterController>();
             footGrounded.PlayerFootstep += HandleFootstepEvent;
         }
