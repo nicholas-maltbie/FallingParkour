@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using kcp2k;
 using Mirror;
 using Mirror.FizzySteam;
+using PropHunt.Game.Flow;
 using PropHunt.Utils;
 using UnityEngine;
 
@@ -35,14 +36,14 @@ namespace PropHunt.UI
         public MultiplayerMode currentMode = MultiplayerMode.KcpTransport;
 
         /// <summary>
-        /// Settings selected for KcpTransport
+        /// Prefab of settings for KcpTransport
         /// </summary>
-        public KcpTransport kcpTransportSettings;
+        public GameObject kcpTransportPrefab;
 
         /// <summary>
-        /// Settings selected for FizzySteamworks
+        /// Prefab of settings for FizzySteamworks
         /// </summary>
-        public FizzySteamworks fizzySteamworksSettings;
+        public GameObject fizzySteamworksPrefab;
 
         /// <summary>
         /// Lookup from transport type to transport settings
@@ -56,17 +57,29 @@ namespace PropHunt.UI
 
         public void Start()
         {
-            // Set main instance
-            ToggleTransport.Instance = this;
+            if (ToggleTransport.Instance == null)
+            {
+                // Set main instance
+                ToggleTransport.Instance = this;
+            }
+            else
+            {
+                return;
+            }
 
             // setup a lookup table to link the currently available multiplayer modes
             //  to their enum type in code
             this.transportSettingsLookup = new Dictionary<MultiplayerMode, Transport>();
-            this.transportSettingsLookup[MultiplayerMode.FizzySteamworks] = this.fizzySteamworksSettings;
-            this.transportSettingsLookup[MultiplayerMode.KcpTransport] = this.kcpTransportSettings;
+            this.transportSettingsLookup[MultiplayerMode.FizzySteamworks] = GameObject.Instantiate(this.fizzySteamworksPrefab).GetComponent<FizzySteamworks>();
+            this.transportSettingsLookup[MultiplayerMode.KcpTransport] = GameObject.Instantiate(this.kcpTransportPrefab).GetComponent<KcpTransport>();
 
             // Un-parent fizzy steamworks because it leads to warning if not
-            this.fizzySteamworksSettings.transform.parent = null;
+            this.transportSettingsLookup[MultiplayerMode.KcpTransport].transform.parent = transform;
+            this.transportSettingsLookup[MultiplayerMode.FizzySteamworks].transform.parent = transform;
+
+            // Set active state to false
+            this.transportSettingsLookup[MultiplayerMode.KcpTransport].gameObject.SetActive(false);
+            this.transportSettingsLookup[MultiplayerMode.FizzySteamworks].gameObject.SetActive(false);
 
             // Setup initial mode
             SetMultiplayerMode(this.currentMode, forceUpdate: true);
