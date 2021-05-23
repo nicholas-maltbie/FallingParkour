@@ -42,6 +42,19 @@ namespace Tests.EditMode.Environment.Sound
             LabeledSFX byType = library.GetSFXClipBySoundType(SoundType.Hit);
             Assert.IsTrue(byType == glassHit || byType == concreteHit);
             Assert.IsTrue(library.GetSFXClipBySoundMaterialAndType(SoundMaterial.Concrete, SoundType.Hit) == concreteHit);
+
+            // Test the various lookup functions
+            Assert.IsTrue(library.HasSoundEffect("testSound1"));
+            Assert.IsFalse(library.HasSoundEffect("sound not in the library"));
+
+            Assert.IsTrue(library.HasSoundEffect(SoundMaterial.Glass));
+            Assert.IsFalse(library.HasSoundEffect(SoundMaterial.Misc));
+
+            Assert.IsTrue(library.HasSoundEffect(SoundType.Hit));
+            Assert.IsFalse(library.HasSoundEffect(SoundType.Misc));
+
+            Assert.IsTrue(library.HasSoundEffect(SoundMaterial.Glass, SoundType.Hit));
+            Assert.IsFalse(library.HasSoundEffect(SoundMaterial.Glass, SoundType.Misc));
         }
     }
 }

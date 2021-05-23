@@ -142,6 +142,49 @@ namespace PropHunt.Environment.Sound
         {
             return soundIdLookup[soundId];
         }
+
+        /// <summary>
+        /// Does this library contain any sound effects for a given material?
+        /// </summary>
+        /// <param name="soundMaterial">Sound material to lookup</param>
+        /// <returns>True if any sound effects have this material, false otherwise</returns>
+        public bool HasSoundEffect(SoundMaterial soundMaterial)
+        {
+            return soundMaterialLookup.ContainsKey(soundMaterial) && soundMaterialLookup[soundMaterial].Count > 0;
+        }
+
+        /// <summary>
+        /// Does this library contain any sound effects for a given sound type
+        /// </summary>
+        /// <param name="soundType">Sound type to lookup</param>
+        /// <returns>True if any sound effects have this type, false otherwise</returns>
+        public bool HasSoundEffect(SoundType soundType)
+        {
+            return soundTypeLookup.ContainsKey(soundType) && soundTypeLookup[soundType].Count > 0;
+        }
+
+
+        /// <summary>
+        /// Does this library contain any sound effects for a given sound material and type
+        /// </summary>
+        /// <param name="soundType">Sound type to lookup</param>
+        /// <param name="soundMaterial">Sound material to lookup</param>
+        /// <returns>True if any sound effects have this material and type, false otherwise</returns>
+        public bool HasSoundEffect(SoundMaterial soundMaterial, SoundType soundType)
+        {
+            return soundMaterialTypeLookup.ContainsKey(new Tuple<SoundMaterial, SoundType>(soundMaterial, soundType)) &&
+                soundMaterialTypeLookup[new Tuple<SoundMaterial, SoundType>(soundMaterial, soundType)].Count > 0;
+        }
+
+        /// <summary>
+        /// Does this library contain a sound effect with a given id
+        /// </summary>
+        /// <param name="soundId">Sound id to lookup</param>
+        /// <returns>True if there is a sound effect with this id, false otherwise</returns>
+        public bool HasSoundEffect(string soundId)
+        {
+            return soundIdLookup.ContainsKey(soundId);
+        }
     }
 
     /// <summary>
@@ -153,6 +196,7 @@ namespace PropHunt.Environment.Sound
         Wood,
         Metal,
         Concrete,
+        Water,
         Misc
     }
 
@@ -166,7 +210,8 @@ namespace PropHunt.Environment.Sound
         Scrape,
         Roll,
         Footstep,
-        Misc
+        Misc,
+        PropTransformation,
     }
 
     /// <summary>

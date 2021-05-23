@@ -11,6 +11,9 @@ namespace Mirror.Tests.RemoteAttributeTest
         [SetUp]
         public virtual void SetUp()
         {
+#if UNITY_EDITOR
+            var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
+#endif
             Transport.activeTransport = new GameObject().AddComponent<MemoryTransport>();
 
             // start server/client

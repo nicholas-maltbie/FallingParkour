@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3612603010206716569}
   - component: {fileID: 3612603010206716575}
   - component: {fileID: 3612603010206716568}
+  - component: {fileID: 351090567}
   m_Layer: 0
   m_Name: SoundEffectManager
   m_TagString: Untagged
@@ -64,3 +65,19 @@ MonoBehaviour:
   soundEffectLibrary: {fileID: 11400000, guid: 6160c822f896c8b48a0984426a3d9bf2, type: 2}
   soundEffectPrefab: {fileID: 1268714253140809689, guid: 2f7a7edc6502fd241b43262a6a996867, type: 3}
   audioMixer: {fileID: 24100000, guid: 447bcbade0387f642bb6a6663dd979ce, type: 2}
+  maxSFXSources: 64
+--- !u!114 &351090567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3612603010206716570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a4877dbfe6f0f1418d4606d0751f529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxVolume: 1
+  minPitch: 0.75
+  maxPitch: 1.25

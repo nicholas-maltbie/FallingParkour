@@ -145,6 +145,7 @@ MonoBehaviour:
   disguiseVisual: {fileID: 870885988261750343, guid: b40ed299e93e07e438c7e7926a23cacd, type: 3}
   disguiseCollider: {fileID: 1421276817065654402}
   cameraOffset: {x: 0, y: 0, z: 0}
+  transformationMaterialSound: 4
 --- !u!114 &1421276817065654428
 MonoBehaviour:
   m_ObjectHideFlags: 0
