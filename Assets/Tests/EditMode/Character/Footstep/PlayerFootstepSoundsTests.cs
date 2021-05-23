@@ -5,13 +5,14 @@ using Moq;
 using NUnit.Framework;
 using PropHunt.Animation;
 using PropHunt.Character;
+using PropHunt.Character.Footstep;
 using PropHunt.Environment.Sound;
 using PropHunt.Utils;
 using Tests.EditMode.Environment.Sound;
 using UnityEditor;
 using UnityEngine;
 
-namespace Tests.EditMode.Character
+namespace Tests.EditMode.Character.Footstep
 {
     /// <summary>
     /// Tests to verify behaviour of player footstep sound tests
@@ -140,6 +141,21 @@ namespace Tests.EditMode.Character
             Assert.IsTrue(manager.UsedSources == 1);
 
             GameObject.DestroyImmediate(floor);
+        }
+
+        [Test]
+        public void TestPlayAttachedSound()
+        {
+            AttachedFootstepSound attached = footstepSounds.gameObject.AddComponent<AttachedFootstepSound>();
+            attached.audioSource = footstepSounds.gameObject.AddComponent<AudioSource>();
+
+            attached.PlayFootstepSound(new SoundEffectEvent
+            {
+                volume = 1.0f,
+                pitchValue = 1.0f,
+                sfxId = SoundEffectManager.Instance.soundEffectLibrary.GetSFXClipBySoundType(SoundType.Footstep).soundId,
+            });
+            Assert.IsTrue(attached.audioSource.isPlaying);
         }
 
         [Test]

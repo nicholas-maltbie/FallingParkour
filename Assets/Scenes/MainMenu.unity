@@ -470,7 +470,7 @@ MonoBehaviour:
     IrradianceMinDistance: 1
   updateComponents: 1
   currentAudioListener: {fileID: 0}
-  showLoadTimeOptions: 0
+  showLoadTimeOptions: 1
   showMassBakingOptions: 0
   layerMask:
     serializedVersion: 2

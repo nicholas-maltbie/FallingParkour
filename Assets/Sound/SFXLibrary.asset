@@ -29,3 +29,7 @@ MonoBehaviour:
     soundType: 4
     audioClip: {fileID: 8300000, guid: aeca7bf0da453ff409533bce003459f0, type: 3}
     soundId: sfx-walk-concrete-shoes-right
+  - soundMaterial: 3
+    soundType: 2
+    audioClip: {fileID: 8300000, guid: 9dd1be827a78f2c43a56140282bb1d39, type: 3}
+    soundId: scrape-glass-test-1

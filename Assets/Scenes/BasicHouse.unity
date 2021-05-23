@@ -28839,7 +28839,7 @@ MonoBehaviour:
     AmbisonicsOrder: 1
     MaxSources: 32
     IrradianceMinDistance: 1
-  updateComponents: 0
+  updateComponents: 1
   currentAudioListener: {fileID: 0}
   showLoadTimeOptions: 1
   showMassBakingOptions: 1

@@ -19,10 +19,6 @@ namespace Tests.EditMode.Environment.Sound
         [SetUp]
         public override void SetUp()
         {
-            // Load up an empty scene
-#if UNITY_EDITOR
-            var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
-#endif
             base.SetUp();
             // Clear out all audio sources
             foreach (AudioSource source in GameObject.FindObjectsOfType<AudioSource>())

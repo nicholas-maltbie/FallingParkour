@@ -26,8 +26,8 @@ GameObject:
   - component: {fileID: 9146407159294641169}
   - component: {fileID: 7122104008381147}
   - component: {fileID: 5860327242025993134}
-  - component: {fileID: -1222635204622539188}
   - component: {fileID: 3584596455403864377}
+  - component: {fileID: 623292108012484}
   m_Layer: 0
   m_Name: BasicPlayer
   m_TagString: Untagged
@@ -380,27 +380,6 @@ MonoBehaviour:
   syncInterval: 0.1
   groundFeet: 1
   playerFootGrounded: {fileID: 6956521044681878227}
---- !u!114 &-1222635204622539188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 245587927565386927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e0b575595bd111479a47007728de4bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  footGrounded: {fileID: 6956521044681878227}
-  sprintVolume: 0.95
-  walkVolume: 0.45
-  minPitchRange: 0.85
-  maxPitchRange: 1.15
-  maxFootstepSoundDelay: 0.75
-  minFootstepSoundDelay: 0.25
 --- !u!114 &3584596455403864377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,7 +394,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  playerId: 0
   characterName: Player
+--- !u!114 &623292108012484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245587927565386927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe567c0785e30cf4c902b0fc7fa8504b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  sprintVolume: 0.95
+  walkVolume: 0.45
+  minPitchRange: 0.95
+  maxPitchRange: 1.05
+  maxFootstepSoundDelay: 0.75
+  minFootstepSoundDelay: 0.25
+  soundType: 4
+  footGrounded: {fileID: 6956521044681878227}
 --- !u!1 &886816266439757742
 GameObject:
   m_ObjectHideFlags: 0

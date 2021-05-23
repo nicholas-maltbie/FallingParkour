@@ -1,21 +1,14 @@
+
 using Mirror;
-using PropHunt.Animation;
 using PropHunt.Environment.Sound;
 using PropHunt.Utils;
 using UnityEngine;
 
-namespace PropHunt.Character
+namespace PropHunt.Character.Footstep
 {
-    /// <summary>
-    /// Create footstep sounds based on player animation
-    /// </summary>
     [RequireComponent(typeof(KinematicCharacterController))]
-    public class PlayerFootstepSounds : NetworkBehaviour
+    public class TimedPlayerFootstepSound : NetworkBehaviour
     {
-        /// <summary>
-        /// Foot grounded component for detecting footsteps
-        /// </summary>
-        public PlayerFootGrounded footGrounded;
 
         /// <summary>
         /// Kinematic character conttroller for player movement
@@ -57,7 +50,16 @@ namespace PropHunt.Character
         /// </summary>
         private float elapsedWalkingSilent = 0.0f;
 
-        private float lastFootstep = Mathf.NegativeInfinity;
+        /// <summary>
+        /// Time of the most recent footstep event
+        /// </summary>
+        protected float lastFootstep = Mathf.NegativeInfinity;
+
+        /// <summary>
+        /// Sound type for the footstep
+        /// </summary>
+        [SerializeField]
+        private SoundType soundType = SoundType.Footstep;
 
         public INetworkService networkService;
         public IUnityService unityService = new UnityService();
@@ -67,25 +69,39 @@ namespace PropHunt.Character
             this.networkService = new NetworkService(this);
         }
 
-        public void Start()
+        public virtual void Start()
         {
             this.kcc = GetComponent<KinematicCharacterController>();
-            footGrounded.PlayerFootstep += HandleFootstepEvent;
         }
 
-        private SoundMaterial GetSoundMaterial(GameObject gameObject)
+        protected void MakeFootstepAtPoint(Vector3 point, GameObject ground)
         {
-            return SoundMaterial.Concrete;
-        }
-
-        public void HandleFootstepEvent(object sender, FootstepEvent footstepEvent)
-        {
-            if (!networkService.isLocalPlayer || footstepEvent.state != FootstepState.Down || (unityService.time - lastFootstep) < minFootstepSoundDelay)
+            this.lastFootstep = unityService.time;
+            this.elapsedWalkingSilent = 0.0f;
+            SoundEffectEvent sfxEvent = new SoundEffectEvent
             {
-                return;
+                sfxId = SoundEffectManager.Instance.soundEffectLibrary.GetSFXClipBySoundMaterialAndType(
+                    GetSoundMaterial(ground),
+                    soundType).soundId,
+                point = point,
+                pitchValue = Random.Range(minPitchRange, maxPitchRange),
+                volume = kcc.Sprinting ? sprintVolume : walkVolume,
+                mixerGroup = "Footsteps"
+            };
+            PlayFootstepSound(sfxEvent);
+            if (this.networkService.isServer)
+            {
+                RpcCreateFootstepSound(sfxEvent);
             }
+            else
+            {
+                CmdCreateFootstepSound(sfxEvent);
+            }
+        }
 
-            MakeFootstepAtPoint(footstepEvent.footstepPosition, footstepEvent.floor);
+        public virtual void PlayFootstepSound(SoundEffectEvent sfxEvent)
+        {
+            SoundEffectManager.CreateSoundEffectAtPoint(sfxEvent);
         }
 
         public void Update()
@@ -100,10 +116,6 @@ namespace PropHunt.Character
             {
                 elapsedWalkingSilent += unityService.deltaTime;
             }
-            else
-            {
-                elapsedWalkingSilent = 0;
-            }
 
             if (elapsedWalkingSilent >= maxFootstepSoundDelay)
             {
@@ -111,29 +123,9 @@ namespace PropHunt.Character
             }
         }
 
-        private void MakeFootstepAtPoint(Vector3 point, GameObject ground)
+        protected SoundMaterial GetSoundMaterial(GameObject gameObject)
         {
-            lastFootstep = unityService.time;
-            elapsedWalkingSilent = 0.0f;
-            SoundEffectEvent sfxEvent = new SoundEffectEvent
-            {
-                sfxId = SoundEffectManager.Instance.soundEffectLibrary.GetSFXClipBySoundMaterialAndType(
-                    GetSoundMaterial(ground),
-                    SoundType.Footstep).soundId,
-                point = point,
-                pitchValue = Random.Range(minPitchRange, maxPitchRange),
-                volume = kcc.Sprinting ? sprintVolume : walkVolume,
-                mixerGroup = "Footsteps"
-            };
-            SoundEffectManager.CreateSoundEffectAtPoint(sfxEvent);
-            if (this.networkService.isServer)
-            {
-                RpcCreateFootstepSound(sfxEvent);
-            }
-            else
-            {
-                CmdCreateFootstepSound(sfxEvent);
-            }
+            return SoundMaterial.Concrete;
         }
 
         [Command]
@@ -149,7 +141,7 @@ namespace PropHunt.Character
             {
                 return;
             }
-            SoundEffectManager.CreateSoundEffectAtPoint(sfxEvent);
+            PlayFootstepSound(sfxEvent);
         }
     }
 }

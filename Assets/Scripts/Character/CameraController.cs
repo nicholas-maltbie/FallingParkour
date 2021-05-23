@@ -109,6 +109,12 @@ namespace PropHunt.Character
         /// </summary>
         public float CameraDistance { get; private set; }
 
+        /// <summary>
+        /// Source camera position in real world space, this is where the head of 
+        /// the player would be, where the camera zooms out from
+        /// </summary>
+        public Vector3 CameraSource => transform.TransformDirection(this.baseCameraOffset) + transform.position;
+
         public void Start()
         {
             this.networkService = new NetworkService(this);
@@ -153,7 +159,7 @@ namespace PropHunt.Character
             // Set the local position of the camera to be the current rotation projected
             //   backwards by the current distance of the camera from the player
             Vector3 cameraDirection = -cameraTransform.forward * this.currentDistance;
-            Vector3 cameraSource = transform.TransformDirection(this.baseCameraOffset) + transform.position;
+            Vector3 cameraSource = CameraSource;
 
             // Draw a line from our camera source in the camera direction. If the line hits anything that isn't us
             // Limit the distance by how far away that object is

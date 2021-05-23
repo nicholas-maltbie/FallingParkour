@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: -4343623551026766709}
   - component: {fileID: 5348990939057730075}
   - component: {fileID: 3403938823917133484}
+  - component: {fileID: 4870341166431718373}
   m_Layer: 8
   m_Name: PropPlayer
   m_TagString: Untagged
@@ -44,6 +45,7 @@ Transform:
   m_Children:
   - {fileID: 8130394144415267709}
   - {fileID: 4775831964603035018}
+  - {fileID: 8643105102554136625}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -137,7 +139,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  cameraTransform: {fileID: 8130394144415267709}
+  cameraController: {fileID: 0}
+  audioListener: {fileID: 0}
 --- !u!114 &4402717801493103246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,27 +311,28 @@ MonoBehaviour:
   groundedDistance: 0.01
   groundCheckDistance: 10
   maxWalkAngle: 60
-  maxBounces: 5
   gravity: {x: 0, y: -20, z: 0}
-  velocity: {x: 0, y: 0, z: 0}
-  jumpVelocity: 8
-  attemptingJump: 0
-  maxPushSpeed: 10
-  pushDecay: 0.9
-  anglePower: 0.5
-  verticalSnapDown: 0.35
-  onGround: 0
-  stepUpDepth: 0.1
-  verticalSnapUp: 0.3
-  distanceToGround: 0
-  surfaceNormal: {x: 0, y: 0, z: 0}
-  floor: {fileID: 0}
-  angle: 0
   movementSpeed: 5
   sprintSpeed: 6.5
+  jumpVelocity: 8
+  maxBounces: 5
+  pushDecay: 0.9
+  anglePower: 0.5
+  maxPushSpeed: 10
+  verticalSnapDown: 0.35
+  stepUpDepth: 0.1
+  verticalSnapUp: 0.3
+  snapBufferTime: 0.05
   inputMovement: {x: 0, y: 0, z: 0}
+  attemptingJump: 0
   isSprinting: 0
   elapsedFalling: 0
+  velocity: {x: 0, y: 0, z: 0}
+  distanceToGround: 0
+  onGround: 0
+  angle: 0
+  surfaceNormal: {x: 0, y: 0, z: 0}
+  floor: {fileID: 0}
 --- !u!114 &3403938823917133484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -343,7 +347,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  playerId: 0
   characterName: Player
+--- !u!114 &4870341166431718373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245587927565386927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6cd516e694681145957f47dbd9a4186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  sprintVolume: 0.95
+  walkVolume: 0.45
+  minPitchRange: 0.95
+  maxPitchRange: 1.05
+  maxFootstepSoundDelay: 1.5
+  minFootstepSoundDelay: 0.5
+  soundType: 2
+  audioSource: {fileID: 5645832213540187553}
 --- !u!1 &457463035878123438
 GameObject:
   m_ObjectHideFlags: 0
@@ -486,3 +513,174 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4653986574978292632
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8643105102554136625}
+  - component: {fileID: 5645832213540187553}
+  - component: {fileID: 5106665593262713246}
+  m_Layer: 8
+  m_Name: ScrapeSource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8643105102554136625
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4653986574978292632}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2691377025762807458}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &5645832213540187553
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4653986574978292632}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: -5889326568863306336, guid: 447bcbade0387f642bb6a6663dd979ce, type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 1
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &5106665593262713246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4653986574978292632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cc64aca77a4bc84f9a15ccd92d26878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  directBinaural: 1
+  interpolation: 0
+  physicsBasedAttenuation: 0
+  airAbsorption: 0
+  dipoleWeight: 0
+  dipolePower: 0
+  occlusionMode: 2
+  occlusionMethod: 0
+  sourceRadius: 1
+  occlusionSamples: 16
+  directMixLevel: 1
+  reflections: 0
+  indirectBinaural: 0
+  physicsBasedAttenuationForIndirect: 1
+  indirectMixLevel: 1
+  simulationType: 0
+  uniqueIdentifier: 
+  avoidSilenceDuringInit: 0
+  overrideHRTFIndex: 0
+  hrtfIndex: 0
+  bakingRadius: 16
+  useAllProbeBoxes: 0
+  probeBoxes: []
+  bakedProbeNames: []
+  bakedProbeDataSizes: 
+  bakedDataSize: 0
+  bakedStatsFoldout: 0
+  bakeToggle: 0
+  bakedDataIdentifier:
+    identifier: 0
+    type: 0
