@@ -13,6 +13,8 @@ namespace Tests.PlayMode.Character
         [UnityTest]
         public IEnumerator TestPlayerMoveForward()
         {
+            PlayerInputManager.playerMovementState = PlayerInputState.Allow;
+
             KinematicCharacterController characterMovement = GameObject.FindObjectOfType<KinematicCharacterController>();
             Vector3 forward = characterMovement.transform.forward;
             Vector3 start = characterMovement.transform.position;
@@ -21,10 +23,14 @@ namespace Tests.PlayMode.Character
             Mock<IUnityService> unityServiceMock = new Mock<IUnityService>();
             unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(1.0f);
             unityServiceMock.Setup(e => e.deltaTime).Returns(() => Time.deltaTime);
+            unityServiceMock.Setup(e => e.fixedDeltaTime).Returns(() => Time.fixedDeltaTime);
             characterMovement.unityService = unityServiceMock.Object;
 
-            // Move the character forward for 1 seconds
-            yield return new WaitForSeconds(1.0f);
+            yield return null;
+            yield return new WaitForFixedUpdate();
+
+            // Move the character forward for 2 seconds
+            yield return new WaitForSeconds(2.0f);
 
             // Assert that there is some positive movement along the forward axis
             Vector3 movement = characterMovement.transform.position - start;

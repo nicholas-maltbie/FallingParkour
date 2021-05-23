@@ -14,6 +14,7 @@ namespace Tests.EditMode.Utils
             unityService.GetButton("Jump");
             unityService.GetButtonDown("Jump");
             Assert.IsTrue(unityService.deltaTime >= 0.0f);
+            Assert.IsTrue(unityService.fixedDeltaTime >= 0.0f);
         }
     }
 }

@@ -58,7 +58,8 @@ namespace Tests.EditMode.Prop
         {
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
             this.kcc.gameObject.AddComponent<Rigidbody>();
-            this.kcc.inputMovement = Vector3.one;
+            this.unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(1.0f);
+            this.kcc.Update();
             this.kcc.FixedUpdate();
             Assert.IsTrue(this.kcc.transform.position == Vector3.zero);
         }
@@ -74,14 +75,19 @@ namespace Tests.EditMode.Prop
         [Test]
         public void TestDenyMovement()
         {
+            this.unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(1.0f);
+
             PlayerInputManager.playerMovementState = PlayerInputState.Deny;
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
-            this.kcc.inputMovement = Vector3.one;
+            this.kcc.Update();
             this.kcc.FixedUpdate();
+
             Assert.IsTrue(this.kcc.transform.position == Vector3.zero);
+
             PlayerInputManager.playerMovementState = PlayerInputState.Allow;
-            this.kcc.inputMovement = Vector3.one;
+            this.kcc.Update();
             this.kcc.FixedUpdate();
+
             Assert.IsTrue(this.kcc.transform.position == Vector3.zero);
         }
 
@@ -92,14 +98,14 @@ namespace Tests.EditMode.Prop
             this.unityServiceMock.Setup(e => e.GetAxis("Horizontal")).Returns(1.0f);
             this.unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(1.0f);
             this.kcc.Update();
-            Assert.IsTrue(this.kcc.inputMovement.magnitude <= 1.0f);
-            Assert.IsTrue(this.kcc.inputMovement.x == this.kcc.inputMovement.z);
+            Assert.IsTrue(this.kcc.InputMovement.magnitude <= 1.0f);
+            Assert.IsTrue(this.kcc.InputMovement.x == this.kcc.InputMovement.z);
             this.unityServiceMock.Setup(e => e.GetAxis("Horizontal")).Returns(1.0f);
             this.unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(0.0f);
             this.kcc.Update();
-            Assert.IsTrue(this.kcc.inputMovement.magnitude <= 1.0f);
-            Assert.IsTrue(this.kcc.inputMovement.x == 1.0f);
-            Assert.IsTrue(this.kcc.inputMovement.z == 0.0f);
+            Assert.IsTrue(this.kcc.InputMovement.magnitude <= 1.0f);
+            Assert.IsTrue(this.kcc.InputMovement.x == 1.0f);
+            Assert.IsTrue(this.kcc.InputMovement.z == 0.0f);
         }
 
         [Test]
@@ -108,6 +114,7 @@ namespace Tests.EditMode.Prop
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
             // When grounded
             this.unityServiceMock.Setup(e => e.deltaTime).Returns(1.0f);
+            this.unityServiceMock.Setup(e => e.fixedDeltaTime).Returns(1.0f);
             this.colliderCastMock.Setup(e => e.CastSelf(It.IsAny<Vector3>(), It.IsAny<float>())).Returns(
                 new ColliderCastHit
                 {
@@ -118,14 +125,16 @@ namespace Tests.EditMode.Prop
             );
             this.kcc.FixedUpdate();
             Assert.IsTrue(this.kcc.StandingOnGround);
-            Assert.IsTrue(!this.kcc.Falling);
+            Assert.IsFalse(this.kcc.Falling);
 
             // Allow player to attempt to jump
-            this.kcc.attemptingJump = true;
+            unityServiceMock.Setup(e => e.GetButton("Jump")).Returns(true);
+            this.kcc.Update();
             this.kcc.FixedUpdate();
 
             // Assert that we are jumping
-            Assert.IsTrue(Vector3.Project(this.kcc.velocity, -this.kcc.gravity).magnitude > 0);
+            UnityEngine.Debug.Log(this.kcc.Velocity);
+            Assert.IsTrue(Vector3.Project(this.kcc.Velocity, -this.kcc.gravity).magnitude > 0);
         }
 
         [Test]
@@ -135,6 +144,7 @@ namespace Tests.EditMode.Prop
 
             // When grounded
             this.unityServiceMock.Setup(e => e.deltaTime).Returns(1.0f);
+            this.unityServiceMock.Setup(e => e.fixedDeltaTime).Returns(1.0f);
             this.colliderCastMock.Setup(e => e.CastSelf(Vector3.down, this.kcc.groundCheckDistance)).Returns(
                 new ColliderCastHit
                 {
@@ -149,6 +159,7 @@ namespace Tests.EditMode.Prop
 
             // When on slope
             this.unityServiceMock.Setup(e => e.deltaTime).Returns(1.0f);
+            this.unityServiceMock.Setup(e => e.fixedDeltaTime).Returns(1.0f);
             this.colliderCastMock.Setup(e => e.CastSelf(Vector3.down, this.kcc.groundCheckDistance)).Returns(
                 new ColliderCastHit
                 {
@@ -163,6 +174,7 @@ namespace Tests.EditMode.Prop
 
             // When falling
             this.unityServiceMock.Setup(e => e.deltaTime).Returns(1.0f);
+            this.unityServiceMock.Setup(e => e.fixedDeltaTime).Returns(1.0f);
             this.colliderCastMock.Setup(e => e.CastSelf(Vector3.down, this.kcc.groundCheckDistance)).Returns(
                 new ColliderCastHit
                 {
@@ -193,6 +205,7 @@ namespace Tests.EditMode.Prop
             Collider overlapCollider = overlap.AddComponent<BoxCollider>();
 
             unityServiceMock.Setup(e => e.deltaTime).Returns(0.001f);
+            unityServiceMock.Setup(e => e.fixedDeltaTime).Returns(0.001f);
             // Setup overlapping
             this.colliderCastMock.Setup(e => e.GetOverlappingDirectional()).Returns(new ColliderCastHit[]{
                 new ColliderCastHit

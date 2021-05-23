@@ -21,6 +21,7 @@ namespace Tests.EditMode.Game.Flow
             GameObject go = new GameObject();
             Transport.activeTransport = go.AddComponent<MemoryTransport>();
             networkManager = go.AddComponent<CustomNetworkManager>();
+            networkManager.autoCreatePlayer = false;
             networkManager.playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Tests/EditMode/TestPlayer.prefabs");
             networkManager.Awake();
 

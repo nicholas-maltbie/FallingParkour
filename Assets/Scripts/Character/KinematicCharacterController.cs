@@ -18,16 +18,6 @@ namespace PropHunt.Character
         public const float MaxAngleShoveRadians = 90.0f;
 
         /// <summary>
-        /// Distance to ground at which player is considered grounded
-        /// </summary>
-        public float groundedDistance = 0.01f;
-
-        /// <summary>
-        /// Distance to check player distance to ground
-        /// </summary>
-        public float groundCheckDistance = 10f;
-
-        /// <summary>
         /// Mocked unity service for accessing inputs, delta time, and
         /// various other static unity inputs in a testable manner.
         /// </summary>
@@ -39,44 +29,79 @@ namespace PropHunt.Character
         public INetworkService networkService;
 
         /// <summary>
-        /// Maximum angle at which the player can walk (in degrees)
+        /// Collider cast component to abstract movement of player
         /// </summary>
-        public float maxWalkAngle = 60f;
+        public IColliderCast colliderCast;
+
+        [Header("Ground Checking")]
 
         /// <summary>
-        /// Maximum number of time player can bounce of walls/floors/objects during an update
+        /// Distance to ground at which player is considered grounded
         /// </summary>
-        public int maxBounces = 5;
+        [Tooltip("Distance from ground at which a player is considered standing on the ground")]
+        [SerializeField]
+        public float groundedDistance = 0.01f;
+
+        /// <summary>
+        /// Distance to check player distance to ground
+        /// </summary>
+        [Tooltip("Distance to draw rays down when checking if player is grounded")]
+        [SerializeField]
+        public float groundCheckDistance = 5f;
+
+        /// <summary>
+        /// Maximum angle at which the player can walk (in degrees)
+        /// </summary>
+        [Tooltip("Maximum angle at which the player can walk")]
+        [SerializeField]
+        [Range(0, 90)]
+        public float maxWalkAngle = 60f;
 
         /// <summary>
         /// Direction and strength of gravity
         /// </summary>
+        [Tooltip("Direction and strength of gravity in units per second squared")]
+        [SerializeField]
         public Vector3 gravity = new Vector3(0, -9.807f, 0);
 
+        [Header("Motion Settings")]
+
         /// <summary>
-        /// Current player velocity
+        /// Speed of player movement
         /// </summary>
-        public Vector3 velocity;
+        [Tooltip("Speed of player when walking")]
+        [SerializeField]
+        public float movementSpeed = 5.0f;
+
+        /// <summary>
+        /// Speed of player when sprinting
+        /// </summary>
+        [Tooltip("Speed of player when sprinting")]
+        [SerializeField]
+        public float sprintSpeed = 7.5f;
 
         /// <summary>
         /// Velocity of player jump in units per second
         /// </summary>
+        [Tooltip("Vertical velocity of player jump")]
+        [SerializeField]
         public float jumpVelocity = 5.0f;
 
         /// <summary>
-        /// Is the player attempting to jump
+        /// Maximum number of time player can bounce of walls/floors/objects during an update
         /// </summary>
-        public bool attemptingJump;
-
-        /// <summary>
-        /// Maximum distance the player can be pushed out of overlapping objects in units per second
-        /// </summary>
-        public float maxPushSpeed = 1.0f;
+        [Tooltip("Maximum number of bounces when a player is moving")]
+        [SerializeField]
+        [Range(1, 10)]
+        public int maxBounces = 5;
 
         /// <summary>
         /// Decay value of momentum when hitting another object.
         /// Should be between [0, 1]
         /// </summary>
+        [Tooltip("Decay in momentum when hitting another object")]
+        [SerializeField]
+        [Range(0, 1)]
         public float pushDecay = 0.9f;
 
         /// <summary>
@@ -85,48 +110,151 @@ namespace PropHunt.Character
         /// values between [0, 1] so values smaller than 1 create a positive
         /// curve and grater than 1 for a negative curve.
         /// </summary>
+        [Tooltip("Decrease in momentum when walking into objects (such as walls) at an angle as an exponential." +
+        "Values between [0, 1] so values smaller than 1 create a positive curve and grater than 1 for a negative curve")]
+        [SerializeField]
         public float anglePower = 0.5f;
+
+        /// <summary>
+        /// Maximum distance the player can be pushed out of overlapping objects in units per second
+        /// </summary>
+        [Tooltip("Maximum distance a player can be pushed when overlapping other objects in units per second")]
+        [SerializeField]
+        public float maxPushSpeed = 1.0f;
 
         /// <summary>
         /// Distance that the character can "snap down" vertical steps
         /// </summary>
+        [Tooltip("Snap down distance when snapping onto the floor")]
+        [SerializeField]
         public float verticalSnapDown = 0.2f;
 
-        /// <summary>
-        /// Was the player grounded this frame
-        /// </summary>
-        public bool onGround;
+        [Header("Stair and Step")]
 
         /// <summary>
         /// Minimum depth of a stair for a user to climb up
         /// (thinner steps than this value will not let the player climb)
         /// </summary>
+        [Tooltip("Minimum depth of stairs when climbing up steps")]
+        [SerializeField]
         public float stepUpDepth = 0.1f;
 
         /// <summary>
         /// Distance that the player can snap up when moving up stairs or vertical steps in terrain
         /// </summary>
+        [Tooltip("Maximum height of step the player can step up")]
+        [SerializeField]
         public float verticalSnapUp = 0.3f;
+
+        /// <summary>
+        /// Time in which the player can snap up or down steps even after starting to fall.
+        /// This property is useful to reduce the jerky stopping and moving effects when
+        /// going up or down cliffs.
+        /// </summary>
+        [Tooltip("Time in which the player can snap up or down steps even after starting to fall")]
+        [SerializeField]
+        public float snapBufferTime = 0.05f;
+
+        [Header("Player Input")]
+
+        /// <summary>
+        /// Player's given input movement for this frame
+        /// </summary>
+        [Tooltip("Current input movement provided by the player")]
+        [SerializeField]
+        private Vector3 inputMovement;
+
+        /// <summary>
+        /// Is the player attempting to jump
+        /// </summary>
+        [Tooltip("Current jump input from the player")]
+        [SerializeField]
+        private bool attemptingJump;
+
+        /// <summary>
+        /// Is the player sprinting
+        /// </summary>
+        [Tooltip("Current sprinting state of the player")]
+        [SerializeField]
+        private bool isSprinting;
+
+        [Header("Current Status")]
+
+        /// <summary>
+        /// How long has the player been falling
+        /// </summary>
+        [Tooltip("How long has the player been falling")]
+        [SerializeField]
+        private float elapsedFalling;
+
+        /// <summary>
+        /// Current player velocity
+        /// </summary>
+        [Tooltip("Current speed and direction of player motion")]
+        [SerializeField]
+        private Vector3 velocity;
+
+        [Header("Current Grounded State")]
 
         /// <summary>
         /// Current distance the player is from the ground
         /// </summary>
+        [Tooltip("Current distance the player is from the ground")]
+        [SerializeField]
         public float distanceToGround;
+
+        /// <summary>
+        /// Was the player grounded this frame
+        /// </summary>
+        [Tooltip("Is the player grounded this frame")]
+        [SerializeField]
+        public bool onGround;
+
+        /// <summary>
+        /// Angle between the ground and the player
+        /// </summary>
+        [Tooltip("Current angle between the ground and the player")]
+        [SerializeField]
+        public float angle;
 
         /// <summary>
         /// The surface normal vector of the ground the player is standing on
         /// </summary>
+        [Tooltip("Normal vector between player and ground")]
+        [SerializeField]
         public Vector3 surfaceNormal;
 
         /// <summary>
         /// What is the player standing on
         /// </summary>
+        [Tooltip("Current object the player is standing on")]
+        [SerializeField]
         public GameObject floor;
 
         /// <summary>
-        /// Angle between the ground and the player
+        /// Amount of time that has elapsed since the player's last jump action
         /// </summary>
-        public float angle;
+        private float elapsedSinceJump;
+
+        /// <summary>
+        /// Get the current player velocity
+        /// </summary>
+        public Vector3 Velocity => velocity;
+
+        /// <summary>
+        /// How long has the player been falling
+        /// </summary>
+        public float FallingTime => elapsedFalling;
+
+        /// <summary>
+        /// Is the player currently sprinting
+        /// </summary>
+        public bool Sprinting => isSprinting;
+
+        /// <summary>
+        /// Intended direction of movement provided by
+        /// </summary>
+        public Vector3 InputMovement => inputMovement;
 
         /// <summary>
         /// Is the player currently standing on the ground?
@@ -145,34 +273,14 @@ namespace PropHunt.Character
         public bool Falling => !StandingOnGround || angle > maxWalkAngle;
 
         /// <summary>
-        /// Collider cast component to abstract movement of player
+        /// Can a player snap down this frame, a player is only allowed to snap down
+        /// if they were standing on the ground this frame or was not falling within a given buffer time.
+        /// Additionally, a player must have not jumped within a small buffer time in order to
+        /// attempt the action of snapping down. This stops the player from teleporting into the ground right
+        /// as they start to jump.
         /// </summary>
-        public IColliderCast colliderCast;
-
-        /// <summary>
-        /// Speed of player movement
-        /// </summary>
-        public float movementSpeed = 5.0f;
-
-        /// <summary>
-        /// Speed of player when sprinting
-        /// </summary>
-        public float sprintSpeed = 7.5f;
-
-        /// <summary>
-        /// Player's given input movement for this frame
-        /// </summary>
-        public Vector3 inputMovement;
-
-        /// <summary>
-        /// Is the player sprinting
-        /// </summary>
-        public bool isSprinting;
-
-        /// <summary>
-        /// How long has the player been falling
-        /// </summary>
-        public float elapsedFalling;
+        /// <returns>If a player is allowed to snap down</returns>
+        private bool CanSnapDown => (StandingOnGround || elapsedFalling <= snapBufferTime) && (elapsedSinceJump >= snapBufferTime);
 
         public void Start()
         {
@@ -205,7 +313,7 @@ namespace PropHunt.Character
                 return;
             }
 
-            float deltaTime = unityService.deltaTime;
+            float deltaTime = unityService.fixedDeltaTime;
 
             // If player is not allowed to move, stop player movement
             if (PlayerInputManager.playerMovementState == PlayerInputState.Deny)
@@ -239,6 +347,11 @@ namespace PropHunt.Character
             if (!Falling && attemptingJump)
             {
                 velocity = this.jumpVelocity * -gravity.normalized;
+                elapsedSinceJump = 0.0f;
+            }
+            else
+            {
+                elapsedSinceJump += deltaTime;
             }
 
             // If the player is standing on the ground, project their movement onto the ground plane
@@ -256,7 +369,7 @@ namespace PropHunt.Character
 
             // if the player was standing on the ground at the start of the frame and is not 
             //    trying to jump right now, snap them down to the ground
-            if (StandingOnGround && !attemptingJump)
+            if (CanSnapDown)
             {
                 SnapPlayerDown();
             }
@@ -352,7 +465,7 @@ namespace PropHunt.Character
             ColliderCastHit snapHit = colliderCast.CastSelf(directionAfterSnap.normalized, Mathf.Max(stepUpDepth, momentum.magnitude));
 
             // If they can move without instantly hitting something, then snap them up
-            if (!Falling && snapHit.distance > Epsilon && (!snapHit.hit || snapHit.distance > stepUpDepth))
+            if ((!Falling || elapsedFalling <= snapBufferTime) && snapHit.distance > Epsilon && (!snapHit.hit || snapHit.distance > stepUpDepth))
             {
                 // Project rest of movement onto plane perpendicular to gravity
                 transform.position = currentPosition;
@@ -433,15 +546,13 @@ namespace PropHunt.Character
                 {
                     // Only apply angular change if hitting something
                     // Get angle between surface normal and remaining movement
-                    float angleBetween = Vector3.Angle(hit.normal, momentum);
+                    float angleBetween = Vector3.Angle(hit.normal, momentum) - 90.0f;
                     // Normalize angle between to be between 0 and 1
                     // 0 means no angle, 1 means 90 degree angle
                     angleBetween = Mathf.Min(MaxAngleShoveRadians, Mathf.Abs(angleBetween));
                     float normalizedAngle = angleBetween / MaxAngleShoveRadians;
-                    // Create angle factor using 1 / (1 + normalizedAngle)
-                    float angleFactor = 1.0f / (1.0f + normalizedAngle);
                     // Reduce the momentum by the remaining movement that ocurred
-                    momentum *= Mathf.Pow(angleFactor, anglePower);
+                    momentum *= Mathf.Pow(1 - normalizedAngle, anglePower);
                     // Rotate the remaining remaining movement to be projected along the plane 
                     // of the surface hit (emulate pushing against the object)
                     momentum = Vector3.ProjectOnPlane(momentum, planeNormal).normalized * momentum.magnitude;

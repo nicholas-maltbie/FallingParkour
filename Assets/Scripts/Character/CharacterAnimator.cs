@@ -60,17 +60,17 @@ namespace PropHunt.Character
                 return;
             }
 
-            bool jumping = kcc.velocity.y >= 0.1f;
-            bool falling = kcc.elapsedFalling >= fallingThreshold;
+            bool jumping = kcc.Velocity.y >= 0.1f;
+            bool falling = kcc.FallingTime >= fallingThreshold;
             bool jumpingOrFalling = jumping || falling;
-            bool moving = !jumpingOrFalling && kcc.inputMovement.magnitude > this.movementDeadZone;
+            bool moving = !jumpingOrFalling && kcc.InputMovement.magnitude > this.movementDeadZone;
 
             // Set animator fields based on information
-            animator.SetFloat("MoveX", kcc.inputMovement.x);
-            animator.SetFloat("MoveY", kcc.inputMovement.z);
+            animator.SetFloat("MoveX", kcc.InputMovement.x);
+            animator.SetFloat("MoveY", kcc.InputMovement.z);
             // Set moving if movement is greater than dead zone
             animator.SetBool("Moving", moving);
-            animator.SetBool("Sprinting", moving && kcc.isSprinting);
+            animator.SetBool("Sprinting", moving && kcc.Sprinting);
             // Set turning value based on turning direction
             animator.SetFloat("Rotation", cameraController.frameRotation > 0 ? 1 : -1);
             animator.SetBool("Turning", !moving && !jumpingOrFalling && Mathf.Abs(cameraController.frameRotation) > this.turningDeadZone);

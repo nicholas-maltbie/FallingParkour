@@ -14,6 +14,12 @@ namespace PropHunt.Utils
         float deltaTime { get; }
 
         /// <summary>
+        /// Get the current fixed delta time for physics based update
+        /// </summary>
+        /// <returns>the delta time shown by the fixed delta time</returns>
+        float fixedDeltaTime { get; }
+
+        /// <summary>
         /// Gets the current time in seconds since start of the game
         /// </summary>
         /// <value>Time in seconds since the start of the game</value>
@@ -51,6 +57,9 @@ namespace PropHunt.Utils
 
         /// <inheritdoc/>
         public float time => Time.time;
+
+        /// <inheritdoc/>
+        public float fixedDeltaTime => Time.fixedDeltaTime;
 
         /// <inheritdoc/>
         public float GetAxis(string axisName)
