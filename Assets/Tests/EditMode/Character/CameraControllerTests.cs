@@ -71,6 +71,14 @@ namespace Tests.EditMode.Character
         }
 
         [Test]
+        public void TestCameraRaycastFromBase()
+        {
+            RaycastHit hit;
+            Assert.IsFalse(this.cameraController.RaycastFromCameraBase(Mathf.Infinity, ~0, QueryTriggerInteraction.Ignore, out hit));
+            Assert.IsFalse(this.cameraController.SpherecastFromCameraBase(Mathf.Infinity, ~0, 0.1f, QueryTriggerInteraction.Ignore, out hit));
+        }
+
+        [Test]
         public void TestVariousDitherThresholds()
         {
             this.cameraController.maxCameraDistance = 2.0f;

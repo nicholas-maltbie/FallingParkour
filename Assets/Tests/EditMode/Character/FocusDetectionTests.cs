@@ -70,6 +70,7 @@ namespace Tests.EditMode.Character
             // Setup a game object for our player
             GameObject playerObject = new GameObject();
             // Add a FocusDetection Behaviour to our object
+            CameraController controller = playerObject.AddComponent<CameraController>();
             this.focusDetection = playerObject.AddComponent<FocusDetection>();
             this.focusDetection.Start();
             // Setup the fields for the focus detection
@@ -79,7 +80,7 @@ namespace Tests.EditMode.Character
             this.focusDetection.networkService = this.networkServiceMock.Object;
             this.focusDetection.unityService = this.unityServiceMock.Object;
             // Make player object it's own camera
-            this.focusDetection.cameraTransform = playerObject.transform;
+            controller.cameraTransform = playerObject.transform;
 
             // Setup thing for player to look at
             focusTarget = new GameObject();

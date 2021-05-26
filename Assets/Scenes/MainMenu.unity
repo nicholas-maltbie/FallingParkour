@@ -223,6 +223,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2923298690912514389, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
+      propertyPath: transport
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 493852692511661025, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
       propertyPath: sceneId
       value: 1976774151
@@ -235,14 +239,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: NetworkManager
       objectReference: {fileID: 0}
-    - target: {fileID: 8542409671753137159, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
-      propertyPath: kcpTransportPrefab
-      value: 
-      objectReference: {fileID: 4000378363632139773, guid: f8b0771faa8c69e4fb6b86805ce52ee6, type: 3}
-    - target: {fileID: 8542409671753137159, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
-      propertyPath: fizzySteamworksPrefab
-      value: 
-      objectReference: {fileID: 4808816533550693423, guid: 9d70228972f0cd447b9d1c6122dbf8ae, type: 3}
     - target: {fileID: 8542409671753137208, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -287,8 +283,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: -2805528078656427217, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
 --- !u!1001 &351090565
 PrefabInstance:

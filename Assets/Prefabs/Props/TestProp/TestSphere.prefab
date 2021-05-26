@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 6956598772981576140}
   - component: {fileID: 1750258744}
   - component: {fileID: 1418625170}
+  - component: {fileID: -4835312065550775150}
   m_Layer: 0
   m_Name: TestSphere
   m_TagString: Untagged
@@ -71,7 +72,8 @@ MonoBehaviour:
   propName: TestSphere
   disguiseVisual: {fileID: 7768427415145440261, guid: 93ca935b4ae79f0419a388e0b61f3c41, type: 3}
   disguiseCollider: {fileID: 5172308136022080726}
-  cameraOffset: {fileID: 7425264745552991977}
+  cameraOffset: {x: 0, y: 0, z: 0}
+  transformationMaterialSound: 5
 --- !u!114 &535994576491328819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,7 +104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.1
+  syncInterval: 0.05
   target: {fileID: 7374360553800807224}
   clientAuthority: 0
   syncVelocity: 1
@@ -721,6 +723,27 @@ MonoBehaviour:
     - {x: -0.6959634, y: 0.1768332, z: -0.6959634}
     - {x: -0.34139428, y: 0.6646524, z: -0.66459554}
     - {x: -0.17685792, y: 0.6958694, z: -0.6960511}
+--- !u!114 &-4835312065550775150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2832051002949170794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.05
+  clientAuthority: 0
+  localPositionSensitivity: 0.01
+  localRotationSensitivity: 0.01
+  localScaleSensitivity: 0.01
+  compressRotation: 0
+  interpolateScale: 1
+  syncScale: 1
 --- !u!1 &3026821061586071396
 GameObject:
   m_ObjectHideFlags: 0

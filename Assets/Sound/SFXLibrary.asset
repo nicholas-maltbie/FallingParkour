@@ -34,7 +34,7 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 9dd1be827a78f2c43a56140282bb1d39, type: 3}
     soundId: scrape-glass-test-1
   - soundMaterial: 5
-    soundType: 5
+    soundType: 7
     audioClip: {fileID: 8300000, guid: 8ca4436d0750ae743a654bf87ce0643e, type: 3}
     soundId: sfx-poof
   - soundMaterial: 5
@@ -45,3 +45,7 @@ MonoBehaviour:
     soundType: 6
     audioClip: {fileID: 8300000, guid: 62aca13de6d2ea84aabbdd16c8ef5b5d, type: 3}
     soundId: SFX-polymorph-LIquids
+  - soundMaterial: 5
+    soundType: 8
+    audioClip: {fileID: 8300000, guid: 9a043ec5a138c3f459a455dd7fd63d24, type: 3}
+    soundId: SFX-Death-Sound

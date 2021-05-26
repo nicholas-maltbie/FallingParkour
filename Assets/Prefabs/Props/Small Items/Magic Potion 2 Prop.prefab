@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.1
+  syncInterval: 0.05
   clientAuthority: 0
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
@@ -90,15 +90,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.1
+  syncInterval: 0.05
   target: {fileID: 5240101231465838115}
   clientAuthority: 0
   syncVelocity: 1
   clearVelocity: 0
-  velocitySensitivity: 0.1
+  velocitySensitivity: 0.05
   syncAngularVelocity: 1
   clearAngularVelocity: 0
-  angularVelocitySensitivity: 0.1
+  angularVelocitySensitivity: 0.05
 --- !u!54 &5240101231465838115
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -131,6 +131,7 @@ MonoBehaviour:
   disguiseVisual: {fileID: 6583999811884216055, guid: cc7ca3823a96a7b4b833191dca350d49, type: 3}
   disguiseCollider: {fileID: 5240101231465838143}
   cameraOffset: {x: 0, y: 0, z: 0}
+  transformationMaterialSound: 5
 --- !u!114 &5240101231465838113
 MonoBehaviour:
   m_ObjectHideFlags: 0

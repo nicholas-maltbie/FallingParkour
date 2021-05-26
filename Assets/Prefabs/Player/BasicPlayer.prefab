@@ -28,6 +28,7 @@ GameObject:
   - component: {fileID: 5860327242025993134}
   - component: {fileID: 3584596455403864377}
   - component: {fileID: 623292108012484}
+  - component: {fileID: 5057111722928178139}
   m_Layer: 0
   m_Name: BasicPlayer
   m_TagString: Untagged
@@ -155,7 +156,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  cameraTransform: {fileID: 8130394144415267709}
+  cameraController: {fileID: 0}
+  audioListener: {fileID: 0}
 --- !u!114 &6982824905100499536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,7 +190,6 @@ MonoBehaviour:
   syncInterval: 0.1
   sphereRadius: 0.1
   viewDistance: 5
-  cameraTransform: {fileID: 8130394144415267709}
   focus: {fileID: 0}
   currentHitDistance: 0
   viewLayermask:
@@ -295,27 +296,28 @@ MonoBehaviour:
   groundedDistance: 0.01
   groundCheckDistance: 10
   maxWalkAngle: 60
-  maxBounces: 5
   gravity: {x: 0, y: -20, z: 0}
-  velocity: {x: 0, y: 0, z: 0}
-  jumpVelocity: 8
-  attemptingJump: 0
-  maxPushSpeed: 10
-  pushDecay: 0.9
-  anglePower: 1
-  verticalSnapDown: 0.45
-  onGround: 0
-  stepUpDepth: 0.05
-  verticalSnapUp: 0.35
-  distanceToGround: 0
-  surfaceNormal: {x: 0, y: 0, z: 0}
-  floor: {fileID: 0}
-  angle: 0
   movementSpeed: 5
   sprintSpeed: 7.5
+  jumpVelocity: 8
+  maxBounces: 5
+  pushDecay: 0.9
+  anglePower: 1
+  maxPushSpeed: 10
+  verticalSnapDown: 0.45
+  stepUpDepth: 0.05
+  verticalSnapUp: 0.35
+  snapBufferTime: 0.05
   inputMovement: {x: 0, y: 0, z: 0}
+  attemptingJump: 0
   isSprinting: 0
   elapsedFalling: 0
+  velocity: {x: 0, y: 0, z: 0}
+  distanceToGround: 0
+  onGround: 0
+  angle: 0
+  surfaceNormal: {x: 0, y: 0, z: 0}
+  floor: {fileID: 0}
 --- !u!114 &4965862787272249836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,6 +420,25 @@ MonoBehaviour:
   minFootstepSoundDelay: 0.25
   soundType: 4
   footGrounded: {fileID: 6956521044681878227}
+--- !u!114 &5057111722928178139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245587927565386927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efdb34d87499d0a408ea83db2ac64efe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  attackCooldown: 0.1
+  raycastMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  targetTeam: 1
 --- !u!1 &886816266439757742
 GameObject:
   m_ObjectHideFlags: 0

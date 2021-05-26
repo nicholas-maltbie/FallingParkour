@@ -129,7 +129,7 @@ namespace PropHunt.Character
 
         public void Start()
         {
-            if (networkService.isServer)
+            if (networkService.isServer && connectionToClient != null)
             {
                 playerId = connectionToClient.connectionId;
             }

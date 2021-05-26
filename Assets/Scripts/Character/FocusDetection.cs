@@ -5,31 +5,62 @@ using UnityEngine;
 
 namespace PropHunt.Character
 {
+    /// <summary>
+    /// Detect what the player is currently looking at
+    /// </summary>
+    [RequireComponent(typeof(CameraController))]
     public class FocusDetection : NetworkBehaviour
     {
-        /// <summary>Unity service for getting player inputs</summary>
+        /// <summary>
+        /// Unity service for getting player inputs
+        /// </summary>
         public IUnityService unityService = new UnityService();
-        /// <summary>Network service for managing network calls</summary>
+
+        /// <summary>
+        /// Network service for managing network calls
+        /// </summary>
         public INetworkService networkService;
-        ///<summary>Create sphere radius variable -J</summary>
+
+        /// <summary>
+        /// Create sphere radius variable -J
+        /// </summary>
         public float sphereRadius = 0.1f;
-        /// <summary>Determines how far the player can look</summary>
+
+        /// <summary>
+        /// Determines how far the player can look
+        /// </summary>
         public float viewDistance = 5.0f;
-        /// <summary>What direction is the player looking</summary>
-        public Transform cameraTransform;
-        /// <summary>What the player is looking at</summary>
+
+        /// <summary>
+        /// Controller that operates the player camera
+        /// </summary>
+        private CameraController cameraController;
+
+        /// <summary>
+        /// What the player is looking at
+        /// </summary>
         public GameObject focus;
-        /// <summary>How far away the hit from the spherecast is</summary>
+
+        /// <summary>
+        /// How far away the hit from the spherecast is
+        /// </summary>
         public float currentHitDistance;
-        /// <summary>What does view interaction able to hit</summary>
+
+        /// <summary>
+        /// What does view interaction able to hit
+        /// </summary>
         public LayerMask viewLayermask = ~0;
-        /// <summary>How does view intearaction interact with triggers</summary>
+
+        /// <summary>
+        /// How does view intearaction interact with triggers
+        /// </summary>
         public QueryTriggerInteraction focusTriggerInteraction;
 
         /// <summary> Start is called before the first frame update</summary>
         public void Start()
         {
             this.networkService = new NetworkService(this);
+            this.cameraController = GetComponent<CameraController>();
         }
 
         public void InteractWithObject(GameObject target, GameObject source)
@@ -63,13 +94,9 @@ namespace PropHunt.Character
                 // exit from update if this is not the local player
                 return;
             }
-            //Update origin -J
-            Vector3 origin = cameraTransform.position;
-            Vector3 direction = cameraTransform.forward;
-            RaycastHit hit;
             // if spherecast hits something, update the player's focus and distance variables -J
-            if (PhysicsUtils.SphereCastFirstHitIgnore(gameObject, origin, sphereRadius, direction, focusRange,
-                viewLayermask, focusTriggerInteraction, out hit))
+            if (controller.SpherecastFromCameraBase(focusRange,
+                viewLayermask, sphereRadius, focusTriggerInteraction, out RaycastHit hit))
             {
                 focus = hit.transform.gameObject;
                 // If the object has a focus component, tell the object it is 'focused'

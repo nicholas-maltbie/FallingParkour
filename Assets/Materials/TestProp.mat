@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OtherBoxMaterial
+  m_Name: TestProp
   m_Shader: {fileID: -6465566751694194690, guid: b8a85e334e9beaa4da3566fc9e187173, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -149,7 +149,7 @@ Material:
     - Vector2_57A569B6: {r: 0, g: 0, b: 0, a: 0}
     - _AlbedoColor: {r: 1, g: 0.24754307, b: 0, a: 1}
     - _BaseColor: {r: 0.9150943, g: 0.331296, b: 0.11654504, a: 1}
-    - _Color: {r: 1, g: 0.5087234, b: 0, a: 1}
+    - _Color: {r: 0.9716981, g: 0.157634, b: 0.03208439, a: 1}
     - _Emission: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0.8627451, g: 0.7058824, b: 0, a: 1}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}

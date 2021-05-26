@@ -12,11 +12,17 @@ namespace Tests.EditMode.Game.Flow
     {
         protected CustomNetworkManager networkManager;
 
+        protected bool reloadScene = true;
+
         [SetUp]
         public virtual void SetUp()
         {
 #if UNITY_EDITOR
-            var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
+            if (reloadScene)
+            {
+                var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene,
+                    UnityEditor.SceneManagement.NewSceneMode.Single);
+            }
 #endif
             GameObject go = new GameObject();
             Transport.activeTransport = go.AddComponent<MemoryTransport>();

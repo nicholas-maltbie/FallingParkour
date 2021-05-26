@@ -122,6 +122,18 @@ namespace PropHunt.Character
             this.currentDistance = minCameraDistance;
         }
 
+        public bool RaycastFromCameraBase(float maxDistance, LayerMask layerMask, QueryTriggerInteraction queryTriggerInteraction, out RaycastHit hit)
+        {
+            return PhysicsUtils.RaycastFirstHitIgnore(gameObject, CameraSource, cameraTransform.forward, maxDistance,
+                layerMask, queryTriggerInteraction, out hit);
+        }
+
+        public bool SpherecastFromCameraBase(float maxDistance, LayerMask layerMask, float sphereRadius, QueryTriggerInteraction queryTriggerInteraction, out RaycastHit hit)
+        {
+            return PhysicsUtils.SphereCastFirstHitIgnore(gameObject, CameraSource, sphereRadius, cameraTransform.forward, maxDistance,
+                layerMask, queryTriggerInteraction, out hit);
+        }
+
         public void Update()
         {
             if (!networkService.isLocalPlayer)
