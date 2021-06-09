@@ -1,7 +1,7 @@
 using PropHunt.Character;
 using UnityEngine;
 
-namespace PropHunt.UI
+namespace PropHunt.UI.Events
 {
     /// <summary>
     /// Simple class to set player movement state when menu loads

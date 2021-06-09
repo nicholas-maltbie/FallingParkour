@@ -2,7 +2,7 @@ using PropHunt.UI;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PropHunt.UI
+namespace PropHunt.UI.Actions
 {
     public class ToggleTransportAction : MonoBehaviour
     {

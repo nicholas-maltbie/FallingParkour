@@ -169,6 +169,7 @@ MonoBehaviour:
   screenChangeInputs:
   - input: Cancel
     menu: {fileID: 3816567771485690116, guid: 77f3d4674d5aa254aba6cd0ff623b5c3, type: 3}
+  screenChangeOperations: []
 --- !u!114 &1811976908144868216
 MonoBehaviour:
   m_ObjectHideFlags: 0

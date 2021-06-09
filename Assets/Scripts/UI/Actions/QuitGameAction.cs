@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PropHunt.UI
+namespace PropHunt.UI.Actions
 {
     /// <summary>
     /// Class with behaviour to quit game

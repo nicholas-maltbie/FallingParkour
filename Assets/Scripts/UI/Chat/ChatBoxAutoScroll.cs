@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PropHunt.UI
+namespace PropHunt.UI.Chat
 {
     public class ChatBoxAutoScroll : MonoBehaviour
     {

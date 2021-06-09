@@ -2,7 +2,7 @@ using PropHunt.Character;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PropHunt.UI
+namespace PropHunt.UI.Actions
 {
     public class PlayerNameUpdate : MonoBehaviour
     {

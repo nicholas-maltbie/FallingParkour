@@ -744,6 +744,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   screenChangeInputs: []
+  screenChangeOperations:
+  - input: Cancel
+    operation: 0
 --- !u!114 &2165199262839015779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -880,12 +883,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8387962290575963714}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetScreen
-        m_Mode: 2
+        m_TargetAssemblyTypeName: PropHunt.UI.MenuController, PropHunt
+        m_MethodName: PreviousScreen
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 8543157476786906886, guid: d7e0cec9d46eff341ad598031aeba302, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

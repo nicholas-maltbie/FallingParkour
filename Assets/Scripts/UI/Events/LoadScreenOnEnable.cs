@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PropHunt.UI
+namespace PropHunt.UI.Events
 {
     /// <summary>
     /// Simple class to load screen when enabled

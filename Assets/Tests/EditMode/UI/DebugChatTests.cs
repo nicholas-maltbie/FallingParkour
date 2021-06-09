@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 using PropHunt.Game.Communication;
-using PropHunt.UI;
+using PropHunt.UI.Chat;
 using UnityEngine;
 using UnityEngine.UI;
 

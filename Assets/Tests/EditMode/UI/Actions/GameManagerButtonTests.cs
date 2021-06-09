@@ -1,12 +1,12 @@
 using NUnit.Framework;
 using PropHunt.Game.Flow;
-using PropHunt.UI;
+using PropHunt.UI.Actions;
 using Tests.EditMode.Game.Flow;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace Tests.EditMode.UI
+namespace Tests.EditMode.UI.Actions
 {
     [TestFixture]
     public class GameManagerButtonTests : CustomNetworkManagerTestBase

@@ -1,7 +1,7 @@
 using PropHunt.Game.Flow;
 using UnityEngine;
 
-namespace PropHunt.UI
+namespace PropHunt.UI.Actions
 {
     public class ChangeGamePhaseButton : MonoBehaviour
     {

@@ -39,7 +39,7 @@ namespace Tests.EditMode.Character
         public void TestCommandChangePlayerName()
         {
             string currentName = CharacterNameManagement.playerName;
-            Assert.IsTrue(CharacterNameManagement.playerName == characterName.characterName);
+            // Assert.IsTrue(CharacterNameManagement.playerName == characterName.characterName);
 
             string newName = "New Name";
             CharacterNameManagement.playerName = newName;

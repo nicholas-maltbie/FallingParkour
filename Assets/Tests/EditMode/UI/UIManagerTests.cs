@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using PropHunt.UI;
+using PropHunt.UI.Events;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -82,7 +83,6 @@ namespace Tests.EditMode.UI
             this.uiManager.initialScreen = -1;
 
             this.uiManager.Start();
-            this.uiManager.OnDestroy();
             this.uiManager.Start();
             this.uiManager.OnDestroy();
 
@@ -217,6 +217,19 @@ namespace Tests.EditMode.UI
             // Should have no new screne load requests
             Assert.IsTrue(this.screenChangeEvents == 3);
             Assert.IsTrue(this.currentScreen == screenNames[2]);
+
+            // Add screens until the history overflows
+            for (int i = 0; i < uiManager.maxScreenHistory; i++)
+            {
+                UIManager.RequestNewScreen(this, screenNames[i % 2]);
+            }
+
+            // Attempt to revert to previous screen when history is empty
+            uiManager.ClearHistory();
+            string beforePrevious = this.currentScreen;
+            UIManager.PreviousScreen(this);
+            // assert that current screen has not changed
+            Assert.IsTrue(this.currentScreen == beforePrevious);
 
             // Cleanup objects created by test
             foreach (Canvas canvasObject in this.uiManager.screenPrefabs)

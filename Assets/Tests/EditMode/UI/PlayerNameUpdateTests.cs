@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using PropHunt.Character;
-using PropHunt.UI;
+using PropHunt.UI.Actions;
 using UnityEngine;
 using UnityEngine.UI;
 
