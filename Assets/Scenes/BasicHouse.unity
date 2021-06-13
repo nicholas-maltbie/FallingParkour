@@ -28834,7 +28834,7 @@ MonoBehaviour:
     LowFreqTransmission: 0.1
     MidFreqTransmission: 0.05
     HighFreqTransmission: 0.03
-  simulationPreset: 0
+  simulationPreset: 3
   simulationValue:
     MaxOcclusionSamples: 128
     RealtimeRays: 4096
@@ -28845,9 +28845,9 @@ MonoBehaviour:
     BakeSecondaryRays: 4096
     BakeBounces: 32
     BakeThreadsPercentage: 5
-    Duration: 1
+    Duration: 0.1
     AmbisonicsOrder: 1
-    MaxSources: 32
+    MaxSources: 128
     IrradianceMinDistance: 1
   updateComponents: 1
   currentAudioListener: {fileID: 0}
@@ -49485,7 +49485,7 @@ MonoBehaviour:
   sourceRadius: 1
   occlusionSamples: 4
   directMixLevel: 1
-  reflections: 0
+  reflections: 1
   indirectBinaural: 0
   physicsBasedAttenuationForIndirect: 1
   indirectMixLevel: 0.5

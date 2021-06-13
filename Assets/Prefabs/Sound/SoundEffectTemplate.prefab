@@ -55,10 +55,10 @@ MonoBehaviour:
   sourceRadius: 1
   occlusionSamples: 4
   directMixLevel: 1
-  reflections: 0
+  reflections: 1
   indirectBinaural: 0
   physicsBasedAttenuationForIndirect: 0
-  indirectMixLevel: 1
+  indirectMixLevel: 0.5
   simulationType: 0
   uniqueIdentifier: 
   avoidSilenceDuringInit: 1

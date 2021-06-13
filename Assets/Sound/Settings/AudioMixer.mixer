@@ -66,24 +66,6 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
---- !u!244 &-93144897322839728
-AudioMixerEffectController:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_EffectID: a860e7ddb1991fd45a419b3d916b1357
-  m_EffectName: Steam Audio Mixer Return
-  m_MixLevel: 8c5dc146d9d08ab45938306f6dec4263
-  m_Parameters:
-  - m_ParameterName: Binaural
-    m_GUID: a29a9811910ca684fab2c57477d60e2a
-  - m_ParameterName: BypassAtInit
-    m_GUID: 463dcc841f088bf4280fccbceafad89d
-  m_SendTarget: {fileID: 0}
-  m_EnableWetMix: 0
-  m_Bypass: 0
 --- !u!241 &24100000
 AudioMixerController:
   m_ObjectHideFlags: 0
@@ -136,7 +118,6 @@ AudioMixerGroupController:
   m_Effects:
   - {fileID: 24400004}
   - {fileID: 5377644287383961196}
-  - {fileID: -93144897322839728}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0
