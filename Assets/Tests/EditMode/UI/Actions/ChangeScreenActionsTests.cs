@@ -89,6 +89,20 @@ namespace Tests.EditMode.UI.Actions
         }
 
         [Test]
+        public void TestFilterResolutions()
+        {
+            Resolution[] resolutions = new Resolution[]
+            {
+                new Resolution{width = 10, height = 20, refreshRate = 10},
+                new Resolution{width = 20, height = 20, refreshRate = 10},
+                new Resolution{width = 10, height = 20, refreshRate = 20},
+                new Resolution{width = 20, height = 40, refreshRate = 10},
+            };
+            Resolution[] filtered = ChangeScreenActions.FilterResolutions(resolutions);
+            Assert.IsTrue(resolutions.Length > filtered.Length);
+        }
+
+        [Test]
         public void ConfirmDialogSettings()
         {
             // Simulate waiting for a timeout

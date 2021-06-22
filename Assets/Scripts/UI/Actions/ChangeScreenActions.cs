@@ -214,6 +214,24 @@ namespace PropHunt.UI.Actions
         }
 
         /// <summary>
+        /// Filter duplicate resolutions from a set of resolutions. Removes refresh rate from the data
+        /// </summary>
+        /// <param name="resolutions">Various resolution options</param>
+        /// <returns>Filters duplicates with the same width and height</returns>
+        public static Resolution[] FilterResolutions(Resolution[] resolutions)
+        {
+            HashSet<Resolution> resolutionSet = new HashSet<Resolution>();
+            resolutions.ToList().ForEach(resolution =>
+                resolutionSet.Add(new Resolution
+                {
+                    width = resolution.width,
+                    height = resolution.height
+                })
+            );
+            return resolutionSet.OrderBy(i => new Tuple<int, int>(-i.width, -i.height)).ToArray();
+        }
+
+        /// <summary>
         /// Refresh the list of resolutions from the Screen settings
         /// </summary>
         private void RefreshResolutionDropdown()
@@ -224,6 +242,7 @@ namespace PropHunt.UI.Actions
                 new Resolution { width = 1920, height = 1080, refreshRate = 60 },
                 new Resolution { width = 1280, height = 720, refreshRate = 60 }
             } : this.resolutions;
+            this.resolutions = FilterResolutions(this.resolutions);
             List<string> options = new List<string>();
             for (int i = 0; i < resolutions.Length; i++)
             {
