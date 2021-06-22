@@ -27,6 +27,11 @@ namespace Tests.PlayMode.Character
         protected Mock<IUnityService> unityServiceMock;
 
         /// <summary>
+        /// Character controller for controlling player movement
+        /// </summary>
+        protected KinematicCharacterController kcc;
+
+        /// <summary>
         /// Basic floor object, should be centered at 0,0,0 and has a width and length of 10 units
         /// and a height of 1 unit.
         /// </summary>
@@ -66,7 +71,7 @@ namespace Tests.PlayMode.Character
             // These will be created with default settings
             PrimitiveColliderCast colliderCast = this.player.AddComponent<PrimitiveColliderCast>();
             colliderCast.layerMask = ~0;
-            KinematicCharacterController kcc = this.player.AddComponent<KinematicCharacterController>();
+            kcc = this.player.AddComponent<KinematicCharacterController>();
 
             // Wait for a fixed update to register the position of the floor in the physics simulation
             yield return new WaitForFixedUpdate();
@@ -115,7 +120,7 @@ namespace Tests.PlayMode.Character
         {
             Vector3 start = base.player.transform.position;
             // Simulate walking forward
-            unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(1.0f);
+            kcc.inputMovement = new Vector3(0, 0, 1.0f);
             yield return new WaitForSeconds(3);
 
             Vector3 end = base.player.transform.position;
@@ -130,9 +135,9 @@ namespace Tests.PlayMode.Character
         public IEnumerator CoyoteTimeTest()
         {
             // Simulate walking forward
-            unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(1.0f);
             // Set the coyote time of the player to be 3 seconds for this test
             KinematicCharacterController kcc = player.GetComponent<KinematicCharacterController>();
+            kcc.inputMovement = new Vector3(0, 0, 1.0f);
 
             // Test to verify small gap between when character walks off the edge and when they start falling
             // Put the character on top of a box
@@ -232,7 +237,7 @@ namespace Tests.PlayMode.Character
         {
             Vector3 start = base.player.transform.position;
             // Simulate walking forward
-            unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(1.0f);
+            kcc.inputMovement = new Vector3(0, 0, 1.0f);
             // So, steps start at (0, 0, 3), have a total depth of stepDepth = 0.25 and 12 steps
             // Total time to walk up steps should be (1 + 0.25 * 12) / speed
             float timeToScale = (stairsStart.magnitude + stepDepth * numSteps) / player.GetComponent<KinematicCharacterController>().movementSpeed;

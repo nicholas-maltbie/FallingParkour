@@ -94,8 +94,8 @@ namespace PropHunt.UI
 
         public IEnumerator DestorySelf()
         {
+            GameObject.Destroy(gameObject);
             yield return null;
-            GameObject.Destroy(this);
         }
 
         public void Start()
@@ -129,6 +129,7 @@ namespace PropHunt.UI
             {
                 string screenName = screenPrefabs[idx].name;
                 // instantiate a copy of each screen and set all to disabled except current screen
+                UnityEngine.Debug.Log(screenPrefabs[idx].name);
                 GameObject screen = GameObject.Instantiate(screenPrefabs[idx].gameObject);
                 // Set object parent to this for more organized hierarchy
                 screen.transform.SetParent(this.transform, worldPositionStays: false);
@@ -153,7 +154,10 @@ namespace PropHunt.UI
 
         public void OnDestroy()
         {
-            UIManager.Instance = null;
+            if (UIManager.Instance == this)
+            {
+                UIManager.Instance = null;
+            }
             UIManager.RequestScreenChange -= this.HandleScreenRequest;
         }
 

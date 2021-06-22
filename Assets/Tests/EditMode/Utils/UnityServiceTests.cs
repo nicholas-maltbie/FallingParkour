@@ -10,9 +10,6 @@ namespace Tests.EditMode.Utils
         public void VerifyUnityServiceInvokeWithoutErrors()
         {
             IUnityService unityService = new UnityService();
-            unityService.GetAxis("Horizontal");
-            unityService.GetButton("Jump");
-            unityService.GetButtonDown("Jump");
             Assert.IsTrue(unityService.deltaTime >= 0.0f);
             Assert.IsTrue(unityService.fixedDeltaTime >= 0.0f);
         }

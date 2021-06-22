@@ -2,6 +2,7 @@ using Mirror;
 using PropHunt.Character;
 using PropHunt.Utils;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace PropHunt.Character
 {
@@ -162,14 +163,14 @@ namespace PropHunt.Character
         /// </summary>
         [Tooltip("Current input movement provided by the player")]
         [SerializeField]
-        private Vector3 inputMovement;
+        public Vector3 inputMovement;
 
         /// <summary>
         /// Is the player attempting to jump
         /// </summary>
         [Tooltip("Current jump input from the player")]
         [SerializeField]
-        private bool attemptingJump;
+        public bool attemptingJump;
 
         /// <summary>
         /// Is the player sprinting
@@ -286,23 +287,6 @@ namespace PropHunt.Character
         {
             this.networkService = new NetworkService(this);
             this.colliderCast = GetComponent<ColliderCast>();
-        }
-
-        public void Update()
-        {
-            if (!networkService.isLocalPlayer)
-            {
-                // exit from update if this is not the local player
-                return;
-            }
-            // Get palyer input on a frame by frame basis
-            inputMovement = new Vector3(unityService.GetAxis("Horizontal"), 0, unityService.GetAxis("Vertical"));
-            // Normalize movement vector to be a max of 1 if greater than one
-            inputMovement = inputMovement.magnitude > 1 ? inputMovement / inputMovement.magnitude : inputMovement;
-
-            // Get other movemen inputs
-            this.attemptingJump = unityService.GetButton("Jump");
-            this.isSprinting = unityService.GetButton("Sprint");
         }
 
         public void FixedUpdate()
@@ -562,6 +546,23 @@ namespace PropHunt.Character
                 bounces++;
             }
             // We're done, player was moved as part of loop
+        }
+
+        public void OnMove(InputAction.CallbackContext context)
+        {
+            Vector2 movement = context.ReadValue<Vector2>();
+            inputMovement = new Vector3(movement.x, 0, movement.y);
+            inputMovement = inputMovement.magnitude > 1 ? inputMovement / inputMovement.magnitude : inputMovement;
+        }
+
+        public void OnJump(InputAction.CallbackContext context)
+        {
+            attemptingJump = (PlayerInputManager.playerMovementState == PlayerInputState.Allow) && context.ReadValueAsButton();
+        }
+
+        public void OnSprint(InputAction.CallbackContext context)
+        {
+            isSprinting = context.ReadValueAsButton();
         }
     }
 }

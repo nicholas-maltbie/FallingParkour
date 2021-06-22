@@ -34,6 +34,11 @@ namespace Tests.EditMode.UI.Actions
         /// </summary>
         private string currentScreen;
 
+        /// <summary>
+        /// List of supported screen names
+        /// </summary>
+        private string[] screenNames;
+
         [SetUp]
         public void Setup()
         {
@@ -41,7 +46,19 @@ namespace Tests.EditMode.UI.Actions
             this.uiManager = this.menuControllerObject.AddComponent<UIManager>();
             this.menuController = this.menuControllerObject.AddComponent<MenuController>();
 
-            this.uiManager.screenPrefabs = new List<Canvas>(new Canvas[] { menuControllerObject.AddComponent<Canvas>() });
+            this.uiManager.screenPrefabs = new List<Canvas>();
+            this.menuController.actionDelay = -10.0f;
+
+            this.screenNames = new string[10];
+            for (int i = 0; i < screenNames.Length; i++)
+            {
+                this.screenNames[i] = "Screen " + i.ToString();
+                GameObject screen = new GameObject();
+                screen.name = this.screenNames[i];
+                screen.transform.parent = this.menuControllerObject.transform;
+                this.uiManager.screenPrefabs.Add(screen.AddComponent<Canvas>());
+            }
+
             Assert.Throws<System.InvalidOperationException>(() => this.uiManager.Start());
 
             // Listen to requested screen change events
@@ -62,98 +79,40 @@ namespace Tests.EditMode.UI.Actions
         [Test]
         public void SetScreenTests()
         {
-            GameObject holderObject = new GameObject();
-            holderObject.name = "Helloworld";
-            this.menuController.SetScreen(holderObject);
-            Assert.IsTrue(this.currentScreen == "Helloworld");
+            this.menuController.SetScreen(screenNames[0]);
+            Assert.IsTrue(this.currentScreen == screenNames[0]);
 
-            this.menuController.SetScreen("NewScreen");
-            Assert.IsTrue(this.currentScreen == "NewScreen");
+            this.menuController.SetScreen(screenNames[1]);
+            Assert.IsTrue(this.currentScreen == screenNames[1]);
 
-            GameObject.DestroyImmediate(holderObject);
-        }
-
-        [Test]
-        public void TestSetScreenOnInput()
-        {
-            GameObject holderObject = new GameObject();
-            holderObject.name = "default_screen";
-            this.menuController.SetScreen(holderObject);
-            holderObject.name = "input_change_screen";
-
-            InputScreenChange change = new InputScreenChange();
-            change.input = "Cancel";
-            change.menu = holderObject;
-            this.menuController.screenChangeInputs.Add(change);
-
-            Mock<IUnityService> unityServiceMock = new Mock<IUnityService>();
-            menuController.unityService = unityServiceMock.Object;
-            unityServiceMock.Setup(e => e.GetButtonDown("Cancel")).Returns(true);
-            this.menuController.Update();
-            Assert.IsTrue(this.currentScreen == "input_change_screen");
-
-            GameObject.DestroyImmediate(holderObject);
-        }
-
-        [Test]
-        public void TestBlockedChange()
-        {
-            GameObject holderObject = new GameObject();
-            holderObject.name = "default_screen";
-            this.menuController.SetScreen(holderObject);
-            holderObject.name = "input_change_screen";
-            // Assert cannot change screen when disallowed
-            this.menuController.allowInputChanges = false;
-
-            InputScreenChange change = new InputScreenChange();
-            change.input = "Cancel";
-            change.menu = holderObject;
-            this.menuController.screenChangeInputs.Add(change);
-
-            Mock<IUnityService> unityServiceMock = new Mock<IUnityService>();
-            menuController.unityService = unityServiceMock.Object;
-            unityServiceMock.Setup(e => e.GetButtonDown("Cancel")).Returns(true);
-            this.menuController.Update();
-            Assert.IsFalse(this.currentScreen == "input_change_screen");
+            this.menuController.SetScreen(this.uiManager.screenPrefabs[2].gameObject);
+            Assert.IsTrue(this.currentScreen == screenNames[2]);
 
             this.menuController.PreviousScreen();
-            this.menuController.SetScreen("input_change_screen");
-
-            GameObject.DestroyImmediate(holderObject);
+            Assert.IsTrue(this.currentScreen == screenNames[1]);
         }
 
         [Test]
-        public void TestOperationOnInput()
+        public void TestRestrictScreenChanges()
         {
-            // Setup a list of supported screens
+            this.menuController.SetScreen(screenNames[0]);
+            Assert.IsTrue(this.currentScreen == screenNames[0]);
 
-            InputScreenOperation operation = new InputScreenOperation();
-            operation.input = "Cancel";
-            operation.operation = MenuOperation.Previous;
-            this.menuController.screenChangeOperations.Add(operation);
+            this.menuController.allowInputChanges = false;
+            this.menuController.SetScreen(screenNames[1]);
+            Assert.IsTrue(this.currentScreen == screenNames[0]);
 
-            // Make a history of two screen operations
-            GameObject previousScreen = new GameObject();
-            previousScreen.name = "previous_screen";
-            this.menuController.SetScreen(previousScreen);
-            GameObject nextScreen = new GameObject();
-            nextScreen.name = "next_screen";
+            this.menuController.allowInputChanges = true;
+            this.menuController.SetScreen(screenNames[1]);
+            Assert.IsTrue(this.currentScreen == screenNames[1]);
 
-            // Reset UI manager's screen list
-            this.uiManager.OnDestroy();
-            this.uiManager.screenPrefabs = new List<Canvas>(new Canvas[] { previousScreen.AddComponent<Canvas>(), nextScreen.AddComponent<Canvas>() });
-            Assert.Throws<System.InvalidOperationException>(() => this.uiManager.Start());
+            this.menuController.allowInputChanges = false;
+            this.menuController.PreviousScreen();
+            Assert.IsTrue(this.currentScreen == screenNames[1]);
 
-            this.menuController.SetScreen(nextScreen);
-
-            Mock<IUnityService> unityServiceMock = new Mock<IUnityService>();
-            menuController.unityService = unityServiceMock.Object;
-            unityServiceMock.Setup(e => e.GetButtonDown("Cancel")).Returns(true);
-            this.menuController.Update();
-            Assert.IsTrue(this.currentScreen == "previous_screen");
-
-            GameObject.DestroyImmediate(previousScreen);
-            GameObject.DestroyImmediate(nextScreen);
+            this.menuController.allowInputChanges = true;
+            this.menuController.PreviousScreen();
+            Assert.IsTrue(this.currentScreen == screenNames[0]);
         }
     }
 }

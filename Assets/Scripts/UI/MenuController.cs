@@ -10,103 +10,41 @@ namespace PropHunt.UI
     public class MenuController : MonoBehaviour
     {
         /// <summary>
-        /// Various supported menu operations
-        /// </summary>
-        public enum MenuOperation
-        {
-            Previous
-        }
-
-        /// <summary>
-        /// Serialize container to perform a menu operation whenever a player gives an input
-        /// </summary>
-        [System.Serializable]
-        public class InputScreenOperation
-        {
-            /// <summary>
-            /// Input to listen to from the player, listen to button down event
-            /// </summary>
-            public string input;
-            /// <summary>
-            /// Operation to perform when the player presses this input as a button down
-            /// </summary>
-            public MenuOperation operation;
-        }
-
-        /// <summary>
-        /// Serialize container to change screen whenever a player gives an input
-        /// </summary>
-        [System.Serializable]
-        public class InputScreenChange
-        {
-            /// <summary>
-            /// Input to listen to from the player, listen to button down event
-            /// </summary>
-            public string input;
-            /// <summary>
-            /// Screen to load when the player presses this input as a button down
-            /// </summary>
-            public GameObject menu;
-        }
-
-        /// <summary>
-        /// Input screen change events for this menu
-        /// </summary>
-        public List<InputScreenChange> screenChangeInputs = new List<InputScreenChange>();
-
-        /// <summary>
-        /// Input screen change operations for this menu
-        /// </summary>
-        public List<InputScreenOperation> screenChangeOperations = new List<InputScreenOperation>();
-
-        /// <summary>
-        /// Unity service for parsing player inputs
-        /// </summary>
-        public IUnityService unityService = new UnityService();
-
-        /// <summary>
         /// Can this menu controller allow for input to change screens
         /// </summary>
         public bool allowInputChanges = true;
 
-        public void Update()
-        {
-            if (!allowInputChanges)
-            {
-                return;
-            }
+        /// <summary>
+        /// Short action delay (how fast can the screen change)
+        /// </summary>
+        public float actionDelay = 0.01f;
 
-            foreach (InputScreenChange change in this.screenChangeInputs)
-            {
-                if (unityService.GetButtonDown(change.input))
-                {
-                    SetScreen(change.menu);
-                }
-            }
-            foreach (InputScreenOperation change in this.screenChangeOperations)
-            {
-                if (unityService.GetButtonDown(change.input))
-                {
-                    switch (change.operation)
-                    {
-                        case MenuOperation.Previous:
-                            PreviousScreen();
-                            break;
-                    }
-                }
-            }
-        }
+        /// <summary>
+        /// Time of previous screen change
+        /// </summary>
+        private float previousTime;
+
+        /// <summary>
+        /// Can the screne be changed right now?
+        /// </summary>
+        private bool CanAct => allowInputChanges && (unityService.time - previousTime > actionDelay);
+
+        /// <summary>
+        /// Unity service to read time
+        /// </summary>
+        private UnityService unityService = new UnityService();
 
         /// <summary>
         /// Requests go to the previous screen
         /// </summary>
         public void PreviousScreen()
         {
-            if (!allowInputChanges)
+            if (!CanAct)
             {
                 return;
             }
 
+            previousTime = unityService.time;
             UIManager.PreviousScreen(this);
         }
 
@@ -125,11 +63,12 @@ namespace PropHunt.UI
         /// <param name="name">Name of new screen to display</param>
         public void SetScreen(string name)
         {
-            if (!allowInputChanges)
+            if (!CanAct)
             {
                 return;
             }
 
+            previousTime = unityService.time;
             UIManager.RequestNewScreen(this, name);
         }
     }

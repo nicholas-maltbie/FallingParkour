@@ -6,7 +6,10 @@ using PropHunt.Character;
 using PropHunt.Environment;
 using PropHunt.Utils;
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 using UnityEngine.TestTools;
 
 namespace Tests.EditMode.Character
@@ -61,7 +64,7 @@ namespace Tests.EditMode.Character
         GameObject focusTarget;
 
         [UnitySetUp]
-        public IEnumerator SetUp()
+        public IEnumerator UnitySetUp()
         {
 #if UNITY_EDITOR
             var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
@@ -72,6 +75,7 @@ namespace Tests.EditMode.Character
             // Add a FocusDetection Behaviour to our object
             CameraController controller = playerObject.AddComponent<CameraController>();
             this.focusDetection = playerObject.AddComponent<FocusDetection>();
+            // this.playerInput = playerObject.AddComponent<PlayerInput>();
             this.focusDetection.Start();
             // Setup the fields for the focus detection
             // Setup and connect mocked network connection
@@ -147,7 +151,12 @@ namespace Tests.EditMode.Character
             // Set local player state to true
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
             // Allow player to interact with box
-            this.unityServiceMock.Setup(e => e.GetButtonDown("Interact")).Returns(true);
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+
+            // Simulate pressing the interact button
+            this.focusDetection.Interact(new InputAction.CallbackContext());
+            this.focusDetection.interacting = true;
+
             this.networkServiceMock.Setup(e => e.isServer).Returns(true);
             InteractTest testInteract = this.focusTarget.AddComponent<InteractTest>();
             // Wait a frame to update the physics world and load colliders

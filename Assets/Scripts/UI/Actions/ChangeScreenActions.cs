@@ -395,7 +395,7 @@ namespace PropHunt.UI.Actions
         {
 #if UNITY_EDITOR
             UnityEngine.Debug.Log($"Setting {currentFullScreen} with resolution {currentResolution.width}x{currentResolution.height} * {currentResolution.refreshRate}, monitor {currentDisplay}");
-#else
+#endif
             Screen.SetResolution(currentResolution.width, currentResolution.height, currentFullScreen, currentResolution.refreshRate);
             // Then set target monitor
             // This will be added in 2021.2 so will have that to look forward to in future
@@ -409,7 +409,6 @@ namespace PropHunt.UI.Actions
             PlayerPrefs.SetInt(resolutionRefreshRatePlayerPrefKey, currentResolution.refreshRate);
             PlayerPrefs.SetInt(fullScreenPlayerPrefKey, (int)currentFullScreen);
             PlayerPrefs.SetInt(targetDisplayPlayerPrefKey, currentDisplay);
-#endif
         }
     }
 }

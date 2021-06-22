@@ -43,11 +43,7 @@ namespace PropHunt.UI.Actions
         public void OnQualityLevelChange(int level)
         {
             QualitySettings.SetQualityLevel(level);
-#if UNITY_EDITOR
-            UnityEngine.Debug.Log($"Setting quality level to {QualitySettings.names[level]}");
-#else
             PlayerPrefs.SetInt(qualityLevelPlayerPrefKey, level);
-#endif
         }
     }
 }

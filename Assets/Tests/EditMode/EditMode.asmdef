@@ -8,13 +8,15 @@
         "Mirror",
         "kcp2k",
         "Tests.Common",
-        "QuickOutline"
+        "QuickOutline",
+        "Unity.InputSystem",
+        "Unity.InputSystem.TestFramework"
     ],
     "includePlatforms": [
         "Editor"
     ],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": true,
     "precompiledReferences": [
         "nunit.framework.dll",

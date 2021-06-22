@@ -90,5 +90,11 @@ namespace Tests.EditMode.Character
             this.cameraController.ditherDistance = 0.0f;
             this.cameraController.Update();
         }
+
+        [Test]
+        public void TestInputProcessing()
+        {
+            this.cameraController.OnLook(new UnityEngine.InputSystem.InputAction.CallbackContext());
+        }
     }
 }

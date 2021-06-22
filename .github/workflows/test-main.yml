@@ -60,7 +60,7 @@ jobs:
             -debugCodeOptimization
             -burst-disable-compilation 
             -coverageResultsPath ${{ matrix.testMode }}-artifacts
-            -coverageOptions "generateBadgeReport;assemblyFilters:-Assembly*,-Mirror*,-Tests*,-SimpleWebTransport,-Telepathy,-kcp2k,-QuickOutline;pathFilters:-*/Assets/Mirror/*.-*/Assets/SteamAudio/*,-*/Assets/Tests/*"
+            -coverageOptions "generateBadgeReport;assemblyFilters:-Assembly*,-Mirror*,-Tests*,-SimpleWebTransport,-Telepathy,-kcp2k,-QuickOutline,-PropHunt.Controls;pathFilters:-*/Assets/Mirror/*,-*/Assets/Controls/*,-*/Assets/SteamAudio/*,-*/Assets/Tests/*"
             -nographics
 
       # - name: Upload Results

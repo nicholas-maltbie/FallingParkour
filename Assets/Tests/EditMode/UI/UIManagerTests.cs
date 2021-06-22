@@ -79,6 +79,7 @@ namespace Tests.EditMode.UI
         [Test]
         public void UIManagerDestoryDuplicate()
         {
+            LogAssert.ignoreFailingMessages = true;
             this.uiManager.screenPrefabs = new List<Canvas>();
             this.uiManager.initialScreen = -1;
 

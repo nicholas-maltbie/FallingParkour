@@ -24,27 +24,6 @@ namespace PropHunt.Utils
         /// </summary>
         /// <value>Time in seconds since the start of the game</value>
         float time { get; }
-
-        /// <summary>
-        /// Get the raw axis movement for a given axis (by name)
-        /// </summary>
-        /// <param name="axisName">Name of selected axis</param>
-        /// <returns>Movement along axis as a float</returns>
-        float GetAxis(string axisName);
-
-        /// <summary>
-        /// Get when a button goes down during this frame
-        /// </summary>
-        /// <param name="buttonName">Name of the button (identifier)</param>
-        /// <returns>True if pressed this frame, false otherwise</returns>
-        bool GetButtonDown(string buttonName);
-
-        /// <summary>
-        /// Gets the current state of a button.
-        /// </summary>
-        /// <param name="buttonName">Name of the button (identifier)</param>
-        /// <returns>True if the button is down, false if the button is up</returns>
-        bool GetButton(string buttonName);
     }
 
     /// <summary>
@@ -60,23 +39,5 @@ namespace PropHunt.Utils
 
         /// <inheritdoc/>
         public float fixedDeltaTime => Time.fixedDeltaTime;
-
-        /// <inheritdoc/>
-        public float GetAxis(string axisName)
-        {
-            return Input.GetAxis(axisName);
-        }
-
-        /// <inheritdoc/>
-        public bool GetButtonDown(string buttonName)
-        {
-            return Input.GetButtonDown(buttonName);
-        }
-
-        /// <inheritdoc/>
-        public bool GetButton(string buttonName)
-        {
-            return Input.GetButton(buttonName);
-        }
     }
 }

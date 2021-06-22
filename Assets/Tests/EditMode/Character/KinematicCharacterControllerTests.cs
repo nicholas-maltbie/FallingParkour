@@ -1,12 +1,10 @@
-using System;
 using Moq;
 using NUnit.Framework;
 using PropHunt.Character;
-using PropHunt.Prop;
 using PropHunt.Utils;
 using UnityEngine;
 
-namespace Tests.EditMode.Prop
+namespace Tests.EditMode.Character
 {
     /// <summary>
     /// Tests to verify behaviour of KinematicCharacterController script
@@ -58,8 +56,7 @@ namespace Tests.EditMode.Prop
         {
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
             this.kcc.gameObject.AddComponent<Rigidbody>();
-            this.unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(1.0f);
-            this.kcc.Update();
+            this.kcc.inputMovement = new Vector3(0, 0, 1.0f);
             this.kcc.FixedUpdate();
             Assert.IsTrue(this.kcc.transform.position == Vector3.zero);
         }
@@ -68,24 +65,23 @@ namespace Tests.EditMode.Prop
         public void TestNotLocal()
         {
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(false);
-            this.kcc.Update();
+            // this.kcc.Update();
             this.kcc.FixedUpdate();
         }
 
         [Test]
         public void TestDenyMovement()
         {
-            this.unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(1.0f);
-
+            this.kcc.inputMovement = new Vector3(0, 0, 1.0f);
             PlayerInputManager.playerMovementState = PlayerInputState.Deny;
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
-            this.kcc.Update();
+            // this.kcc.Update();
             this.kcc.FixedUpdate();
 
             Assert.IsTrue(this.kcc.transform.position == Vector3.zero);
 
             PlayerInputManager.playerMovementState = PlayerInputState.Allow;
-            this.kcc.Update();
+            // this.kcc.Update();
             this.kcc.FixedUpdate();
 
             Assert.IsTrue(this.kcc.transform.position == Vector3.zero);
@@ -95,14 +91,13 @@ namespace Tests.EditMode.Prop
         public void TestMapMovementFromInput()
         {
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
-            this.unityServiceMock.Setup(e => e.GetAxis("Horizontal")).Returns(1.0f);
-            this.unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(1.0f);
-            this.kcc.Update();
+            // Simulate giving input movement
+            this.kcc.OnMove(new UnityEngine.InputSystem.InputAction.CallbackContext());
+            this.kcc.OnSprint(new UnityEngine.InputSystem.InputAction.CallbackContext());
+            this.kcc.inputMovement = new Vector3(0.5f, 0, 0.5f);
             Assert.IsTrue(this.kcc.InputMovement.magnitude <= 1.0f);
             Assert.IsTrue(this.kcc.InputMovement.x == this.kcc.InputMovement.z);
-            this.unityServiceMock.Setup(e => e.GetAxis("Horizontal")).Returns(1.0f);
-            this.unityServiceMock.Setup(e => e.GetAxis("Vertical")).Returns(0.0f);
-            this.kcc.Update();
+            this.kcc.inputMovement = new Vector3(1.0f, 0, 0.0f);
             Assert.IsTrue(this.kcc.InputMovement.magnitude <= 1.0f);
             Assert.IsTrue(this.kcc.InputMovement.x == 1.0f);
             Assert.IsTrue(this.kcc.InputMovement.z == 0.0f);
@@ -128,8 +123,8 @@ namespace Tests.EditMode.Prop
             Assert.IsFalse(this.kcc.Falling);
 
             // Allow player to attempt to jump
-            unityServiceMock.Setup(e => e.GetButton("Jump")).Returns(true);
-            this.kcc.Update();
+            this.kcc.OnJump(new UnityEngine.InputSystem.InputAction.CallbackContext());
+            this.kcc.attemptingJump = true;
             this.kcc.FixedUpdate();
 
             // Assert that we are jumping

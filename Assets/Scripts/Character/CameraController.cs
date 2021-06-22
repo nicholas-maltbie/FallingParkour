@@ -3,6 +3,7 @@ using System.Collections;
 using Mirror;
 using PropHunt.Utils;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace PropHunt.Character
 {
@@ -134,6 +135,27 @@ namespace PropHunt.Character
                 layerMask, queryTriggerInteraction, out hit);
         }
 
+        /// <summary>
+        /// Change in yaw from mouse movement
+        /// </summary>
+        private float yawChange;
+
+        /// <summary>
+        /// Change in pitch from mouse movement
+        /// </summary>
+        private float pitchChange;
+
+        /// <summary>
+        /// Look action changes for camera movement
+        /// </summary>
+        public void OnLook(InputAction.CallbackContext context)
+        {
+            Vector2 look = context.ReadValue<Vector2>();
+            look *= PlayerInputManager.mouseSensitivity;
+            yawChange = look.x;
+            pitchChange = look.y;
+        }
+
         public void Update()
         {
             if (!networkService.isLocalPlayer)
@@ -144,17 +166,16 @@ namespace PropHunt.Character
             float deltaTime = unityService.deltaTime;
 
             float yaw = transform.rotation.eulerAngles.y;
-            float yawChange = 0;
             float zoomChange = 0;
             // bound pitch between -180 and 180
             float pitch = (cameraTransform.rotation.eulerAngles.x % 360 + 180) % 360 - 180;
             // Only allow rotation if player is allowed to move
             if (PlayerInputManager.playerMovementState == PlayerInputState.Allow)
             {
-                yawChange = rotationRate * deltaTime * unityService.GetAxis("Mouse X");
+                yawChange = rotationRate * deltaTime * yawChange;
                 yaw += yawChange;
-                pitch += rotationRate * deltaTime * -1 * unityService.GetAxis("Mouse Y");
-                zoomChange = zoomSpeed * deltaTime * -1 * unityService.GetAxis("Mouse ScrollWheel");
+                pitch += rotationRate * deltaTime * -1 * pitchChange;
+                // zoomChange = zoomSpeed * deltaTime * -1 * unityService.GetAxis("Mouse ScrollWheel");
             }
             // Clamp rotation of camera between minimum and maximum specified pitch
             pitch = Mathf.Clamp(pitch, minPitch, maxPitch);

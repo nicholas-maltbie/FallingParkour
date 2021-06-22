@@ -16,11 +16,6 @@ namespace Tests.EditMode.Character
     public class CharacterPushTests
     {
         /// <summary>
-        /// How the character moved
-        /// </summary>
-        private CharacterMovement characterMovement;
-
-        /// <summary>
         /// Character Push component for this test
         /// </summary>
         private CharacterPush characterPush;
@@ -52,7 +47,6 @@ namespace Tests.EditMode.Character
             GameObject characterGo = new GameObject();
             this.networkIdentity = characterGo.AddComponent<NetworkIdentity>();
             this.characterController = characterGo.AddComponent<CharacterController>();
-            this.characterMovement = characterGo.AddComponent<CharacterMovement>();
             this.characterPush = characterGo.AddComponent<CharacterPush>();
             this.characterPush.Start();
             this.networkServiceMock = new Mock<INetworkService>();
@@ -63,7 +57,7 @@ namespace Tests.EditMode.Character
         [TearDown]
         public void TearDown()
         {
-            GameObject.DestroyImmediate(this.characterMovement.gameObject);
+            GameObject.DestroyImmediate(this.characterPush.gameObject);
         }
 
         /// <summary>
