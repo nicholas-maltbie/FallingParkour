@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 
 namespace PropHunt.UI
 {
@@ -55,7 +57,7 @@ namespace PropHunt.UI
         /// <summary>
         /// Various screens to add into the scene
         /// </summary>
-        public List<CanvasGroup> screenPrefabs = new List<CanvasGroup>();
+        public List<GameScreen> screenPrefabs = new List<GameScreen>();
 
         /// <summary>
         /// Index of the first screen to show
@@ -76,6 +78,11 @@ namespace PropHunt.UI
         /// Sequence of all screens used by the player
         /// </summary>
         private LinkedList<string> screenSequence = new LinkedList<string>();
+
+        /// <summary>
+        /// Input actions used by UI Module
+        /// </summary>
+        public InputActionAsset inputActions;
 
         /// <summary>
         /// Maximum number of screen changes that can be saved
@@ -125,6 +132,7 @@ namespace PropHunt.UI
 
             // Setup dictionary of screens
             this.screenLookup = new Dictionary<string, GameObject>();
+            // GetComponent<InputSystemUIInputModule>().actionsAsset = inputActions;
             for (int idx = 0; idx < this.screenPrefabs.Count; idx++)
             {
                 string screenName = screenPrefabs[idx].name;
@@ -134,20 +142,17 @@ namespace PropHunt.UI
                 // Set object parent to this for more organized hierarchy
                 screen.transform.SetParent(this.transform, worldPositionStays: false);
                 this.screenLookup[screenName] = screen;
-                CanvasGroup canvasGroup = screen.GetComponent<CanvasGroup>();
+                GameScreen gameScreen = screen.GetComponent<GameScreen>();
+                screen.SetActive(true);
                 if (idx == this.initialScreen)
                 {
                     this.CurrentScreen = screenName;
                     screenSequence.AddLast(screenName);
-                    canvasGroup.alpha = 1.0f;
-                    canvasGroup.interactable = true;
-                    canvasGroup.blocksRaycasts = true;
+                    gameScreen.DisplayScreen();
                 }
                 else
                 {
-                    canvasGroup.alpha = 0.0f;
-                    canvasGroup.interactable = false;
-                    canvasGroup.blocksRaycasts = false;
+                    gameScreen.HideScreen();
                 }
             }
 
@@ -203,15 +208,11 @@ namespace PropHunt.UI
             GameObject currentlyDisplayed = this.screenLookup[this.CurrentScreen];
             GameObject newDisplay = this.screenLookup[screenName];
 
-            CanvasGroup currentCanvas = currentlyDisplayed.GetComponent<CanvasGroup>();
-            CanvasGroup nextCanvas = newDisplay.GetComponent<CanvasGroup>();
+            GameScreen currentScreen = currentlyDisplayed.GetComponent<GameScreen>();
+            GameScreen nextScreen = newDisplay.GetComponent<GameScreen>();
 
-            currentCanvas.alpha = 0.0f;
-            currentCanvas.interactable = false;
-            currentCanvas.blocksRaycasts = false;
-            nextCanvas.alpha = 1.0f;
-            nextCanvas.interactable = true;
-            nextCanvas.blocksRaycasts = true;
+            currentScreen.HideScreen();
+            nextScreen.DisplayScreen();
 
             ScreenChangeEventArgs changeEvent = new ScreenChangeEventArgs();
             changeEvent.oldScreen = this.CurrentScreen;

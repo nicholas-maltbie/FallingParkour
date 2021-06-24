@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: -3259061909783027214}
   - component: {fileID: 332710742900957262}
   - component: {fileID: 1397598960152374926}
+  - component: {fileID: 6979754546132761593}
   m_Layer: 5
   m_Name: ConnectingMenu
   m_TagString: Untagged
@@ -308,6 +309,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &6979754546132761593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5674224039144228343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a93a4523ef70bf64b8799d5e38201ad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7587180217208483878
 GameObject:
   m_ObjectHideFlags: 0

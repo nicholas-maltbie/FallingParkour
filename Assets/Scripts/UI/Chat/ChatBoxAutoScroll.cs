@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace PropHunt.UI.Chat
 {
-    public class ChatBoxAutoScroll : MonoBehaviour
+    public class ChatBoxAutoScroll : MonoBehaviour, IScreenComponent
     {
         public static float scrollPosition;
 
@@ -27,9 +27,14 @@ namespace PropHunt.UI.Chat
             yield return null;
         }
 
-        public void OnEnable()
+        public void OnScreenLoaded()
         {
             StartCoroutine(SetScroll(ChatBoxAutoScroll.scrollPosition));
+        }
+
+        public void OnScreenUnloaded()
+        {
+
         }
     }
 }

@@ -5,15 +5,20 @@ using UnityEngine.UI;
 
 namespace PropHunt.UI.Chat
 {
-    public class DebugChatUpdate : MonoBehaviour
+    public class DebugChatUpdate : MonoBehaviour, IScreenComponent
     {
         public Text text;
         public Scrollbar bar;
 
-        public void OnEnable()
+        public void OnScreenLoaded()
         {
             UpdateText();
             DebugChatLog.DebugChatEvents += HandleEvent;
+        }
+
+        public void OnScreenUnloaded()
+        {
+
         }
 
         public void OnDisable()

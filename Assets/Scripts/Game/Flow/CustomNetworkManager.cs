@@ -3,8 +3,6 @@ using Mirror;
 using PropHunt.Game.Communication;
 using System;
 using PropHunt.Environment.Sound;
-using UnityEngine.SceneManagement;
-using System.Collections;
 
 namespace PropHunt.Game.Flow
 {
@@ -23,6 +21,9 @@ namespace PropHunt.Game.Flow
         public static event EventHandler<PlayerConnectEvent> OnPlayerConnect;
 
         public static CustomNetworkManager Instance;
+
+        [Header("Game Prefabs")]
+        public GameTimer timerPrefab;
 
         public override void Awake()
         {
@@ -59,6 +60,12 @@ namespace PropHunt.Game.Flow
 
         public override void OnStartClient()
         {
+            // Register timer prefab if it is not already registered
+            if (timerPrefab != null && !NetworkClient.prefabs.ContainsValue(timerPrefab.gameObject))
+            {
+                NetworkClient.RegisterPrefab(timerPrefab.gameObject);
+            }
+
             base.OnStartClient();
             DebugChatLog.ClearChatLog();
             NetworkClient.RegisterHandler<ChatMessage>(DebugChatLog.OnMessage);

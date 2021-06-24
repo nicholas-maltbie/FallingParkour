@@ -46,7 +46,7 @@ namespace Tests.EditMode.UI.Actions
             this.uiManager = this.menuControllerObject.AddComponent<UIManager>();
             this.menuController = this.menuControllerObject.AddComponent<MenuController>();
 
-            this.uiManager.screenPrefabs = new List<CanvasGroup>();
+            this.uiManager.screenPrefabs = new List<GameScreen>();
             this.menuController.actionDelay = -10.0f;
 
             this.screenNames = new string[10];
@@ -56,7 +56,7 @@ namespace Tests.EditMode.UI.Actions
                 GameObject screen = new GameObject();
                 screen.name = this.screenNames[i];
                 screen.transform.parent = this.menuControllerObject.transform;
-                this.uiManager.screenPrefabs.Add(screen.AddComponent<CanvasGroup>());
+                this.uiManager.screenPrefabs.Add(screen.AddComponent<GameScreen>());
             }
 
             Assert.Throws<System.InvalidOperationException>(() => this.uiManager.Start());

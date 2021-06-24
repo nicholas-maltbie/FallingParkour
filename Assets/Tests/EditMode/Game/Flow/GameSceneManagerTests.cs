@@ -42,6 +42,7 @@ namespace Tests.EditMode.Game.Flow
         [Test]
         public void TestUpdateChangePhase()
         {
+            LogAssert.ignoreFailingMessages = true;
             networkServiceMock.Setup(e => e.activeNetworkServer).Returns(false);
             sceneManager.Update();
 
@@ -57,6 +58,7 @@ namespace Tests.EditMode.Game.Flow
         [Test]
         public void TestHandleVariousPhaseChanges()
         {
+            LogAssert.ignoreFailingMessages = true;
             LogAssert.Expect(LogType.Error, "ServerChangeScene empty scene name");
             GameManager.ChangePhase(GamePhase.Reset);
             GameManager.ChangePhase(GamePhase.Lobby);

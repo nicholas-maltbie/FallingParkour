@@ -24,7 +24,7 @@ namespace Tests.EditMode.UI
 
             enableOnHost.enableOnHost = sampleObjects;
 
-            enableOnHost.OnEnable();
+            enableOnHost.OnScreenLoaded();
 
             Assert.IsTrue(sampleObjects[0].activeSelf == false);
             Assert.IsTrue(sampleObjects[1].activeSelf == false);
@@ -34,6 +34,8 @@ namespace Tests.EditMode.UI
             GameObject.DestroyImmediate(sampleObjects[0]);
             GameObject.DestroyImmediate(sampleObjects[1]);
             GameObject.DestroyImmediate(sampleObjects[2]);
+
+            enableOnHost.OnScreenUnloaded();
         }
     }
 }

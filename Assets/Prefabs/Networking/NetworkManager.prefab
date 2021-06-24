@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 8542409671753137208}
   - component: {fileID: -2923298690912514389}
   - component: {fileID: 8542409671753137159}
+  - component: {fileID: 6242311273644376927}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -152,7 +153,7 @@ MonoBehaviour:
   serverBatchInterval: 0
   offlineScene: Assets/Scenes/MainMenu.unity
   onlineScene: 
-  transport: {fileID: 0}
+  transport: {fileID: 6242311273644376927}
   networkAddress: localhost
   maxConnections: 100
   disconnectInactiveConnections: 0
@@ -165,6 +166,7 @@ MonoBehaviour:
   - {fileID: 245587927565386927, guid: 042d651bd63ca1d42bf47ae427994384, type: 3}
   - {fileID: 245587927565386927, guid: cd466bba068e4af4885e6e346a44616a, type: 3}
   - {fileID: 1250752114043530695, guid: d3c7992bedb32c547a65b63a8702b3d8, type: 3}
+  timerPrefab: {fileID: 5660222951667944539, guid: 0d379e827af7e944095b2c2ee6ffa675, type: 3}
 --- !u!114 &8542409671753137159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,3 +182,25 @@ MonoBehaviour:
   currentMode: 1
   kcpTransportPrefab: {fileID: 4000378363632139773, guid: f8b0771faa8c69e4fb6b86805ce52ee6, type: 3}
   fizzySteamworksPrefab: {fileID: 4808816533550693423, guid: 9d70228972f0cd447b9d1c6122dbf8ae, type: 3}
+--- !u!114 &6242311273644376927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8542409671753137158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b0fecffa3f624585964b0d0eb21b18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Port: 7777
+  NoDelay: 1
+  Interval: 10
+  FastResend: 2
+  CongestionWindow: 0
+  SendWindowSize: 4096
+  ReceiveWindowSize: 4096
+  debugLog: 0
+  statisticsGUI: 0
+  statisticsLog: 0

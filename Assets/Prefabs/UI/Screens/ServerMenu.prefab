@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: -7644575066371791825}
   - component: {fileID: -4388690099473577725}
   - component: {fileID: -785964180251839563}
+  - component: {fileID: -8397626695015259230}
   m_Layer: 5
   m_Name: ServerMenu
   m_TagString: Untagged
@@ -254,6 +255,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &-8397626695015259230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4151337882126337144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a93a4523ef70bf64b8799d5e38201ad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8011329247239133913
 GameObject:
   m_ObjectHideFlags: 0

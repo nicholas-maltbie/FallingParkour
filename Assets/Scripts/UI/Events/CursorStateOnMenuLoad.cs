@@ -5,7 +5,7 @@ namespace PropHunt.UI.Events
     /// <summary>
     /// Simple class to set cursor state when the menu loads
     /// </summary>
-    public class CursorStateOnMenuLoad : MonoBehaviour
+    public class CursorStateOnMenuLoad : MonoBehaviour, IScreenComponent
     {
         /// <summary>
         /// Lock state of cursor when loading this screen
@@ -17,10 +17,15 @@ namespace PropHunt.UI.Events
         /// </summary>
         public bool cursorVisible = true;
 
-        public void OnEnable()
+        public void OnScreenLoaded()
         {
             Cursor.lockState = cursorLockMode;
             Cursor.visible = cursorVisible;
+        }
+
+        public void OnScreenUnloaded()
+        {
+
         }
     }
 }

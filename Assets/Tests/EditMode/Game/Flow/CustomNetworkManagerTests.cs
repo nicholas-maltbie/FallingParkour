@@ -29,6 +29,7 @@ namespace Tests.EditMode.Game.Flow
             networkManager = go.AddComponent<CustomNetworkManager>();
             networkManager.autoCreatePlayer = false;
             networkManager.playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Tests/EditMode/TestPlayer.prefabs");
+            networkManager.timerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Networking/Timer/GameTimer.prefab").GetComponent<GameTimer>();
             networkManager.Awake();
 
             networkManager.StartHost();
@@ -44,6 +45,7 @@ namespace Tests.EditMode.Game.Flow
         {
             networkManager.StopHost();
 
+            // Cleanup created prefabs
             GameObject.DestroyImmediate(networkManager.playerPrefab);
             GameObject.DestroyImmediate(networkManager.gameObject);
         }

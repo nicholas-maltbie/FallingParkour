@@ -1470,7 +1470,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.000033261666}
+  m_AnchoredPosition: {x: 0, y: -0.000030517578}
   m_SizeDelta: {x: 200, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4025729824258712297
@@ -1922,8 +1922,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6995827685516138419}
   m_HandleRect: {fileID: 6497642611335811398}
   m_Direction: 2
-  m_Value: 0.9999998
-  m_Size: 0.79077
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3064,9 +3064,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Sound
-
-'
+  m_Text: Sound
 --- !u!1 &2058467463802269622
 GameObject:
   m_ObjectHideFlags: 0
@@ -10127,6 +10125,7 @@ GameObject:
   - component: {fileID: 2165199262839015779}
   - component: {fileID: 1464204944664550205}
   - component: {fileID: -1744219451164611393}
+  - component: {fileID: -1115252214597416267}
   m_Layer: 5
   m_Name: SettingsMenu
   m_TagString: Untagged
@@ -10301,6 +10300,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &-1115252214597416267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6637053135914170328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a93a4523ef70bf64b8799d5e38201ad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6674487148762431983
 GameObject:
   m_ObjectHideFlags: 0
