@@ -68,7 +68,7 @@ namespace Tests.EditMode.UI
         [Test]
         public void UIManagerSetupWithNoScreens()
         {
-            this.uiManager.screenPrefabs = new List<Canvas>();
+            this.uiManager.screenPrefabs = new List<CanvasGroup>();
             this.uiManager.initialScreen = -1;
 
             this.uiManager.Start();
@@ -80,7 +80,7 @@ namespace Tests.EditMode.UI
         public void UIManagerDestoryDuplicate()
         {
             LogAssert.ignoreFailingMessages = true;
-            this.uiManager.screenPrefabs = new List<Canvas>();
+            this.uiManager.screenPrefabs = new List<CanvasGroup>();
             this.uiManager.initialScreen = -1;
 
             this.uiManager.Start();
@@ -98,14 +98,14 @@ namespace Tests.EditMode.UI
         [Test]
         public void UIManagerSetupSelectedNegativeInvalidScreens()
         {
-            this.uiManager.screenPrefabs = new List<Canvas>();
+            this.uiManager.screenPrefabs = new List<CanvasGroup>();
             GameObject screen = new GameObject();
-            this.uiManager.screenPrefabs.Add(screen.AddComponent<Canvas>());
+            this.uiManager.screenPrefabs.Add(screen.AddComponent<CanvasGroup>());
             this.uiManager.initialScreen = -10;
 
             Assert.Throws<System.InvalidOperationException>(() => this.uiManager.Start());
 
-            foreach (Canvas canvasObject in this.uiManager.screenPrefabs)
+            foreach (CanvasGroup canvasObject in this.uiManager.screenPrefabs)
             {
                 GameObject.DestroyImmediate(canvasObject.gameObject);
             }
@@ -118,14 +118,14 @@ namespace Tests.EditMode.UI
         [Test]
         public void UIManagerSetupSelectedOutOfRangeInvalidScreens()
         {
-            this.uiManager.screenPrefabs = new List<Canvas>();
+            this.uiManager.screenPrefabs = new List<CanvasGroup>();
             GameObject screen = new GameObject();
-            this.uiManager.screenPrefabs.Add(screen.AddComponent<Canvas>());
+            this.uiManager.screenPrefabs.Add(screen.AddComponent<CanvasGroup>());
             this.uiManager.initialScreen = 10;
 
             Assert.Throws<System.InvalidOperationException>(() => this.uiManager.Start());
 
-            foreach (Canvas canvasObject in this.uiManager.screenPrefabs)
+            foreach (CanvasGroup canvasObject in this.uiManager.screenPrefabs)
             {
                 GameObject.DestroyImmediate(canvasObject.gameObject);
             }
@@ -138,13 +138,13 @@ namespace Tests.EditMode.UI
         [Test]
         public void UIManagerLoadScreenOnEnable()
         {
-            this.uiManager.screenPrefabs = new List<Canvas>();
+            this.uiManager.screenPrefabs = new List<CanvasGroup>();
             GameObject screen1 = new GameObject();
             screen1.name = "Screen 1";
             GameObject screen2 = new GameObject();
             screen2.name = "Screen 2";
-            this.uiManager.screenPrefabs.Add(screen1.AddComponent<Canvas>());
-            this.uiManager.screenPrefabs.Add(screen2.AddComponent<Canvas>());
+            this.uiManager.screenPrefabs.Add(screen1.AddComponent<CanvasGroup>());
+            this.uiManager.screenPrefabs.Add(screen2.AddComponent<CanvasGroup>());
 
             this.uiManager.initialScreen = 0;
 
@@ -169,16 +169,16 @@ namespace Tests.EditMode.UI
         [Test]
         public void UIManagerSetupCorrectlyAndSetScreens()
         {
-            this.uiManager.screenPrefabs = new List<Canvas>();
+            this.uiManager.screenPrefabs = new List<CanvasGroup>();
             int totalScreens = 10;
-            GameObject[] screens = new GameObject[totalScreens];
+            GameObject[] screenPrefabs = new GameObject[totalScreens];
             string[] screenNames = new string[totalScreens];
             for (int screenIdx = 0; screenIdx < totalScreens; screenIdx++)
             {
-                screens[screenIdx] = new GameObject();
-                screens[screenIdx].name = "Screen" + screenIdx.ToString();
-                screenNames[screenIdx] = screens[screenIdx].name;
-                this.uiManager.screenPrefabs.Add(screens[screenIdx].AddComponent<Canvas>());
+                screenPrefabs[screenIdx] = new GameObject();
+                screenPrefabs[screenIdx].name = "Screen" + screenIdx.ToString();
+                screenNames[screenIdx] = screenPrefabs[screenIdx].name;
+                this.uiManager.screenPrefabs.Add(screenPrefabs[screenIdx].AddComponent<CanvasGroup>());
             }
             this.uiManager.initialScreen = 2;
 
@@ -219,7 +219,7 @@ namespace Tests.EditMode.UI
             Assert.IsTrue(this.screenChangeEvents == 3);
             Assert.IsTrue(this.currentScreen == screenNames[2]);
 
-            // Add screens until the history overflows
+            // Add screenPrefabs until the history overflows
             for (int i = 0; i < uiManager.maxScreenHistory; i++)
             {
                 UIManager.RequestNewScreen(this, screenNames[i % 2]);
@@ -233,12 +233,12 @@ namespace Tests.EditMode.UI
             Assert.IsTrue(this.currentScreen == beforePrevious);
 
             // Cleanup objects created by test
-            foreach (Canvas canvasObject in this.uiManager.screenPrefabs)
+            foreach (CanvasGroup canvasObject in this.uiManager.screenPrefabs)
             {
                 GameObject.DestroyImmediate(canvasObject.gameObject);
             }
 
-            foreach (GameObject screen in screens)
+            foreach (GameObject screen in screenPrefabs)
             {
                 GameObject.DestroyImmediate(screen);
             }

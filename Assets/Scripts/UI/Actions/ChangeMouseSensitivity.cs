@@ -20,7 +20,7 @@ namespace PropHunt.UI.Actions
         /// <summary>
         /// Power value for scaling mouse sensitivity between minimum and maximum
         /// </summary>
-        public static float powerValue = 0.75f;
+        public const float powerValue = 0.75f;
 
         /// <summary>
         /// Get the value on a slider from a given mouse sensitivity level

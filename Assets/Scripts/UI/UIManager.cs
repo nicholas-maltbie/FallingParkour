@@ -55,7 +55,7 @@ namespace PropHunt.UI
         /// <summary>
         /// Various screens to add into the scene
         /// </summary>
-        public List<Canvas> screenPrefabs = new List<Canvas>();
+        public List<CanvasGroup> screenPrefabs = new List<CanvasGroup>();
 
         /// <summary>
         /// Index of the first screen to show
@@ -134,15 +134,20 @@ namespace PropHunt.UI
                 // Set object parent to this for more organized hierarchy
                 screen.transform.SetParent(this.transform, worldPositionStays: false);
                 this.screenLookup[screenName] = screen;
+                CanvasGroup canvasGroup = screen.GetComponent<CanvasGroup>();
                 if (idx == this.initialScreen)
                 {
                     this.CurrentScreen = screenName;
                     screenSequence.AddLast(screenName);
-                    this.screenLookup[screenName].SetActive(true);
+                    canvasGroup.alpha = 1.0f;
+                    canvasGroup.interactable = true;
+                    canvasGroup.blocksRaycasts = true;
                 }
                 else
                 {
-                    this.screenLookup[screenName].SetActive(false);
+                    canvasGroup.alpha = 0.0f;
+                    canvasGroup.interactable = false;
+                    canvasGroup.blocksRaycasts = false;
                 }
             }
 
@@ -198,8 +203,15 @@ namespace PropHunt.UI
             GameObject currentlyDisplayed = this.screenLookup[this.CurrentScreen];
             GameObject newDisplay = this.screenLookup[screenName];
 
-            currentlyDisplayed.SetActive(false);
-            newDisplay.SetActive(true);
+            CanvasGroup currentCanvas = currentlyDisplayed.GetComponent<CanvasGroup>();
+            CanvasGroup nextCanvas = newDisplay.GetComponent<CanvasGroup>();
+
+            currentCanvas.alpha = 0.0f;
+            currentCanvas.interactable = false;
+            currentCanvas.blocksRaycasts = false;
+            nextCanvas.alpha = 1.0f;
+            nextCanvas.interactable = true;
+            nextCanvas.blocksRaycasts = true;
 
             ScreenChangeEventArgs changeEvent = new ScreenChangeEventArgs();
             changeEvent.oldScreen = this.CurrentScreen;
