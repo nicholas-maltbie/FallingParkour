@@ -19,6 +19,7 @@ namespace Tests.EditMode.UI
             this.playerNameUpdate = go.AddComponent<PlayerNameUpdate>();
             this.field = go.AddComponent<InputField>();
             this.playerNameUpdate.field = this.field;
+            this.playerNameUpdate.Start();
         }
 
         [TearDown]
@@ -32,11 +33,13 @@ namespace Tests.EditMode.UI
         {
             this.field.text = "TestName";
             this.playerNameUpdate.UpdatePlayerName();
-            Assert.IsTrue(CharacterNameManagement.playerName == "TestName");
+            Assert.That(CharacterNameManagement.playerName.Length, Is.LessThanOrEqualTo(CharacterNameManagement.MaxNameLength));
+            Assert.That(CharacterNameManagement.playerName, Is.EqualTo(this.field.text));
 
             this.field.text = "TestName This Name Is Very Long$$$$";
             this.playerNameUpdate.UpdatePlayerName();
-            Assert.IsTrue(CharacterNameManagement.playerName != this.field.text);
+            Assert.That(CharacterNameManagement.playerName.Length, Is.LessThanOrEqualTo(CharacterNameManagement.MaxNameLength));
+            Assert.That(CharacterNameManagement.playerName, Is.EqualTo(this.field.text));
         }
     }
 }

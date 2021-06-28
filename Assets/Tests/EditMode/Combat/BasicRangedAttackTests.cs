@@ -122,9 +122,10 @@ namespace Tests.EditMode.Combat
     [TestFixture]
     public class BasicRangedAttackCommandTests : RemoteTestBase
     {
-        [UnityTest]
-        public IEnumerator TestVerifyAttackNotServer()
+        [Test]
+        public void TestVerifyAttackNotServer()
         {
+            LogAssert.ignoreFailingMessages = true;
             PlayerInputManager.playerMovementState = PlayerInputState.Allow;
             Mock<INetworkService> networkServiceMock = new Mock<INetworkService>();
             Mock<IUnityService> unityServiceMock = new Mock<IUnityService>();
@@ -140,14 +141,13 @@ namespace Tests.EditMode.Combat
             networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
             networkServiceMock.Setup(e => e.isServer).Returns(false);
             unityServiceMock.Setup(e => e.time).Returns(0);
-            yield return null;
+
             // Assert that we can attack at start
             Assert.IsTrue(attack.CanAttack);
             // Attempt to attack, then assert that cooldown has kicked in
             attack.attacking = true;
             attack.Update();
-
-            yield return null;
+            GameObject.DestroyImmediate(attack);
         }
     }
 }

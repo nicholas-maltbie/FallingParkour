@@ -41,6 +41,7 @@ namespace Tests.EditMode.Game.Flow
         [Test]
         public void TestHandleVariousPhaseChanges()
         {
+            LogAssert.ignoreFailingMessages = true;
             GameManager.ChangePhase(GamePhase.Reset);
             GameManager.ChangePhase(GamePhase.Lobby);
             GameManager.ChangePhase(GamePhase.Setup);
@@ -52,6 +53,7 @@ namespace Tests.EditMode.Game.Flow
         [Test]
         public void SpawnCharacterOnJoin()
         {
+            LogAssert.ignoreFailingMessages = true;
             GameManager.ChangePhase(GamePhase.InGame);
             spawnManager.HandlePlayerConnect(this, new PlayerConnectEvent(NetworkServer.connections[0]));
             GameManager.ChangePhase(GamePhase.Lobby);
