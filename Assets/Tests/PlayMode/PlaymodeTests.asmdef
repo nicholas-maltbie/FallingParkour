@@ -1,13 +1,14 @@
 {
     "name": "PlaymodeTests",
+    "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Mirror",
-        "PropHunt",
         "kcp2k",
         "Tests.Common",
-        "Mirror.Components"
+        "Mirror.Components",
+        "FallingParkour"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

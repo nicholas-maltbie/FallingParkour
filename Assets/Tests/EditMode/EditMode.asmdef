@@ -4,13 +4,13 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "PropHunt",
         "Mirror",
         "kcp2k",
         "Tests.Common",
         "QuickOutline",
         "Unity.InputSystem",
-        "Unity.InputSystem.TestFramework"
+        "Unity.InputSystem.TestFramework",
+        "FallingParkour"
     ],
     "includePlatforms": [
         "Editor"
