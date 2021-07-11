@@ -47,7 +47,7 @@ public class ScriptBatch : IPostprocessBuildWithReport
         string path = "Builds/MacOS";
         string[] levels = GetScenes();
 
-        string appFolder = path + "/PropHunt.app";
+        string appFolder = path + "/FallingParkour.app";
 
         // Build player.
         BuildPipeline.BuildPlayer(levels, appFolder, BuildTarget.StandaloneOSX, BuildOptions.Development);
@@ -61,7 +61,7 @@ public class ScriptBatch : IPostprocessBuildWithReport
         string[] levels = GetScenes();
 
         // Build player.
-        BuildPipeline.BuildPlayer(levels, path + "/PropHunt.x86_64", BuildTarget.StandaloneLinux64, BuildOptions.Development);
+        BuildPipeline.BuildPlayer(levels, path + "/FallingParkour.x86_64", BuildTarget.StandaloneLinux64, BuildOptions.Development);
     }
 
     [MenuItem("Build/Windows64 Build")]
@@ -70,7 +70,7 @@ public class ScriptBatch : IPostprocessBuildWithReport
         BuildPlayerOptions options = new BuildPlayerOptions
         {
             scenes = GetScenes(),
-            locationPathName = "Builds/Win64/PropHunt.exe",
+            locationPathName = "Builds/Win64/FallingParkour.exe",
             targetGroup = BuildTargetGroup.Standalone,
             target = BuildTarget.StandaloneWindows64,
             options = BuildOptions.Development
@@ -88,6 +88,6 @@ public class ScriptBatch : IPostprocessBuildWithReport
     //     string[] levels = GetScenes();
 
     //     // Build player.
-    //     BuildPipeline.BuildPlayer(levels, path + "/PropHunt.exe", BuildTarget.StandaloneWindows, BuildOptions.None);
+    //     BuildPipeline.BuildPlayer(levels, path + "/FallingParkour.exe", BuildTarget.StandaloneWindows, BuildOptions.None);
     // }
 }
