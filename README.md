@@ -1,7 +1,6 @@
-# PropHunt Mirror
+# FallingParkour
 
-This is a project to learn how to use [Mirror Networking](https://mirror-networking.com/) with Unity and create a simple game modeled off of PropHunt. 
-This project is based on the [Garry's Mod](https://store.steampowered.com/app/4000/Garrys_Mod/) game mode [PropHunt (Hide'n'Seek)](https://steamcommunity.com/sharedfiles/filedetails/?id=135509255). 
+This is a project using [Mirror Networking](https://mirror-networking.com/) to create a simple multiplayer race game.
 
 ## Development Environment
 

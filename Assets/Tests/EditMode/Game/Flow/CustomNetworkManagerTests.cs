@@ -1,6 +1,7 @@
 using Mirror;
 using Mirror.Tests;
 using NUnit.Framework;
+using PropHunt.Character;
 using PropHunt.Game.Flow;
 using UnityEditor;
 using UnityEngine;
@@ -44,6 +45,7 @@ namespace Tests.EditMode.Game.Flow
         public virtual void TearDown()
         {
             networkManager.StopHost();
+            networkManager.OnDestory();
 
             // Cleanup created prefabs
             GameObject.DestroyImmediate(networkManager.playerPrefab);
@@ -76,6 +78,27 @@ namespace Tests.EditMode.Game.Flow
             CustomNetworkManager.OnPlayerConnect += (object sender, PlayerConnectEvent connectEvent) => { connects++; };
             this.networkManager.OnServerReady(NetworkClient.connection);
             Assert.IsTrue(connects == 1);
+        }
+
+        [Test]
+        public void TestCustomJoinMessage()
+        {
+            NetworkConnection playerConn = NetworkServer.connections[0];
+            var connectHandler = this.networkManager.SendJoinMessage(playerConn);
+            // Try sending a custom join message
+            CharacterName.OnPlayerNameChange?.Invoke(this, new PlayerNameChange("previous", "new", playerConn.connectionId));
+            // Finish timeout
+            connectHandler.MoveNext();
+        }
+
+        [Test]
+        public void TestCustomJoinMessageTimeout()
+        {
+            NetworkConnection playerConn = NetworkServer.connections[0];
+            var connectHandler = this.networkManager.SendJoinMessage(playerConn);
+            // Do NOT send a custom join message of name change
+            // Finish timeout
+            while (connectHandler.MoveNext()) ;
         }
     }
 }

@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Mirror;
+using PropHunt.Game.Flow;
 using PropHunt.Utils;
 using UnityEngine;
 
@@ -11,6 +13,11 @@ namespace PropHunt.Character
     /// </summary>
     public static class CharacterNameManagement
     {
+        /// <summary>
+        /// Maximum name length
+        /// </summary>
+        public const int MaxNameLength = 16;
+
         /// <summary>
         /// Regex to check if a name is valid
         /// </summary>
@@ -91,10 +98,49 @@ namespace PropHunt.Character
     }
 
     /// <summary>
+    /// Player name change event
+    /// </summary>
+    public class PlayerNameChange : EventArgs
+    {
+        /// <summary>
+        /// Previous name the player was using
+        /// </summary>
+        public readonly string previousName;
+        /// <summary>
+        /// New name associated with the player
+        /// </summary>
+        public readonly string newName;
+        /// <summary>
+        /// Network connection id of player joining the server
+        /// </summary>
+        public readonly int connId;
+
+        /// <summary>
+        /// Create a player name change event with previous and new names with the associated
+        /// network connection
+        /// </summary>
+        /// <param name="previousName">Previous name the player used (will
+        /// be empty string if the player had no name previously)</param>
+        /// <param name="newName">New name the player is using</param>
+        /// <param name="connId">Network connection id associated with this player</param>
+        public PlayerNameChange(string previousName, string newName, int connId)
+        {
+            this.previousName = previousName;
+            this.newName = newName;
+            this.connId = connId;
+        }
+    }
+
+    /// <summary>
     /// Component to hold a given character's name
     /// </summary>
     public class CharacterName : NetworkBehaviour
     {
+        /// <summary>
+        /// Events that occur on the server whenever a player changes their name
+        /// </summary>
+        public static EventHandler<PlayerNameChange> OnPlayerNameChange;
+
         /// <summary>
         /// Id associated with this player
         /// </summary>
@@ -119,7 +165,10 @@ namespace PropHunt.Character
         [Command]
         public void CmdUpdatePlayerName(string newName)
         {
+            PlayerNameChange changeEvent = new PlayerNameChange(characterName, newName, playerId);
             characterName = newName;
+            // Send an event for this change event
+            OnPlayerNameChange?.Invoke(this, changeEvent);
         }
 
         public void Awake()

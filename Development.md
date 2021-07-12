@@ -36,9 +36,9 @@ In order to do this, you must first clone the repo:
 # This can be anywhere you want to store the project
 $ cd ~/projects
 # Download the git repo
-$ git clone git@github.com:nicholas-maltbie/PropHunt-Mirror.git
+$ git clone git@github.com:nicholas-maltbie/FallingParkour.git
 # If you do not have ssh key setup, you can download via https
-$ git clone https://github.com/nicholas-maltbie/PropHunt-Mirror.git
+$ git clone https://github.com/nicholas-maltbie/FallingParkour.git
 ```
 
 # 3. Version Control
@@ -75,7 +75,7 @@ menu on the left half of the screen.
 
 From this file menu, navigate to the folder where the
 project has been downloaded. For example 
-`~/projects/PropHunt-Mirror`. Then hit the `Open` 
+`~/projects/FallingParkour`. Then hit the `Open` 
 button in the file selector.
 
 ![Selecting Project from file selector](https://drive.google.com/uc?export=view&id=1XbxAoZ4ISadUDGPs6bxxQUUxYnxXlLOa)

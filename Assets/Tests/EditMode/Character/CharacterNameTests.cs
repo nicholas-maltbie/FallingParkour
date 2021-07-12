@@ -1,3 +1,4 @@
+using Mirror;
 using Mirror.Tests.RemoteAttributeTest;
 using Moq;
 using NUnit.Framework;
@@ -31,6 +32,7 @@ namespace Tests.EditMode.Character
         {
             Mock<INetworkService> networkServiceMock = new Mock<INetworkService>();
             networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
+            networkServiceMock.Setup(e => e.connectionToClient).Returns(NetworkServer.connections[0]);
             characterName.networkService = networkServiceMock.Object;
             characterName.Start();
         }
