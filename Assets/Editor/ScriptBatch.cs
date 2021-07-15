@@ -4,6 +4,7 @@ using System.Diagnostics;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class ScriptBatch : IPostprocessBuildWithReport
@@ -38,11 +39,16 @@ public class ScriptBatch : IPostprocessBuildWithReport
         UnityEditor.OSXStandalone.MacOSCodeSigning.CodeSignAppBundle(report.summary.outputPath); 
 #endif
         UnityEngine.Debug.Log("MyCustomBuildProcessor.OnPostprocessBuild for target " + report.summary.platform + " at path " + report.summary.outputPath);
+
+        UnityEngine.Debug.Log("Setting Scripting Backend back to IL2CPP");
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.IL2CPP);
     }
 
     [MenuItem("Build/MacOS Build")]
     public static void MacOSBuild()
     {
+        UnityEngine.Debug.Log("Setting Scripting Backend to Mono");
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
         // Get filename.
         string path = "Builds/MacOS";
         string[] levels = GetScenes();
@@ -56,6 +62,8 @@ public class ScriptBatch : IPostprocessBuildWithReport
     [MenuItem("Build/Linux Build")]
     public static void LinuxBuild()
     {
+        UnityEngine.Debug.Log("Setting Scripting Backend to Mono");
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
         // Get filename.
         string path = "Builds/Linux";
         string[] levels = GetScenes();
@@ -67,10 +75,33 @@ public class ScriptBatch : IPostprocessBuildWithReport
     [MenuItem("Build/Windows64 Build")]
     public static void WindowsBuild()
     {
+        UnityEngine.Debug.Log("Setting Scripting Backend to IL2CPP");
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.IL2CPP);
+        // BuildUtilities.RegisterShouldIncludeInBuildCallback(new UnityEditor.PackageManager.IShouldIncludeInBuildCallback("Code Coverage"));
         BuildPlayerOptions options = new BuildPlayerOptions
         {
             scenes = GetScenes(),
             locationPathName = "Builds/Win64/FallingParkour.exe",
+            targetGroup = BuildTargetGroup.Standalone,
+            target = BuildTarget.StandaloneWindows64,
+            options = BuildOptions.Development
+        };
+
+        // Build player.
+        BuildPipeline.BuildPlayer(options);
+    }
+
+    [MenuItem("Build/Test Build")]
+    public static void TestBuild()
+    {
+        UnityEngine.Debug.Log("Setting Scripting Backend to Mono");
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
+
+        // BulidUtilities.RegisterShouldIncludeInBuildCallback(PackageManager.IShouldIncludeBUildCallback("Code Coverage"));
+        BuildPlayerOptions options = new BuildPlayerOptions
+        {
+            scenes = GetScenes(),
+            locationPathName = "Builds/Test-Win64/FallingParkour.exe",
             targetGroup = BuildTargetGroup.Standalone,
             target = BuildTarget.StandaloneWindows64,
             options = BuildOptions.Development
