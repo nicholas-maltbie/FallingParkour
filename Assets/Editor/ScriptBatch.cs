@@ -21,6 +21,19 @@ public class ScriptBatch : IPostprocessBuildWithReport
         };
     }
 
+    public static void BuildSetup(BuildTargetGroup buildTargetGroup = BuildTargetGroup.Standalone,
+        ScriptingImplementation scriptingImplementation = ScriptingImplementation.Mono2x)
+    {
+        UnityEngine.Debug.Log($"Setting Scripting Backend to {scriptingImplementation.ToString()}");
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, scriptingImplementation);
+    }
+
+    public static void BuildCleanup()
+    {
+        UnityEngine.Debug.Log("Setting Scripting Backend back to Mono");
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
+    }
+
     [MenuItem("Build/Build All")]
     public static void BuildAll()
     {
@@ -39,16 +52,12 @@ public class ScriptBatch : IPostprocessBuildWithReport
         UnityEditor.OSXStandalone.MacOSCodeSigning.CodeSignAppBundle(report.summary.outputPath); 
 #endif
         UnityEngine.Debug.Log("MyCustomBuildProcessor.OnPostprocessBuild for target " + report.summary.platform + " at path " + report.summary.outputPath);
-
-        UnityEngine.Debug.Log("Setting Scripting Backend back to Mono");
-        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
     }
 
     [MenuItem("Build/MacOS Build")]
     public static void MacOSBuild()
     {
-        UnityEngine.Debug.Log("Setting Scripting Backend to Mono");
-        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
+        BuildSetup(scriptingImplementation: ScriptingImplementation.Mono2x);
         // Get filename.
         string path = "Builds/MacOS";
         string[] levels = GetScenes();
@@ -57,26 +66,30 @@ public class ScriptBatch : IPostprocessBuildWithReport
 
         // Build player.
         BuildPipeline.BuildPlayer(levels, appFolder, BuildTarget.StandaloneOSX, BuildOptions.Development);
+
+        BuildCleanup();
     }
 
     [MenuItem("Build/Linux Build")]
     public static void LinuxBuild()
     {
-        UnityEngine.Debug.Log("Setting Scripting Backend to Mono");
-        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
+        BuildSetup(scriptingImplementation: ScriptingImplementation.Mono2x);
+
         // Get filename.
         string path = "Builds/Linux";
         string[] levels = GetScenes();
 
         // Build player.
         BuildPipeline.BuildPlayer(levels, path + "/FallingParkour.x86_64", BuildTarget.StandaloneLinux64, BuildOptions.Development);
+
+        BuildCleanup();
     }
 
     [MenuItem("Build/Windows64 Build")]
     public static void WindowsBuild()
     {
-        UnityEngine.Debug.Log("Setting Scripting Backend to IL2CPP");
-        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.IL2CPP);
+        BuildSetup(scriptingImplementation: ScriptingImplementation.IL2CPP);
+
         // BuildUtilities.RegisterShouldIncludeInBuildCallback(new UnityEditor.PackageManager.IShouldIncludeInBuildCallback("Code Coverage"));
         BuildPlayerOptions options = new BuildPlayerOptions
         {
@@ -89,13 +102,14 @@ public class ScriptBatch : IPostprocessBuildWithReport
 
         // Build player.
         BuildPipeline.BuildPlayer(options);
+
+        BuildCleanup();
     }
 
     [MenuItem("Build/Test Build")]
     public static void TestBuild()
     {
-        UnityEngine.Debug.Log("Setting Scripting Backend to Mono");
-        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
+        BuildSetup(scriptingImplementation: ScriptingImplementation.Mono2x);
 
         // BulidUtilities.RegisterShouldIncludeInBuildCallback(PackageManager.IShouldIncludeBUildCallback("Code Coverage"));
         BuildPlayerOptions options = new BuildPlayerOptions
@@ -109,6 +123,8 @@ public class ScriptBatch : IPostprocessBuildWithReport
 
         // Build player.
         BuildPipeline.BuildPlayer(options);
+
+        BuildCleanup();
     }
 
     // [MenuItem("Build/Windows Build")]
