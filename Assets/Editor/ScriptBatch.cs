@@ -40,8 +40,8 @@ public class ScriptBatch : IPostprocessBuildWithReport
 #endif
         UnityEngine.Debug.Log("MyCustomBuildProcessor.OnPostprocessBuild for target " + report.summary.platform + " at path " + report.summary.outputPath);
 
-        UnityEngine.Debug.Log("Setting Scripting Backend back to IL2CPP");
-        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.IL2CPP);
+        UnityEngine.Debug.Log("Setting Scripting Backend back to Mono");
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
     }
 
     [MenuItem("Build/MacOS Build")]
