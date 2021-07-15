@@ -4,6 +4,7 @@ using System.Diagnostics;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class ScriptBatch : IPostprocessBuildWithReport
@@ -18,6 +19,19 @@ public class ScriptBatch : IPostprocessBuildWithReport
             "Assets/Scenes/LobbyScene.unity",
             "Assets/Scenes/BasicHouse.unity"
         };
+    }
+
+    public static void BuildSetup(BuildTargetGroup buildTargetGroup = BuildTargetGroup.Standalone,
+        ScriptingImplementation scriptingImplementation = ScriptingImplementation.Mono2x)
+    {
+        UnityEngine.Debug.Log($"Setting Scripting Backend to {scriptingImplementation.ToString()}");
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, scriptingImplementation);
+    }
+
+    public static void BuildCleanup()
+    {
+        UnityEngine.Debug.Log("Setting Scripting Backend back to Mono");
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
     }
 
     [MenuItem("Build/Build All")]
@@ -43,6 +57,7 @@ public class ScriptBatch : IPostprocessBuildWithReport
     [MenuItem("Build/MacOS Build")]
     public static void MacOSBuild()
     {
+        BuildSetup(scriptingImplementation: ScriptingImplementation.Mono2x);
         // Get filename.
         string path = "Builds/MacOS";
         string[] levels = GetScenes();
@@ -51,22 +66,31 @@ public class ScriptBatch : IPostprocessBuildWithReport
 
         // Build player.
         BuildPipeline.BuildPlayer(levels, appFolder, BuildTarget.StandaloneOSX, BuildOptions.Development);
+
+        BuildCleanup();
     }
 
     [MenuItem("Build/Linux Build")]
     public static void LinuxBuild()
     {
+        BuildSetup(scriptingImplementation: ScriptingImplementation.Mono2x);
+
         // Get filename.
         string path = "Builds/Linux";
         string[] levels = GetScenes();
 
         // Build player.
         BuildPipeline.BuildPlayer(levels, path + "/FallingParkour.x86_64", BuildTarget.StandaloneLinux64, BuildOptions.Development);
+
+        BuildCleanup();
     }
 
     [MenuItem("Build/Windows64 Build")]
     public static void WindowsBuild()
     {
+        BuildSetup(scriptingImplementation: ScriptingImplementation.IL2CPP);
+
+        // BuildUtilities.RegisterShouldIncludeInBuildCallback(new UnityEditor.PackageManager.IShouldIncludeInBuildCallback("Code Coverage"));
         BuildPlayerOptions options = new BuildPlayerOptions
         {
             scenes = GetScenes(),
@@ -78,6 +102,29 @@ public class ScriptBatch : IPostprocessBuildWithReport
 
         // Build player.
         BuildPipeline.BuildPlayer(options);
+
+        BuildCleanup();
+    }
+
+    [MenuItem("Build/Test Build")]
+    public static void TestBuild()
+    {
+        BuildSetup(scriptingImplementation: ScriptingImplementation.Mono2x);
+
+        // BulidUtilities.RegisterShouldIncludeInBuildCallback(PackageManager.IShouldIncludeBUildCallback("Code Coverage"));
+        BuildPlayerOptions options = new BuildPlayerOptions
+        {
+            scenes = GetScenes(),
+            locationPathName = "Builds/Test-Win64/FallingParkour.exe",
+            targetGroup = BuildTargetGroup.Standalone,
+            target = BuildTarget.StandaloneWindows64,
+            options = BuildOptions.Development
+        };
+
+        // Build player.
+        BuildPipeline.BuildPlayer(options);
+
+        BuildCleanup();
     }
 
     // [MenuItem("Build/Windows Build")]
