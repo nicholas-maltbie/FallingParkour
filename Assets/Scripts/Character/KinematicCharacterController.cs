@@ -369,21 +369,15 @@ namespace PropHunt.Character
                 inputMovement = Vector3.zero;
             }
 
+            // Update grounded state and increase velocity if falling
+            CheckGrounded();
+
             // If we are standing on a rigidbody marked as a moving platform, move the player
             // with the moving ground object.
             MoveWithGround();
 
             // Push out of overlapping objects
             PushOutOverlapping();
-
-            // Rotate movement vector by player yaw (rotation about vertical axis)
-            Quaternion horizPlaneView = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
-            Vector3 playerMovementDirection = horizPlaneView * inputMovement;
-
-            Vector3 movement = playerMovementDirection * (isSprinting ? sprintSpeed : movementSpeed);
-
-            // Update grounded state and increase velocity if falling
-            CheckGrounded();
 
             // Update player velocity based on grounded state
             if (!Falling && !attemptingJump)
@@ -399,6 +393,12 @@ namespace PropHunt.Character
 
             // Compute player jump if they are attempting to jump
             PlayerJump(deltaTime);
+
+            // Rotate movement vector by player yaw (rotation about vertical axis)
+            Quaternion horizPlaneView = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+            Vector3 playerMovementDirection = horizPlaneView * inputMovement;
+
+            Vector3 movement = playerMovementDirection * (isSprinting ? sprintSpeed : movementSpeed);
 
             // If the player is standing on the ground, project their movement onto the ground plane
             // This allows them to walk up gradual slopes without facing a hit in movement speed
@@ -461,13 +461,13 @@ namespace PropHunt.Character
         {
             // Check if we were standing on moving ground the previous frame
             IMovingGround movingGround = previousFloor == null ? null : previousFloor.GetComponent<IMovingGround>();
-            if (movingGround == null)
+            if (movingGround == null || this.Falling)
             {
                 // We aren't standing on something, don't do anything
                 return;
             }
             // Otherwise, get the displacement of the floor at the previous position
-            Vector3 displacement = movingGround.GetDisplacementAtPoint(previousGroundHitPosition);
+            Vector3 displacement = movingGround.GetDisplacementAtPoint(groundHitPosition);
             // Move player by that displacement amount
             transform.position += displacement;
         }
