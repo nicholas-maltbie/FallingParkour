@@ -369,12 +369,12 @@ namespace PropHunt.Character
                 inputMovement = Vector3.zero;
             }
 
-            // Update grounded state and increase velocity if falling
-            CheckGrounded();
-
-            // If we are standing on a rigidbody marked as a moving platform, move the player
+            // If we are standing on an object marked as a moving platform, move the player
             // with the moving ground object.
             MoveWithGround();
+
+            // Update grounded state and increase velocity if falling
+            CheckGrounded();
 
             // Push out of overlapping objects
             PushOutOverlapping();
