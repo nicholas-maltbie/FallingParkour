@@ -461,7 +461,7 @@ namespace PropHunt.Character
         {
             // Check if we were standing on moving ground the previous frame
             IMovingGround movingGround = previousFloor == null ? null : previousFloor.GetComponent<IMovingGround>();
-            if (movingGround == null || this.Falling)
+            if (movingGround == null || Falling)
             {
                 // We aren't standing on something, don't do anything
                 return;
