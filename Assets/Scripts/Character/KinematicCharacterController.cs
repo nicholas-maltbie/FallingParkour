@@ -1,5 +1,6 @@
 using Mirror;
 using PropHunt.Character;
+using PropHunt.Environment;
 using PropHunt.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -226,11 +227,62 @@ namespace PropHunt.Character
         public Vector3 surfaceNormal;
 
         /// <summary>
+        /// The point in which the player is hitting the ground
+        /// </summary>
+        [Tooltip("The point in which the player is hitting the ground")]
+        [SerializeField]
+        public Vector3 groundHitPosition;
+
+        /// <summary>
         /// What is the player standing on
         /// </summary>
         [Tooltip("Current object the player is standing on")]
         [SerializeField]
         public GameObject floor;
+
+        [Header("Previous Grounded State")]
+
+        /// <summary>
+        /// Distance the player was from the ground previous fixed update
+        /// </summary>
+        [Tooltip("Distance the player was from the ground previous fixed update")]
+        [SerializeField]
+        private float previousDistanceToGround;
+
+        /// <summary>
+        /// Was the player on the ground (standing on top of something) the previous fixed update
+        /// </summary>
+        [Tooltip("Was the player grounded the previous fixed update")]
+        [SerializeField]
+        private bool previousOnGround;
+
+        /// <summary>
+        /// Angle between the ground and the player during previous fixed updates
+        /// </summary>
+        [Tooltip("Previous angle between the ground and the player")]
+        [SerializeField]
+        public float previousAngle;
+
+        /// <summary>
+        /// The previous surface normal vector of the ground the player is standing on
+        /// </summary>
+        [Tooltip("Previous normal vector between player and ground")]
+        [SerializeField]
+        public Vector3 previousSurfaceNormal;
+
+        /// <summary>
+        /// The previous point in which the player is hitting the ground
+        /// </summary>
+        [Tooltip("The previous point in which the player is hitting the ground")]
+        [SerializeField]
+        public Vector3 previousGroundHitPosition;
+
+        /// <summary>
+        /// What is the player standing on the previous fixed update
+        /// </summary>
+        [Tooltip("Previous object the player is standing on")]
+        [SerializeField]
+        public GameObject previousFloor;
 
         /// <summary>
         /// Amount of time that has elapsed since the player's last jump action
@@ -274,6 +326,18 @@ namespace PropHunt.Character
         public bool Falling => !StandingOnGround || angle > maxWalkAngle;
 
         /// <summary>
+        /// Was the player standing on the ground the previous fixed update?
+        /// <see cref="StandingOnGround"/>
+        /// </summary>
+        public bool PreviousStandingOnGround => previousOnGround && previousDistanceToGround <= groundedDistance && previousDistanceToGround > 0;
+
+        /// <summary>
+        /// Was the player falling the previous fixed update?
+        /// <see cref="Falling"/>
+        /// </summary>
+        public bool PreviousFalling => !PreviousStandingOnGround || previousAngle > maxWalkAngle;
+
+        /// <summary>
         /// Can a player snap down this frame, a player is only allowed to snap down
         /// if they were standing on the ground this frame or was not falling within a given buffer time.
         /// Additionally, a player must have not jumped within a small buffer time in order to
@@ -305,6 +369,10 @@ namespace PropHunt.Character
                 inputMovement = Vector3.zero;
             }
 
+            // If we are standing on a rigidbody marked as a moving platform, move the player
+            // with the moving ground object.
+            MoveWithGround();
+
             // Push out of overlapping objects
             PushOutOverlapping();
 
@@ -316,6 +384,8 @@ namespace PropHunt.Character
 
             // Update grounded state and increase velocity if falling
             CheckGrounded();
+
+            // Update player velocity based on grounded state
             if (!Falling && !attemptingJump)
             {
                 velocity = Vector3.zero;
@@ -327,16 +397,8 @@ namespace PropHunt.Character
                 this.elapsedFalling += deltaTime;
             }
 
-            // Give the player some vertical velocity if they are jumping and grounded
-            if (!Falling && attemptingJump)
-            {
-                velocity = this.jumpVelocity * -gravity.normalized;
-                elapsedSinceJump = 0.0f;
-            }
-            else
-            {
-                elapsedSinceJump += deltaTime;
-            }
+            // Compute player jump if they are attempting to jump
+            PlayerJump(deltaTime);
 
             // If the player is standing on the ground, project their movement onto the ground plane
             // This allows them to walk up gradual slopes without facing a hit in movement speed
@@ -365,6 +427,49 @@ namespace PropHunt.Character
                 rigidbody.velocity = Vector3.zero;
                 rigidbody.angularVelocity = Vector3.zero;
             }
+        }
+
+        /// <summary>
+        /// Give player vertical velocity if they can jump and are attempting to jump
+        /// </summary>
+        /// <param name="deltaTime">Time in fixed update</param>
+        public void PlayerJump(float deltaTime)
+        {
+            // Give the player some vertical velocity if they are jumping and grounded
+            if (!Falling && attemptingJump)
+            {
+                Vector3 groundVelocity = Vector3.zero;
+                IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
+                if (movingGround != null)
+                {
+                    groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition);
+                }
+                velocity = groundVelocity + this.jumpVelocity * -gravity.normalized;
+                elapsedSinceJump = 0.0f;
+            }
+            else
+            {
+                elapsedSinceJump += deltaTime;
+            }
+        }
+
+        /// <summary>
+        /// Move the player with the ground if possible based on the ground's
+        /// velocity at a given point. 
+        /// </summary>
+        public void MoveWithGround()
+        {
+            // Check if we were standing on moving ground the previous frame
+            IMovingGround movingGround = previousFloor == null ? null : previousFloor.GetComponent<IMovingGround>();
+            if (movingGround == null)
+            {
+                // We aren't standing on something, don't do anything
+                return;
+            }
+            // Otherwise, get the displacement of the floor at the previous position
+            Vector3 displacement = movingGround.GetDisplacementAtPoint(previousGroundHitPosition);
+            // Move player by that displacement amount
+            transform.position += displacement;
         }
 
         /// <summary>
@@ -414,16 +519,24 @@ namespace PropHunt.Character
         }
 
         /// <summary>
-        /// Update the current grounded state of this prop class
+        /// Update the current grounded state of this kinematic character controller
         /// </summary>
         public void CheckGrounded()
         {
+            this.previousAngle = this.angle;
+            this.previousDistanceToGround = this.distanceToGround;
+            this.previousOnGround = this.onGround;
+            this.previousSurfaceNormal = this.surfaceNormal;
+            this.previousFloor = this.floor;
+            this.previousGroundHitPosition = this.groundHitPosition;
+
             ColliderCastHit hit = colliderCast.CastSelf(Vector3.down, groundCheckDistance);
             this.angle = Vector3.Angle(hit.normal, -gravity);
             this.distanceToGround = hit.distance;
             this.onGround = hit.hit;
             this.surfaceNormal = hit.normal;
             this.floor = hit.collider != null ? hit.collider.gameObject : null;
+            this.groundHitPosition = hit.pointHit;
         }
 
         /// <summary>
