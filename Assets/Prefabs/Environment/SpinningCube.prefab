@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 6923242233749320688}
   - component: {fileID: 5456813976080007741}
   - component: {fileID: 5495260359213269004}
+  - component: {fileID: 241086443}
   m_Layer: 0
   m_Name: SpinningCube
   m_TagString: Untagged
@@ -67,7 +68,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0feafef9f50b3a14db1503c652ed8190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   angularVelocity: {x: 0, y: 60, z: 0}
+  attitude: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &8004367631608873087
 MonoBehaviour:
@@ -208,3 +212,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8630414752163023795}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &241086443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8630414752163023795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9e71d8b5fbfda545b729900444b08df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  linearSpeed: 3
+  targetsList:
+  - {fileID: 0}
+  - {fileID: 0}
+  moved: {x: 0, y: 0, z: 0}

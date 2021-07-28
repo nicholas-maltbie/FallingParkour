@@ -4,7 +4,7 @@ using UnityEngine;
 using Mirror;
 
 namespace PropHunt.Environment
-{    public class MovingPlatorm : NetworkBehaviour
+{    public class MovingPlatform : NetworkBehaviour
     {
         /// <summary>
         /// Velocity at which this platform should move
@@ -23,6 +23,8 @@ namespace PropHunt.Environment
         [SerializeField]
         public List<Transform> targetsList;
 
+        public Vector3 moved;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -31,10 +33,8 @@ namespace PropHunt.Environment
 
         void FixedUpdate()
         {
-            if (!isServer)
-            {
-                return;
-            }
+            moved = Vector3.zero;
+
             if (targetsList == null || targetsList.Count == 0)
             {
                 return;
@@ -43,32 +43,16 @@ namespace PropHunt.Environment
             var direction = (CurrentTarget.position - transform.position).normalized;
             var displacement = direction * fixedDeltaTime * this.linearSpeed;
             var distanceToTarget = Vector3.Distance(transform.position, CurrentTarget.position);
-            
-            Debug.Log("Direction: " + direction + "\n" + 
-                      "Displacement: " + displacement + "\n" + 
-                      "DistanceToTarget: " + distanceToTarget + "\n" +
-                      "CurrentTarget: " + CurrentTarget);
 
-            if (distanceToTarget > displacement.magnitude)
+            if (direction == Vector3.zero || distanceToTarget < displacement.magnitude)
             {
-                transform.position += displacement;
-                
-                if (Vector3.Distance(transform.position, CurrentTarget.position) < 0.001)
-                {
-                    currentTargetIndex = (currentTargetIndex + 1) % targetsList.Count;
-                }
-            }
-            else
-            {
-                var remainingDisplacement = displacement.magnitude - distanceToTarget;
-                transform.position = CurrentTarget.transform.position;
+                displacement = CurrentTarget.position - transform.position;
                 currentTargetIndex = (currentTargetIndex + 1) % targetsList.Count;
-
-                distanceToTarget = Vector3.Distance(transform.position, CurrentTarget.position);
-                var movement = remainingDisplacement < distanceToTarget ? remainingDisplacement : distanceToTarget;
-                direction = (CurrentTarget.transform.position - this.transform.position).normalized;
-                transform.position += direction * movement;
             }
+            
+            transform.position += displacement;
+            moved += displacement;
+
         }
     }
 }

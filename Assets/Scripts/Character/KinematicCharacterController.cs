@@ -373,11 +373,15 @@ namespace PropHunt.Character
             // with the moving ground object.
             MoveWithGround();
 
-            // Update grounded state and increase velocity if falling
-            CheckGrounded();
-
             // Push out of overlapping objects
             PushOutOverlapping();
+            if (CanSnapDown)
+            {
+                SnapPlayerDown();
+            }
+
+            // Update grounded state and increase velocity if falling
+            CheckGrounded();
 
             // Update player velocity based on grounded state
             if (!Falling && !attemptingJump)
@@ -460,8 +464,8 @@ namespace PropHunt.Character
         public void MoveWithGround()
         {
             // Check if we were standing on moving ground the previous frame
-            IMovingGround movingGround = previousFloor == null ? null : previousFloor.GetComponent<IMovingGround>();
-            if (movingGround == null || Falling)
+            IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
+            if (movingGround == null)
             {
                 // We aren't standing on something, don't do anything
                 return;
@@ -478,10 +482,16 @@ namespace PropHunt.Character
         public void SnapPlayerDown()
         {
             // Cast current character collider down
-            ColliderCastHit hit = colliderCast.CastSelf(Vector3.down, verticalSnapDown);
-            if (hit.hit && hit.distance > Epsilon)
+
+            float height = GetComponent<Collider>().bounds.extents.y;
+            float radius = 0.35f;
+
+            bool didHit = Physics.SphereCast(transform.position, radius, gravity.normalized, out RaycastHit hit,
+                verticalSnapDown + height - radius, ~0, QueryTriggerInteraction.Ignore);
+
+            if (didHit && hit.distance > Epsilon)
             {
-                transform.position += Vector3.down * (hit.distance - Epsilon);
+                transform.position += gravity.normalized * (hit.distance - height + radius + Epsilon);
             }
         }
 
@@ -508,7 +518,7 @@ namespace PropHunt.Character
                     overlap.collider, overlap.collider.transform.position, overlap.collider.transform.rotation,
                     out Vector3 direction, out float distance
                 );
-                distance += Epsilon;
+                // distance += Epsilon;
                 float maxPushDistance = maxPushSpeed * unityService.deltaTime;
                 if (distance > maxPushDistance)
                 {
@@ -530,13 +540,20 @@ namespace PropHunt.Character
             this.previousFloor = this.floor;
             this.previousGroundHitPosition = this.groundHitPosition;
 
-            ColliderCastHit hit = colliderCast.CastSelf(Vector3.down, groundCheckDistance);
+            float height = GetComponent<Collider>().bounds.extents.y;
+            float radius = 0.35f;
+
+            bool didHit = Physics.SphereCast(transform.position, radius, gravity.normalized, out RaycastHit hit,
+                groundCheckDistance + height - radius, ~0, QueryTriggerInteraction.Ignore);
+
+            UnityEngine.Debug.Log(hit.distance + " " + (hit.distance - height + radius));
+
             this.angle = Vector3.Angle(hit.normal, -gravity);
-            this.distanceToGround = hit.distance;
-            this.onGround = hit.hit;
+            this.distanceToGround = Mathf.Max(Epsilon, hit.distance - height + radius);
+            this.onGround = didHit;
             this.surfaceNormal = hit.normal;
             this.floor = hit.collider != null ? hit.collider.gameObject : null;
-            this.groundHitPosition = hit.pointHit;
+            this.groundHitPosition = hit.point;
         }
 
         /// <summary>
