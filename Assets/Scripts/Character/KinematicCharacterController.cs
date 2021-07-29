@@ -329,9 +329,6 @@ namespace PropHunt.Character
                 SnapPlayerDown();
             }
 
-            // Update grounded state and increase velocity if falling
-            CheckGrounded();
-
             // Update player velocity based on grounded state
             if (!Falling && !attemptingJump)
             {
@@ -387,13 +384,11 @@ namespace PropHunt.Character
 
         public RaycastHit[] GetHits(Vector3 direction, float distance)
         {
-            CapsuleCollider capsuleCollider = this.GetComponent<CapsuleCollider>();
-
             RaycastHit[] hits;
-            Vector3 p1 = transform.position + capsuleCollider.center + transform.rotation * Vector3.down * (capsuleCollider.height * 0.499f - capsuleCollider.radius);
-            Vector3 p2 = transform.position + capsuleCollider.center + transform.rotation * Vector3.up * (capsuleCollider.height * 0.499f - capsuleCollider.radius);
+            Vector3 p1 = transform.position + collider.center + transform.rotation * Vector3.down * (collider.height * 0.499f - collider.radius);
+            Vector3 p2 = transform.position + collider.center + transform.rotation * Vector3.up * (collider.height * 0.499f - collider.radius);
             hits = Physics.CapsuleCastAll(p1, p2,
-                capsuleCollider.radius, direction, distance, ~0, QueryTriggerInteraction.Ignore);
+                collider.radius, direction, distance, ~0, QueryTriggerInteraction.Ignore);
             return hits;
         }
 
@@ -449,7 +444,7 @@ namespace PropHunt.Character
         {
             // Check if we were standing on moving ground the previous frame
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
-            if (movingGround == null)
+            if (movingGround == null || Falling)
             {
                 // We aren't standing on something, don't do anything
                 return;
@@ -466,16 +461,15 @@ namespace PropHunt.Character
         public void SnapPlayerDown()
         {
             // Cast current character collider down
-
-            float height = GetComponent<Collider>().bounds.extents.y;
-            float radius = 0.35f;
+            float height = collider.height;
+            float radius = collider.radius;
 
             bool didHit = Physics.SphereCast(transform.position, radius, gravity.normalized, out RaycastHit hit,
-                verticalSnapDown + height - radius, ~0, QueryTriggerInteraction.Ignore);
+                verticalSnapDown + height / 2 - radius, ~0, QueryTriggerInteraction.Ignore);
 
             if (didHit && hit.distance > Epsilon)
             {
-                transform.position += gravity.normalized * (hit.distance - height + radius + Epsilon);
+                transform.position += gravity.normalized * (hit.distance - height / 2 + radius + Epsilon);
             }
         }
 
@@ -527,11 +521,9 @@ namespace PropHunt.Character
 
         public IEnumerable<Collider> GetOverlapping()
         {
-            CapsuleCollider capsuleCollider = this.GetComponent<CapsuleCollider>();
-
-            Vector3 p1 = transform.position + capsuleCollider.center + Vector3.up * -capsuleCollider.height * 0.5f;
-            return Physics.OverlapCapsule(p1, p1 + Vector3.up * capsuleCollider.height,
-                capsuleCollider.radius, ~0, QueryTriggerInteraction.Ignore);
+            Vector3 p1 = transform.position + collider.center + Vector3.up * -collider.height * 0.5f;
+            return Physics.OverlapCapsule(p1, p1 + Vector3.up * collider.height,
+                collider.radius, ~0, QueryTriggerInteraction.Ignore);
         }
 
         /// <summary>
@@ -539,14 +531,14 @@ namespace PropHunt.Character
         /// </summary>
         public void CheckGrounded()
         {
-            float height = GetComponent<Collider>().bounds.extents.y;
-            float radius = 0.35f;
+            float height = collider.height;
+            float radius = collider.radius;
 
             bool didHit = Physics.SphereCast(transform.position, radius, gravity.normalized, out RaycastHit hit,
-                groundCheckDistance + height - radius, ~0, QueryTriggerInteraction.Ignore);
+                groundCheckDistance + height / 2 - radius, ~0, QueryTriggerInteraction.Ignore);
 
             this.angle = Vector3.Angle(hit.normal, -gravity);
-            this.distanceToGround = Mathf.Max(Epsilon, hit.distance - height + radius);
+            this.distanceToGround = Mathf.Max(Epsilon, hit.distance - height / 2 + radius);
             this.onGround = didHit;
             this.surfaceNormal = hit.normal;
             this.floor = hit.collider != null ? hit.collider.gameObject : null;
