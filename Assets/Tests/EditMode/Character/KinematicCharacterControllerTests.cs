@@ -34,7 +34,7 @@ namespace Tests.EditMode.Character
         {
             // Setup character movement player
             GameObject characterGo = new GameObject();
-            characterGo.AddComponent<SphereCollider>();
+            characterGo.AddComponent<CapsuleCollider>();
             this.kcc = characterGo.AddComponent<KinematicCharacterController>();
             this.kcc.Start();
             this.unityServiceMock = new Mock<IUnityService>();
@@ -42,7 +42,7 @@ namespace Tests.EditMode.Character
             this.colliderCastMock = new Mock<IColliderCast>();
             this.kcc.unityService = this.unityServiceMock.Object;
             this.kcc.networkService = this.networkServiceMock.Object;
-            this.kcc.colliderCast = this.colliderCastMock.Object;
+            this.kcc.capsuleCollider = characterGo.GetComponent<CapsuleCollider>();
         }
 
         [TearDown]
@@ -290,13 +290,13 @@ namespace Tests.EditMode.Character
                 new ColliderCastHit { hit = true, distance = 1.0f }
             );
             UnityEngine.Debug.Log(!this.kcc.Falling + " ");
-            this.kcc.AttemptSnapUp(1.0f, new ColliderCastHit(), Vector3.forward);
+            this.kcc.AttemptSnapUp(1.0f, new RaycastHit(), Vector3.forward);
 
             // Setup the event where they can walk forward
             this.colliderCastMock.Setup(e => e.CastSelf(It.IsAny<Vector3>(), It.IsAny<float>())).Returns(
                 new ColliderCastHit { hit = false, distance = 0 }
             );
-            this.kcc.AttemptSnapUp(1.0f, new ColliderCastHit(), Vector3.forward);
+            this.kcc.AttemptSnapUp(1.0f, new RaycastHit(), Vector3.forward);
         }
     }
 }

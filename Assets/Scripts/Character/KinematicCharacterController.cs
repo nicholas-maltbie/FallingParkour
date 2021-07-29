@@ -1,5 +1,4 @@
 using Mirror;
-using PropHunt.Character;
 using PropHunt.Environment;
 using PropHunt.Utils;
 using UnityEngine;
@@ -7,6 +6,7 @@ using UnityEngine.InputSystem;
 
 namespace PropHunt.Character
 {
+    [RequireComponent(typeof(CapsuleCollider))]
     public class KinematicCharacterController : NetworkBehaviour
     {
         /// <summary>
@@ -33,7 +33,7 @@ namespace PropHunt.Character
         /// <summary>
         /// Collider cast component to abstract movement of player
         /// </summary>
-        public IColliderCast colliderCast;
+        public CapsuleCollider capsuleCollider;
 
         [Header("Ground Checking")]
 
@@ -240,50 +240,6 @@ namespace PropHunt.Character
         [SerializeField]
         public GameObject floor;
 
-        [Header("Previous Grounded State")]
-
-        /// <summary>
-        /// Distance the player was from the ground previous fixed update
-        /// </summary>
-        [Tooltip("Distance the player was from the ground previous fixed update")]
-        [SerializeField]
-        private float previousDistanceToGround;
-
-        /// <summary>
-        /// Was the player on the ground (standing on top of something) the previous fixed update
-        /// </summary>
-        [Tooltip("Was the player grounded the previous fixed update")]
-        [SerializeField]
-        private bool previousOnGround;
-
-        /// <summary>
-        /// Angle between the ground and the player during previous fixed updates
-        /// </summary>
-        [Tooltip("Previous angle between the ground and the player")]
-        [SerializeField]
-        public float previousAngle;
-
-        /// <summary>
-        /// The previous surface normal vector of the ground the player is standing on
-        /// </summary>
-        [Tooltip("Previous normal vector between player and ground")]
-        [SerializeField]
-        public Vector3 previousSurfaceNormal;
-
-        /// <summary>
-        /// The previous point in which the player is hitting the ground
-        /// </summary>
-        [Tooltip("The previous point in which the player is hitting the ground")]
-        [SerializeField]
-        public Vector3 previousGroundHitPosition;
-
-        /// <summary>
-        /// What is the player standing on the previous fixed update
-        /// </summary>
-        [Tooltip("Previous object the player is standing on")]
-        [SerializeField]
-        public GameObject previousFloor;
-
         /// <summary>
         /// Amount of time that has elapsed since the player's last jump action
         /// </summary>
@@ -326,18 +282,6 @@ namespace PropHunt.Character
         public bool Falling => !StandingOnGround || angle > maxWalkAngle;
 
         /// <summary>
-        /// Was the player standing on the ground the previous fixed update?
-        /// <see cref="StandingOnGround"/>
-        /// </summary>
-        public bool PreviousStandingOnGround => previousOnGround && previousDistanceToGround <= groundedDistance && previousDistanceToGround > 0;
-
-        /// <summary>
-        /// Was the player falling the previous fixed update?
-        /// <see cref="Falling"/>
-        /// </summary>
-        public bool PreviousFalling => !PreviousStandingOnGround || previousAngle > maxWalkAngle;
-
-        /// <summary>
         /// Can a player snap down this frame, a player is only allowed to snap down
         /// if they were standing on the ground this frame or was not falling within a given buffer time.
         /// Additionally, a player must have not jumped within a small buffer time in order to
@@ -350,7 +294,7 @@ namespace PropHunt.Character
         public void Start()
         {
             this.networkService = new NetworkService(this);
-            this.colliderCast = GetComponent<ColliderCast>();
+            this.capsuleCollider = GetComponent<CapsuleCollider>();
         }
 
         public void FixedUpdate()
@@ -374,7 +318,7 @@ namespace PropHunt.Character
             MoveWithGround();
 
             // Push out of overlapping objects
-            PushOutOverlapping();
+            // PushOutOverlapping();
             if (CanSnapDown)
             {
                 SnapPlayerDown();
@@ -481,17 +425,15 @@ namespace PropHunt.Character
         /// </summary>
         public void SnapPlayerDown()
         {
-            // Cast current character collider down
-
-            float height = GetComponent<Collider>().bounds.extents.y;
-            float radius = 0.35f;
-
+            // Cast sphere out of current position
+            float radius = capsuleCollider.radius;
+            float height = capsuleCollider.height;
             bool didHit = Physics.SphereCast(transform.position, radius, gravity.normalized, out RaycastHit hit,
-                verticalSnapDown + height - radius, ~0, QueryTriggerInteraction.Ignore);
+                verticalSnapDown + height / 2 - radius, ~0, QueryTriggerInteraction.Ignore);
 
             if (didHit && hit.distance > Epsilon)
             {
-                transform.position += gravity.normalized * (hit.distance - height + radius + Epsilon);
+                transform.position += gravity.normalized * (hit.distance - height / 2 + radius + Epsilon);
             }
         }
 
@@ -504,21 +446,21 @@ namespace PropHunt.Character
         {
             float deltaTime = unityService.deltaTime;
 
-            Collider collider = GetComponent<Collider>();
+            Vector3 center = transform.TransformPoint(capsuleCollider.center);
+            Vector3 size = transform.TransformVector(capsuleCollider.radius, capsuleCollider.height, capsuleCollider.radius);
+            float radius = size.x;
+            float height = size.y;
+            Vector3 bottom = new Vector3(center.x, center.y - height  / 2 + radius, center.z);
+            Vector3 top = new Vector3(center.x, center.y + height / 2 - radius, center.z);
 
-            if (collider == null)
-            {
-                return;
-            }
-
-            foreach (ColliderCastHit overlap in colliderCast.GetOverlappingDirectional())
+            foreach (Collider overlap in Physics.OverlapCapsule(top, bottom, radius))
             {
                 Physics.ComputePenetration(
-                    collider, collider.bounds.center, transform.rotation,
-                    overlap.collider, overlap.collider.transform.position, overlap.collider.transform.rotation,
+                    capsuleCollider, capsuleCollider.bounds.center, transform.rotation,
+                    overlap, overlap.transform.position, overlap.transform.rotation,
                     out Vector3 direction, out float distance
                 );
-                // distance += Epsilon;
+                distance += Epsilon;
                 float maxPushDistance = maxPushSpeed * unityService.deltaTime;
                 if (distance > maxPushDistance)
                 {
@@ -533,20 +475,11 @@ namespace PropHunt.Character
         /// </summary>
         public void CheckGrounded()
         {
-            this.previousAngle = this.angle;
-            this.previousDistanceToGround = this.distanceToGround;
-            this.previousOnGround = this.onGround;
-            this.previousSurfaceNormal = this.surfaceNormal;
-            this.previousFloor = this.floor;
-            this.previousGroundHitPosition = this.groundHitPosition;
-
             float height = GetComponent<Collider>().bounds.extents.y;
             float radius = 0.35f;
 
             bool didHit = Physics.SphereCast(transform.position, radius, gravity.normalized, out RaycastHit hit,
                 groundCheckDistance + height - radius, ~0, QueryTriggerInteraction.Ignore);
-
-            UnityEngine.Debug.Log(hit.distance + " " + (hit.distance - height + radius));
 
             this.angle = Vector3.Angle(hit.normal, -gravity);
             this.distanceToGround = Mathf.Max(Epsilon, hit.distance - height + radius);
@@ -554,6 +487,18 @@ namespace PropHunt.Character
             this.surfaceNormal = hit.normal;
             this.floor = hit.collider != null ? hit.collider.gameObject : null;
             this.groundHitPosition = hit.point;
+        }
+
+        public bool CastSelf(Vector3 direction, out RaycastHit hit, float maxDistance)
+        {
+            Vector3 center = transform.TransformPoint(capsuleCollider.center);
+            Vector3 size = transform.TransformVector(capsuleCollider.radius, capsuleCollider.height, capsuleCollider.radius);
+            float radius = size.x;
+            float height = size.y;
+            Vector3 bottom = new Vector3(center.x, center.y - height  / 2 + radius, center.z);
+            Vector3 top = new Vector3(center.x, center.y + height / 2 - radius, center.z);
+
+            return Physics.CapsuleCast(bottom, top, radius, direction, out hit, maxDistance);
         }
 
         /// <summary>
@@ -568,7 +513,7 @@ namespace PropHunt.Character
         /// <param name="momentum">The remaining momentum of the player</param>
         /// <returns>True if the player had space on the ledge and was able to move, false if
         /// there was not enough room the player is moved back to their original position</returns>
-        public bool AttemptSnapUp(float distanceToSnap, ColliderCastHit hit, Vector3 momentum)
+        public bool AttemptSnapUp(float distanceToSnap, RaycastHit hit, Vector3 momentum)
         {
             // If we were to snap the player up and they moved forward, would they hit something?
             Vector3 currentPosition = transform.position;
@@ -576,10 +521,10 @@ namespace PropHunt.Character
             transform.position += snapUp;
 
             Vector3 directionAfterSnap = Vector3.ProjectOnPlane(Vector3.Project(momentum, -hit.normal), Vector3.up).normalized * momentum.magnitude;
-            ColliderCastHit snapHit = colliderCast.CastSelf(directionAfterSnap.normalized, Mathf.Max(stepUpDepth, momentum.magnitude));
+            bool didSnaphit = this.CastSelf(directionAfterSnap.normalized, out RaycastHit snapHit, Mathf.Max(stepUpDepth, momentum.magnitude));
 
             // If they can move without instantly hitting something, then snap them up
-            if ((!Falling || elapsedFalling <= snapBufferTime) && snapHit.distance > Epsilon && (!snapHit.hit || snapHit.distance > stepUpDepth))
+            if ((!Falling || elapsedFalling <= snapBufferTime) && snapHit.distance > Epsilon && (!didSnaphit || snapHit.distance > stepUpDepth))
             {
                 // Project rest of movement onto plane perpendicular to gravity
                 transform.position = currentPosition;
@@ -611,9 +556,7 @@ namespace PropHunt.Character
             {
                 // Do a cast of the collider to see if an object is hit during this
                 // movement bounce
-                ColliderCastHit hit = colliderCast.CastSelf(momentum.normalized, momentum.magnitude);
-
-                if (!hit.hit)
+                if (!this.CastSelf(momentum.normalized, out RaycastHit hit, momentum.magnitude))
                 {
                     // If there is no hit, move to desired position
                     transform.position += momentum;
@@ -626,25 +569,26 @@ namespace PropHunt.Character
                 {
                     push.PushObject(new KinematicCharacterControllerHit(
                         hit.collider, hit.collider.attachedRigidbody, hit.collider.gameObject,
-                        hit.collider.transform, hit.pointHit, hit.normal, momentum.normalized, movement.magnitude
+                        hit.collider.transform, hit.point, hit.normal, momentum.normalized, movement.magnitude
                     ));
                     // If pushing something, reduce remaining force significantly
                     momentum *= pushDecay;
                 }
 
                 // Set the fraction of remaining movement (minus some small value)
-                transform.position += momentum * (hit.fraction);
+                float fraction = hit.distance / momentum.normalized.magnitude;
+                transform.position += momentum * (fraction);
                 // Push slightly along normal to stop from getting caught in walls
                 transform.position += hit.normal * Epsilon;
                 // Decrease remaining momentum by fraction of movement remaining
-                momentum *= (1 - hit.fraction);
+                momentum *= (1 - fraction);
 
                 // Plane to project rest of movement onto
                 Vector3 planeNormal = hit.normal;
 
                 // Snap character vertically up if they hit something
                 //  close enough to their feet
-                float distanceToFeet = hit.pointHit.y - (transform.position - selfCollider.bounds.extents).y;
+                float distanceToFeet = hit.point.y - (transform.position - selfCollider.bounds.extents).y;
                 if (hit.distance > 0 && !attemptingJump && distanceToFeet < verticalSnapUp && distanceToFeet > 0)
                 {
                     // Sometimes snapping up the exact distance leads to odd behaviour around steps and walls.
