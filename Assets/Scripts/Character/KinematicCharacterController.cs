@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Mirror;
-using PropHunt.Character;
 using PropHunt.Environment;
 using PropHunt.Utils;
 using UnityEngine;
@@ -8,6 +7,10 @@ using UnityEngine.InputSystem;
 
 namespace PropHunt.Character
 {
+    /// <summary>
+    /// Kinematic character controller to move the player character
+    /// as a kinematic object
+    /// </summary>
     [RequireComponent(typeof(CapsuleCollider))]
     public class KinematicCharacterController : NetworkBehaviour
     {
@@ -377,6 +380,9 @@ namespace PropHunt.Character
                 rigidbody.velocity = Vector3.zero;
                 rigidbody.angularVelocity = Vector3.zero;
             }
+
+            // Update grounded state and increase velocity if falling
+            CheckGrounded();
         }
 
         public RaycastHit[] GetHits(Vector3 direction, float distance)
@@ -391,31 +397,24 @@ namespace PropHunt.Character
             return hits;
         }
 
-        public ColliderCastHit CastSelf(Vector3 direction, float distance)
+        public bool CastSelf(Vector3 direction, float distance, out RaycastHit hit)
         {
             RaycastHit closest = new RaycastHit() { distance = Mathf.Infinity };
             bool hitSomething = false;
-            foreach (RaycastHit hit in GetHits(direction, distance))
+            foreach (RaycastHit objHit in GetHits(direction, distance))
             {
-                if (hit.collider.gameObject.transform != gameObject.transform)
+                if (objHit.collider.gameObject.transform != gameObject.transform)
                 {
-                    if (hit.distance < closest.distance)
+                    if (objHit.distance < closest.distance)
                     {
-                        closest = hit;
+                        closest = objHit;
                     }
                     hitSomething = true;
                 }
             }
 
-            return new ColliderCastHit
-            {
-                hit = hitSomething,
-                distance = closest.distance,
-                pointHit = closest.point,
-                normal = closest.normal,
-                fraction = closest.distance / distance,
-                collider = closest.collider
-            };
+            hit = closest;
+            return hitSomething;
         }
 
         /// <summary>
@@ -496,7 +495,7 @@ namespace PropHunt.Character
                 return;
             }
 
-            foreach (ColliderCastHit overlap in this.GetOverlappingDirectional())
+            foreach (RaycastHit overlap in this.GetOverlappingDirectional())
             {
                 Physics.ComputePenetration(
                     collider, collider.bounds.center, transform.rotation,
@@ -513,22 +512,14 @@ namespace PropHunt.Character
             }
         }
 
-        public IEnumerable<ColliderCastHit> GetOverlappingDirectional()
+        public IEnumerable<RaycastHit> GetOverlappingDirectional()
         {
-            List<ColliderCastHit> hits = new List<ColliderCastHit>();
+            List<RaycastHit> hits = new List<RaycastHit>();
             foreach (RaycastHit hit in GetHits(Vector3.down, 0.001f))
             {
                 if (hit.collider.gameObject.transform != gameObject.transform && hit.distance == 0)
                 {
-                    hits.Add(new ColliderCastHit
-                    {
-                        hit = true,
-                        distance = 0,
-                        fraction = 0,
-                        normal = hit.normal,
-                        pointHit = hit.point,
-                        collider = hit.collider
-                    });
+                    hits.Add(hit);
                 }
             }
             return hits;
@@ -574,7 +565,7 @@ namespace PropHunt.Character
         /// <param name="momentum">The remaining momentum of the player</param>
         /// <returns>True if the player had space on the ledge and was able to move, false if
         /// there was not enough room the player is moved back to their original position</returns>
-        public bool AttemptSnapUp(float distanceToSnap, ColliderCastHit hit, Vector3 momentum)
+        public bool AttemptSnapUp(float distanceToSnap, RaycastHit hit, Vector3 momentum)
         {
             // If we were to snap the player up and they moved forward, would they hit something?
             Vector3 currentPosition = transform.position;
@@ -582,10 +573,10 @@ namespace PropHunt.Character
             transform.position += snapUp;
 
             Vector3 directionAfterSnap = Vector3.ProjectOnPlane(Vector3.Project(momentum, -hit.normal), Vector3.up).normalized * momentum.magnitude;
-            ColliderCastHit snapHit = this.CastSelf(directionAfterSnap.normalized, Mathf.Max(stepUpDepth, momentum.magnitude));
+            bool didSnapHit = this.CastSelf(directionAfterSnap.normalized, Mathf.Max(stepUpDepth, momentum.magnitude), out RaycastHit snapHit);
 
             // If they can move without instantly hitting something, then snap them up
-            if ((!Falling || elapsedFalling <= snapBufferTime) && snapHit.distance > Epsilon && (!snapHit.hit || snapHit.distance > stepUpDepth))
+            if ((!Falling || elapsedFalling <= snapBufferTime) && snapHit.distance > Epsilon && (!didSnapHit || snapHit.distance > stepUpDepth))
             {
                 // Project rest of movement onto plane perpendicular to gravity
                 transform.position = currentPosition;
@@ -617,9 +608,8 @@ namespace PropHunt.Character
             {
                 // Do a cast of the collider to see if an object is hit during this
                 // movement bounce
-                ColliderCastHit hit = this.CastSelf(momentum.normalized, momentum.magnitude);
-
-                if (!hit.hit)
+                float distance = momentum.magnitude;
+                if (!this.CastSelf(momentum.normalized, distance, out RaycastHit hit))
                 {
                     // If there is no hit, move to desired position
                     transform.position += momentum;
@@ -632,25 +622,26 @@ namespace PropHunt.Character
                 {
                     push.PushObject(new KinematicCharacterControllerHit(
                         hit.collider, hit.collider.attachedRigidbody, hit.collider.gameObject,
-                        hit.collider.transform, hit.pointHit, hit.normal, momentum.normalized, movement.magnitude
+                        hit.collider.transform, hit.point, hit.normal, momentum.normalized, movement.magnitude
                     ));
                     // If pushing something, reduce remaining force significantly
                     momentum *= pushDecay;
                 }
 
+                float fraction = hit.distance / distance;
                 // Set the fraction of remaining movement (minus some small value)
-                transform.position += momentum * (hit.fraction);
+                transform.position += momentum * (fraction);
                 // Push slightly along normal to stop from getting caught in walls
                 transform.position += hit.normal * Epsilon;
                 // Decrease remaining momentum by fraction of movement remaining
-                momentum *= (1 - hit.fraction);
+                momentum *= (1 - fraction);
 
                 // Plane to project rest of movement onto
                 Vector3 planeNormal = hit.normal;
 
                 // Snap character vertically up if they hit something
                 //  close enough to their feet
-                float distanceToFeet = hit.pointHit.y - (transform.position - selfCollider.bounds.extents).y;
+                float distanceToFeet = hit.point.y - (transform.position - selfCollider.bounds.extents).y;
                 if (hit.distance > 0 && !attemptingJump && distanceToFeet < verticalSnapUp && distanceToFeet > 0)
                 {
                     // Sometimes snapping up the exact distance leads to odd behaviour around steps and walls.

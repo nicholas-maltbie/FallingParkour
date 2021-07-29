@@ -289,13 +289,13 @@ namespace Tests.EditMode.Character
                 new ColliderCastHit { hit = true, distance = 1.0f }
             );
             UnityEngine.Debug.Log(!this.kcc.Falling + " ");
-            this.kcc.AttemptSnapUp(1.0f, new ColliderCastHit(), Vector3.forward);
+            this.kcc.AttemptSnapUp(1.0f, new RaycastHit(), Vector3.forward);
 
             // Setup the event where they can walk forward
             this.colliderCastMock.Setup(e => e.CastSelf(It.IsAny<Vector3>(), It.IsAny<float>())).Returns(
                 new ColliderCastHit { hit = false, distance = 0 }
             );
-            this.kcc.AttemptSnapUp(1.0f, new ColliderCastHit(), Vector3.forward);
+            this.kcc.AttemptSnapUp(1.0f, new RaycastHit(), Vector3.forward);
         }
     }
 }
