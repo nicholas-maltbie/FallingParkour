@@ -34,7 +34,6 @@ namespace Tests.EditMode.Character
         {
             // Setup character movement player
             GameObject characterGo = new GameObject();
-            characterGo.AddComponent<SphereCollider>();
             this.kcc = characterGo.AddComponent<KinematicCharacterController>();
             this.kcc.Start();
             this.unityServiceMock = new Mock<IUnityService>();
@@ -42,7 +41,7 @@ namespace Tests.EditMode.Character
             this.colliderCastMock = new Mock<IColliderCast>();
             this.kcc.unityService = this.unityServiceMock.Object;
             this.kcc.networkService = this.networkServiceMock.Object;
-            this.kcc.colliderCast = this.colliderCastMock.Object;
+            this.kcc.collider = characterGo.AddComponent<CapsuleCollider>();
         }
 
         [TearDown]
