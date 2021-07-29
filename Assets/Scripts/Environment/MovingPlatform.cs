@@ -10,10 +10,8 @@ namespace PropHunt.Environment
         /// <summary>
         /// Velocity at which this platform should move
         /// </summary>
-        [SyncVar]
         public float linearSpeed = 3;
 
-        [SyncVar]
         private int currentTargetIndex = 0;
 
         /// <summary>
@@ -35,6 +33,10 @@ namespace PropHunt.Environment
         void FixedUpdate()
         {
             moved = Vector3.zero;
+            if (!isServer)
+            {
+                return;
+            }
 
             if (targetsList == null || targetsList.Count == 0)
             {
