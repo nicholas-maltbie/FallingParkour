@@ -46,6 +46,11 @@ namespace PropHunt.Environment
 
         public void FixedUpdate()
         {
+            if (!isServer)
+            {
+                return;
+            }
+
             float deltaTime = unityService.fixedDeltaTime;
 
             attachedRigidbody.angularVelocity = Vector3.zero;
