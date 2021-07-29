@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: -3121540945416706136}
   - component: {fileID: 1509629139552447915}
   - component: {fileID: 8481329674398737299}
-  - component: {fileID: 4965862787272249836}
   - component: {fileID: 9146407159294641169}
   - component: {fileID: 7122104008381147}
   - component: {fileID: 5860327242025993134}
@@ -197,6 +196,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   focusTriggerInteraction: 0
+  interacting: 0
 --- !u!114 &8022354081219173697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,6 +294,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  collider: {fileID: 0}
   groundedDistance: 0.01
   groundCheckDistance: 10
   maxWalkAngle: 60
@@ -304,7 +305,7 @@ MonoBehaviour:
   maxBounces: 5
   pushDecay: 0.9
   anglePower: 1
-  maxPushSpeed: 10
+  maxPushSpeed: 25
   verticalSnapDown: 0.45
   stepUpDepth: 0.05
   verticalSnapUp: 0.35
@@ -318,23 +319,8 @@ MonoBehaviour:
   onGround: 0
   angle: 0
   surfaceNormal: {x: 0, y: 0, z: 0}
+  groundHitPosition: {x: 0, y: 0, z: 0}
   floor: {fileID: 0}
---- !u!114 &4965862787272249836
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 245587927565386927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc8b4123465f2bc4ea55a1360da7b4f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  queryTriggerInteraction: 1
 --- !u!114 &9146407159294641169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,6 +427,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   attackRadius: 0.05
   targetTeam: 1
+  attacking: 0
 --- !u!114 &7722155314414626330
 MonoBehaviour:
   m_ObjectHideFlags: 0

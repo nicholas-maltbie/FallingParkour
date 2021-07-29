@@ -88,7 +88,7 @@ public class ScriptBatch : IPostprocessBuildWithReport
     [MenuItem("Build/Windows64 Build")]
     public static void WindowsBuild()
     {
-        BuildSetup(scriptingImplementation: ScriptingImplementation.IL2CPP);
+        BuildSetup(scriptingImplementation: ScriptingImplementation.Mono2x);
 
         // BuildUtilities.RegisterShouldIncludeInBuildCallback(new UnityEditor.PackageManager.IShouldIncludeInBuildCallback("Code Coverage"));
         BuildPlayerOptions options = new BuildPlayerOptions

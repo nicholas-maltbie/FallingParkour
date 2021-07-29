@@ -1,11 +1,17 @@
+using System.Collections.Generic;
 using Mirror;
-using PropHunt.Character;
+using PropHunt.Environment;
 using PropHunt.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace PropHunt.Character
 {
+    /// <summary>
+    /// Kinematic character controller to move the player character
+    /// as a kinematic object
+    /// </summary>
+    [RequireComponent(typeof(CapsuleCollider))]
     public class KinematicCharacterController : NetworkBehaviour
     {
         /// <summary>
@@ -30,9 +36,9 @@ namespace PropHunt.Character
         public INetworkService networkService;
 
         /// <summary>
-        /// Collider cast component to abstract movement of player
+        /// Player collider for checking things
         /// </summary>
-        public IColliderCast colliderCast;
+        public CapsuleCollider collider;
 
         [Header("Ground Checking")]
 
@@ -226,6 +232,13 @@ namespace PropHunt.Character
         public Vector3 surfaceNormal;
 
         /// <summary>
+        /// The point in which the player is hitting the ground
+        /// </summary>
+        [Tooltip("The point in which the player is hitting the ground")]
+        [SerializeField]
+        public Vector3 groundHitPosition;
+
+        /// <summary>
         /// What is the player standing on
         /// </summary>
         [Tooltip("Current object the player is standing on")]
@@ -286,7 +299,7 @@ namespace PropHunt.Character
         public void Start()
         {
             this.networkService = new NetworkService(this);
-            this.colliderCast = GetComponent<ColliderCast>();
+            this.collider = GetComponent<CapsuleCollider>();
         }
 
         public void FixedUpdate()
@@ -305,17 +318,18 @@ namespace PropHunt.Character
                 inputMovement = Vector3.zero;
             }
 
+            // If we are standing on an object marked as a moving platform, move the player
+            // with the moving ground object.
+            MoveWithGround();
+
             // Push out of overlapping objects
             PushOutOverlapping();
+            if (CanSnapDown)
+            {
+                SnapPlayerDown();
+            }
 
-            // Rotate movement vector by player yaw (rotation about vertical axis)
-            Quaternion horizPlaneView = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
-            Vector3 playerMovementDirection = horizPlaneView * inputMovement;
-
-            Vector3 movement = playerMovementDirection * (isSprinting ? sprintSpeed : movementSpeed);
-
-            // Update grounded state and increase velocity if falling
-            CheckGrounded();
+            // Update player velocity based on grounded state
             if (!Falling && !attemptingJump)
             {
                 velocity = Vector3.zero;
@@ -327,16 +341,14 @@ namespace PropHunt.Character
                 this.elapsedFalling += deltaTime;
             }
 
-            // Give the player some vertical velocity if they are jumping and grounded
-            if (!Falling && attemptingJump)
-            {
-                velocity = this.jumpVelocity * -gravity.normalized;
-                elapsedSinceJump = 0.0f;
-            }
-            else
-            {
-                elapsedSinceJump += deltaTime;
-            }
+            // Compute player jump if they are attempting to jump
+            PlayerJump(deltaTime);
+
+            // Rotate movement vector by player yaw (rotation about vertical axis)
+            Quaternion horizPlaneView = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+            Vector3 playerMovementDirection = horizPlaneView * inputMovement;
+
+            Vector3 movement = playerMovementDirection * (isSprinting ? sprintSpeed : movementSpeed);
 
             // If the player is standing on the ground, project their movement onto the ground plane
             // This allows them to walk up gradual slopes without facing a hit in movement speed
@@ -365,6 +377,82 @@ namespace PropHunt.Character
                 rigidbody.velocity = Vector3.zero;
                 rigidbody.angularVelocity = Vector3.zero;
             }
+
+            // Update grounded state and increase velocity if falling
+            CheckGrounded();
+        }
+
+        public RaycastHit[] GetHits(Vector3 direction, float distance)
+        {
+            RaycastHit[] hits;
+            Vector3 p1 = transform.position + collider.center + transform.rotation * Vector3.down * (collider.height * 0.499f - collider.radius);
+            Vector3 p2 = transform.position + collider.center + transform.rotation * Vector3.up * (collider.height * 0.499f - collider.radius);
+            hits = Physics.CapsuleCastAll(p1, p2,
+                collider.radius, direction, distance, ~0, QueryTriggerInteraction.Ignore);
+            return hits;
+        }
+
+        public bool CastSelf(Vector3 direction, float distance, out RaycastHit hit)
+        {
+            RaycastHit closest = new RaycastHit() { distance = Mathf.Infinity };
+            bool hitSomething = false;
+            foreach (RaycastHit objHit in GetHits(direction, distance))
+            {
+                if (objHit.collider.gameObject.transform != gameObject.transform)
+                {
+                    if (objHit.distance < closest.distance)
+                    {
+                        closest = objHit;
+                    }
+                    hitSomething = true;
+                }
+            }
+
+            hit = closest;
+            return hitSomething;
+        }
+
+        /// <summary>
+        /// Give player vertical velocity if they can jump and are attempting to jump
+        /// </summary>
+        /// <param name="deltaTime">Time in fixed update</param>
+        public void PlayerJump(float deltaTime)
+        {
+            // Give the player some vertical velocity if they are jumping and grounded
+            if (!Falling && attemptingJump)
+            {
+                Vector3 groundVelocity = Vector3.zero;
+                IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
+                if (movingGround != null)
+                {
+                    groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition);
+                }
+                velocity = groundVelocity + this.jumpVelocity * -gravity.normalized;
+                elapsedSinceJump = 0.0f;
+            }
+            else
+            {
+                elapsedSinceJump += deltaTime;
+            }
+        }
+
+        /// <summary>
+        /// Move the player with the ground if possible based on the ground's
+        /// velocity at a given point. 
+        /// </summary>
+        public void MoveWithGround()
+        {
+            // Check if we were standing on moving ground the previous frame
+            IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
+            if (movingGround == null || Falling)
+            {
+                // We aren't standing on something, don't do anything
+                return;
+            }
+            // Otherwise, get the displacement of the floor at the previous position
+            Vector3 displacement = movingGround.GetDisplacementAtPoint(groundHitPosition);
+            // Move player by that displacement amount
+            transform.position += displacement;
         }
 
         /// <summary>
@@ -373,10 +461,15 @@ namespace PropHunt.Character
         public void SnapPlayerDown()
         {
             // Cast current character collider down
-            ColliderCastHit hit = colliderCast.CastSelf(Vector3.down, verticalSnapDown);
-            if (hit.hit && hit.distance > Epsilon)
+            float height = collider.height;
+            float radius = collider.radius;
+
+            bool didHit = Physics.SphereCast(transform.position, radius, gravity.normalized, out RaycastHit hit,
+                verticalSnapDown + height / 2 - radius, ~0, QueryTriggerInteraction.Ignore);
+
+            if (didHit && hit.distance > Epsilon)
             {
-                transform.position += Vector3.down * (hit.distance - Epsilon);
+                transform.position += gravity.normalized * (hit.distance - height / 2 + radius + Epsilon);
             }
         }
 
@@ -396,14 +489,14 @@ namespace PropHunt.Character
                 return;
             }
 
-            foreach (ColliderCastHit overlap in colliderCast.GetOverlappingDirectional())
+            foreach (RaycastHit overlap in this.GetOverlappingDirectional())
             {
                 Physics.ComputePenetration(
                     collider, collider.bounds.center, transform.rotation,
                     overlap.collider, overlap.collider.transform.position, overlap.collider.transform.rotation,
                     out Vector3 direction, out float distance
                 );
-                distance += Epsilon;
+                // distance += Epsilon;
                 float maxPushDistance = maxPushSpeed * unityService.deltaTime;
                 if (distance > maxPushDistance)
                 {
@@ -413,17 +506,43 @@ namespace PropHunt.Character
             }
         }
 
+        public IEnumerable<RaycastHit> GetOverlappingDirectional()
+        {
+            List<RaycastHit> hits = new List<RaycastHit>();
+            foreach (RaycastHit hit in GetHits(Vector3.down, 0.001f))
+            {
+                if (hit.collider.gameObject.transform != gameObject.transform && hit.distance == 0)
+                {
+                    hits.Add(hit);
+                }
+            }
+            return hits;
+        }
+
+        public IEnumerable<Collider> GetOverlapping()
+        {
+            Vector3 p1 = transform.position + collider.center + Vector3.up * -collider.height * 0.5f;
+            return Physics.OverlapCapsule(p1, p1 + Vector3.up * collider.height,
+                collider.radius, ~0, QueryTriggerInteraction.Ignore);
+        }
+
         /// <summary>
-        /// Update the current grounded state of this prop class
+        /// Update the current grounded state of this kinematic character controller
         /// </summary>
         public void CheckGrounded()
         {
-            ColliderCastHit hit = colliderCast.CastSelf(Vector3.down, groundCheckDistance);
+            float height = collider.height;
+            float radius = collider.radius;
+
+            bool didHit = Physics.SphereCast(transform.position, radius, gravity.normalized, out RaycastHit hit,
+                groundCheckDistance + height / 2 - radius, ~0, QueryTriggerInteraction.Ignore);
+
             this.angle = Vector3.Angle(hit.normal, -gravity);
-            this.distanceToGround = hit.distance;
-            this.onGround = hit.hit;
+            this.distanceToGround = Mathf.Max(Epsilon, hit.distance - height / 2 + radius);
+            this.onGround = didHit;
             this.surfaceNormal = hit.normal;
             this.floor = hit.collider != null ? hit.collider.gameObject : null;
+            this.groundHitPosition = hit.point;
         }
 
         /// <summary>
@@ -438,7 +557,7 @@ namespace PropHunt.Character
         /// <param name="momentum">The remaining momentum of the player</param>
         /// <returns>True if the player had space on the ledge and was able to move, false if
         /// there was not enough room the player is moved back to their original position</returns>
-        public bool AttemptSnapUp(float distanceToSnap, ColliderCastHit hit, Vector3 momentum)
+        public bool AttemptSnapUp(float distanceToSnap, RaycastHit hit, Vector3 momentum)
         {
             // If we were to snap the player up and they moved forward, would they hit something?
             Vector3 currentPosition = transform.position;
@@ -446,10 +565,10 @@ namespace PropHunt.Character
             transform.position += snapUp;
 
             Vector3 directionAfterSnap = Vector3.ProjectOnPlane(Vector3.Project(momentum, -hit.normal), Vector3.up).normalized * momentum.magnitude;
-            ColliderCastHit snapHit = colliderCast.CastSelf(directionAfterSnap.normalized, Mathf.Max(stepUpDepth, momentum.magnitude));
+            bool didSnapHit = this.CastSelf(directionAfterSnap.normalized, Mathf.Max(stepUpDepth, momentum.magnitude), out RaycastHit snapHit);
 
             // If they can move without instantly hitting something, then snap them up
-            if ((!Falling || elapsedFalling <= snapBufferTime) && snapHit.distance > Epsilon && (!snapHit.hit || snapHit.distance > stepUpDepth))
+            if ((!Falling || elapsedFalling <= snapBufferTime) && snapHit.distance > Epsilon && (!didSnapHit || snapHit.distance > stepUpDepth))
             {
                 // Project rest of movement onto plane perpendicular to gravity
                 transform.position = currentPosition;
@@ -481,9 +600,8 @@ namespace PropHunt.Character
             {
                 // Do a cast of the collider to see if an object is hit during this
                 // movement bounce
-                ColliderCastHit hit = colliderCast.CastSelf(momentum.normalized, momentum.magnitude);
-
-                if (!hit.hit)
+                float distance = momentum.magnitude;
+                if (!this.CastSelf(momentum.normalized, distance, out RaycastHit hit))
                 {
                     // If there is no hit, move to desired position
                     transform.position += momentum;
@@ -496,25 +614,26 @@ namespace PropHunt.Character
                 {
                     push.PushObject(new KinematicCharacterControllerHit(
                         hit.collider, hit.collider.attachedRigidbody, hit.collider.gameObject,
-                        hit.collider.transform, hit.pointHit, hit.normal, momentum.normalized, movement.magnitude
+                        hit.collider.transform, hit.point, hit.normal, momentum.normalized, movement.magnitude
                     ));
                     // If pushing something, reduce remaining force significantly
                     momentum *= pushDecay;
                 }
 
+                float fraction = hit.distance / distance;
                 // Set the fraction of remaining movement (minus some small value)
-                transform.position += momentum * (hit.fraction);
+                transform.position += momentum * (fraction);
                 // Push slightly along normal to stop from getting caught in walls
                 transform.position += hit.normal * Epsilon;
                 // Decrease remaining momentum by fraction of movement remaining
-                momentum *= (1 - hit.fraction);
+                momentum *= (1 - fraction);
 
                 // Plane to project rest of movement onto
                 Vector3 planeNormal = hit.normal;
 
                 // Snap character vertically up if they hit something
                 //  close enough to their feet
-                float distanceToFeet = hit.pointHit.y - (transform.position - selfCollider.bounds.extents).y;
+                float distanceToFeet = hit.point.y - (transform.position - selfCollider.bounds.extents).y;
                 if (hit.distance > 0 && !attemptingJump && distanceToFeet < verticalSnapUp && distanceToFeet > 0)
                 {
                     // Sometimes snapping up the exact distance leads to odd behaviour around steps and walls.
