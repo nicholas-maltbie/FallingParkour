@@ -4,7 +4,8 @@ using UnityEngine;
 using Mirror;
 
 namespace PropHunt.Environment
-{    public class MovingPlatform : NetworkBehaviour
+{
+    public class MovingPlatform : NetworkBehaviour
     {
         /// <summary>
         /// Velocity at which this platform should move
@@ -19,7 +20,7 @@ namespace PropHunt.Environment
         /// Gets the current target we're moving towards
         /// </summary>
         public Transform CurrentTarget => targetsList[currentTargetIndex];
-        
+
         [SerializeField]
         public List<Transform> targetsList;
 
@@ -28,7 +29,7 @@ namespace PropHunt.Environment
         // Start is called before the first frame update
         void Start()
         {
-            
+
         }
 
         void FixedUpdate()
@@ -49,7 +50,7 @@ namespace PropHunt.Environment
                 displacement = CurrentTarget.position - transform.position;
                 currentTargetIndex = (currentTargetIndex + 1) % targetsList.Count;
             }
-            
+
             transform.position += displacement;
             moved += displacement;
 
