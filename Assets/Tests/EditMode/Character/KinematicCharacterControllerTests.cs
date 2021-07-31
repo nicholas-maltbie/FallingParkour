@@ -41,7 +41,7 @@ namespace Tests.EditMode.Character
             this.colliderCastMock = new Mock<IColliderCast>();
             this.kcc.unityService = this.unityServiceMock.Object;
             this.kcc.networkService = this.networkServiceMock.Object;
-            this.kcc.collider = characterGo.AddComponent<CapsuleCollider>();
+            this.kcc.capsuleCollider = characterGo.AddComponent<CapsuleCollider>();
         }
 
         [TearDown]
