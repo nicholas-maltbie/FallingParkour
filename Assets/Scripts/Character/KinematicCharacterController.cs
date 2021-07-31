@@ -306,7 +306,7 @@ namespace PropHunt.Character
             var radius = capsuleCollider.radius;
             var height = capsuleCollider.height;
 
-            var bottom = new Vector3(center.x, center.y - height  / 2 + radius, center.z);
+            var bottom = new Vector3(center.x, center.y - height / 2 + radius, center.z);
             var top = new Vector3(center.x, center.y + height / 2 - radius, center.z);
             return (top, bottom, radius, height);
         }
@@ -336,6 +336,8 @@ namespace PropHunt.Character
             // If we are standing on an object marked as a moving platform, move the player
             // with the moving ground object.
             MoveWithGround();
+
+            PushOutOverlapping();
 
             CheckGrounded();
 
@@ -394,7 +396,7 @@ namespace PropHunt.Character
         public IEnumerable<RaycastHit> GetHits(Vector3 direction, float distance)
         {
             (var top, var bottom, var radius, _) = GetParams();
-            return Physics.CapsuleCastAll(top, bottom, radius, direction, distance,~0, QueryTriggerInteraction.Ignore)
+            return Physics.CapsuleCastAll(top, bottom, radius, direction, distance, ~0, QueryTriggerInteraction.Ignore)
                 .Where(hit => hit.collider.transform != transform);
         }
 
@@ -460,7 +462,7 @@ namespace PropHunt.Character
             // Move player by that displacement amount
             transform.position += displacement;
 
-            PushOutOverlapping(displacement.magnitude, debug:true);
+            PushOutOverlapping(displacement.magnitude);
         }
 
         /// <summary>
@@ -487,7 +489,7 @@ namespace PropHunt.Character
             PushOutOverlapping(maxPushSpeed * deltaTime);
         }
 
-        public void PushOutOverlapping(float maxDistance, bool debug=false)
+        public void PushOutOverlapping(float maxDistance)
         {
             foreach (Collider overlap in this.GetOverlapping())
             {
@@ -496,10 +498,6 @@ namespace PropHunt.Character
                     overlap, overlap.gameObject.transform.position, overlap.gameObject.transform.rotation,
                     out Vector3 direction, out float distance
                 );
-                if (debug)
-                {
-                    Debug.Log(overlap.gameObject.name + " " + distance + " " + maxDistance + " " + direction.ToString("F3"));
-                }
                 transform.position += direction.normalized * Mathf.Min(maxDistance, distance + Epsilon);
             }
         }
@@ -524,14 +522,9 @@ namespace PropHunt.Character
         {
             bool didHit = CastSelf(gravity.normalized, groundCheckDistance, out var hit);
             (var top, var bottom, var radius, var height) = GetParams();
-            // bool didHit = Physics.SphereCast(top, radius, gravity.normalized, out RaycastHit hit,
-            //     groundCheckDistance + height - radius, ~0, QueryTriggerInteraction.Ignore);
-
-            Debug.DrawLine(top, top + gravity.normalized * (groundCheckDistance + height - radius));
-            Debug.Log(hit.distance);
 
             this.angle = Vector3.Angle(hit.normal, -gravity);
-            this.distanceToGround = Mathf.Max(Epsilon, hit.distance);
+            this.distanceToGround = hit.distance;
             this.onGround = didHit;
             this.surfaceNormal = hit.normal;
             this.floor = hit.collider != null ? hit.collider.gameObject : null;
