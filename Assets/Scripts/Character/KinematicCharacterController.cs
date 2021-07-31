@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Mirror;
 using PropHunt.Environment;
 using PropHunt.Utils;
@@ -38,7 +39,7 @@ namespace PropHunt.Character
         /// <summary>
         /// Player collider for checking things
         /// </summary>
-        public CapsuleCollider collider;
+        public CapsuleCollider capsuleCollider;
 
         [Header("Ground Checking")]
 
@@ -296,10 +297,24 @@ namespace PropHunt.Character
         /// <returns>If a player is allowed to snap down</returns>
         private bool CanSnapDown => (StandingOnGround || elapsedFalling <= snapBufferTime) && (elapsedSinceJump >= snapBufferTime);
 
+        /// <summary>
+        /// Gets transformed parameters describing this capsule collider
+        /// </summary>
+        public (Vector3, Vector3, float, float) GetParams()
+        {
+            var center = transform.TransformPoint(capsuleCollider.center);
+            var radius = capsuleCollider.radius;
+            var height = capsuleCollider.height;
+
+            var bottom = new Vector3(center.x, center.y - height  / 2 + radius, center.z);
+            var top = new Vector3(center.x, center.y + height / 2 - radius, center.z);
+            return (top, bottom, radius, height);
+        }
+
         public void Start()
         {
             this.networkService = new NetworkService(this);
-            this.collider = GetComponent<CapsuleCollider>();
+            this.capsuleCollider = GetComponent<CapsuleCollider>();
         }
 
         public void FixedUpdate()
@@ -322,12 +337,7 @@ namespace PropHunt.Character
             // with the moving ground object.
             MoveWithGround();
 
-            // Push out of overlapping objects
-            PushOutOverlapping();
-            if (CanSnapDown)
-            {
-                SnapPlayerDown();
-            }
+            CheckGrounded();
 
             // Update player velocity based on grounded state
             if (!Falling && !attemptingJump)
@@ -370,6 +380,8 @@ namespace PropHunt.Character
                 SnapPlayerDown();
             }
 
+            CheckGrounded();
+
             // make sure the rigidbody doesn't move according to velocity or angular velocity
             Rigidbody rigidbody = GetComponent<Rigidbody>();
             if (rigidbody != null)
@@ -377,19 +389,13 @@ namespace PropHunt.Character
                 rigidbody.velocity = Vector3.zero;
                 rigidbody.angularVelocity = Vector3.zero;
             }
-
-            // Update grounded state and increase velocity if falling
-            CheckGrounded();
         }
 
-        public RaycastHit[] GetHits(Vector3 direction, float distance)
+        public IEnumerable<RaycastHit> GetHits(Vector3 direction, float distance)
         {
-            RaycastHit[] hits;
-            Vector3 p1 = transform.position + collider.center + transform.rotation * Vector3.down * (collider.height * 0.499f - collider.radius);
-            Vector3 p2 = transform.position + collider.center + transform.rotation * Vector3.up * (collider.height * 0.499f - collider.radius);
-            hits = Physics.CapsuleCastAll(p1, p2,
-                collider.radius, direction, distance, ~0, QueryTriggerInteraction.Ignore);
-            return hits;
+            (var top, var bottom, var radius, _) = GetParams();
+            return Physics.CapsuleCastAll(top, bottom, radius, direction, distance,~0, QueryTriggerInteraction.Ignore)
+                .Where(hit => hit.collider.transform != transform);
         }
 
         public bool CastSelf(Vector3 direction, float distance, out RaycastHit hit)
@@ -453,6 +459,8 @@ namespace PropHunt.Character
             Vector3 displacement = movingGround.GetDisplacementAtPoint(groundHitPosition);
             // Move player by that displacement amount
             transform.position += displacement;
+
+            PushOutOverlapping(displacement.magnitude, debug:true);
         }
 
         /// <summary>
@@ -460,16 +468,11 @@ namespace PropHunt.Character
         /// </summary>
         public void SnapPlayerDown()
         {
-            // Cast current character collider down
-            float height = collider.height;
-            float radius = collider.radius;
-
-            bool didHit = Physics.SphereCast(transform.position, radius, gravity.normalized, out RaycastHit hit,
-                verticalSnapDown + height / 2 - radius, ~0, QueryTriggerInteraction.Ignore);
+            bool didHit = CastSelf(gravity.normalized, verticalSnapDown, out var hit);
 
             if (didHit && hit.distance > Epsilon)
             {
-                transform.position += gravity.normalized * (hit.distance - height / 2 + radius + Epsilon);
+                transform.position += gravity.normalized * (hit.distance - Epsilon * 2);
             }
         }
 
@@ -480,50 +483,38 @@ namespace PropHunt.Character
         /// </summary>
         public void PushOutOverlapping()
         {
-            float deltaTime = unityService.deltaTime;
+            float deltaTime = unityService.fixedDeltaTime;
+            PushOutOverlapping(maxPushSpeed * deltaTime);
+        }
 
-            Collider collider = GetComponent<Collider>();
-
-            if (collider == null)
-            {
-                return;
-            }
-
-            foreach (RaycastHit overlap in this.GetOverlappingDirectional())
+        public void PushOutOverlapping(float maxDistance, bool debug=false)
+        {
+            foreach (Collider overlap in this.GetOverlapping())
             {
                 Physics.ComputePenetration(
-                    collider, collider.bounds.center, transform.rotation,
-                    overlap.collider, overlap.collider.transform.position, overlap.collider.transform.rotation,
+                    capsuleCollider, transform.position, transform.rotation,
+                    overlap, overlap.gameObject.transform.position, overlap.gameObject.transform.rotation,
                     out Vector3 direction, out float distance
                 );
-                // distance += Epsilon;
-                float maxPushDistance = maxPushSpeed * unityService.deltaTime;
-                if (distance > maxPushDistance)
+                if (debug)
                 {
-                    distance = maxPushDistance;
+                    Debug.Log(overlap.gameObject.name + " " + distance + " " + maxDistance + " " + direction.ToString("F3"));
                 }
-                transform.position += direction.normalized * distance;
+                transform.position += direction.normalized * Mathf.Min(maxDistance, distance + Epsilon);
             }
         }
 
-        public IEnumerable<RaycastHit> GetOverlappingDirectional()
+        public void OnDrawGizmos()
         {
-            List<RaycastHit> hits = new List<RaycastHit>();
-            foreach (RaycastHit hit in GetHits(Vector3.down, 0.001f))
-            {
-                if (hit.collider.gameObject.transform != gameObject.transform && hit.distance == 0)
-                {
-                    hits.Add(hit);
-                }
-            }
-            return hits;
+            (var top, var bottom, var radius, var height) = GetParams();
+            Gizmos.DrawSphere(top, radius);
+            Gizmos.DrawSphere(bottom, radius);
         }
 
         public IEnumerable<Collider> GetOverlapping()
         {
-            Vector3 p1 = transform.position + collider.center + Vector3.up * -collider.height * 0.5f;
-            return Physics.OverlapCapsule(p1, p1 + Vector3.up * collider.height,
-                collider.radius, ~0, QueryTriggerInteraction.Ignore);
+            (var top, var bottom, var radius, var height) = GetParams();
+            return Physics.OverlapCapsule(top, bottom, radius).Where(c => c.transform != transform);
         }
 
         /// <summary>
@@ -531,14 +522,16 @@ namespace PropHunt.Character
         /// </summary>
         public void CheckGrounded()
         {
-            float height = collider.height;
-            float radius = collider.radius;
+            bool didHit = CastSelf(gravity.normalized, groundCheckDistance, out var hit);
+            (var top, var bottom, var radius, var height) = GetParams();
+            // bool didHit = Physics.SphereCast(top, radius, gravity.normalized, out RaycastHit hit,
+            //     groundCheckDistance + height - radius, ~0, QueryTriggerInteraction.Ignore);
 
-            bool didHit = Physics.SphereCast(transform.position, radius, gravity.normalized, out RaycastHit hit,
-                groundCheckDistance + height / 2 - radius, ~0, QueryTriggerInteraction.Ignore);
+            Debug.DrawLine(top, top + gravity.normalized * (groundCheckDistance + height - radius));
+            Debug.Log(hit.distance);
 
             this.angle = Vector3.Angle(hit.normal, -gravity);
-            this.distanceToGround = Mathf.Max(Epsilon, hit.distance - height / 2 + radius);
+            this.distanceToGround = Mathf.Max(Epsilon, hit.distance);
             this.onGround = didHit;
             this.surfaceNormal = hit.normal;
             this.floor = hit.collider != null ? hit.collider.gameObject : null;

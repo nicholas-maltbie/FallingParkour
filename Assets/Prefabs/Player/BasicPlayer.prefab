@@ -294,9 +294,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  collider: {fileID: 0}
+  capsuleCollider: {fileID: 0}
   groundedDistance: 0.01
-  groundCheckDistance: 10
+  groundCheckDistance: 1
   maxWalkAngle: 60
   gravity: {x: 0, y: -20, z: 0}
   movementSpeed: 5
