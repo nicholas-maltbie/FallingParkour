@@ -337,9 +337,9 @@ namespace PropHunt.Character
             // with the moving ground object.
             MoveWithGround();
 
-            PushOutOverlapping();
-
             CheckGrounded();
+
+            PushOutOverlapping();
 
             // Update player velocity based on grounded state
             if (!Falling && !attemptingJump)
@@ -462,7 +462,7 @@ namespace PropHunt.Character
             // Move player by that displacement amount
             transform.position += displacement;
 
-            PushOutOverlapping(displacement.magnitude);
+            PushOutOverlapping(displacement.magnitude * 2);
         }
 
         /// <summary>
@@ -500,13 +500,6 @@ namespace PropHunt.Character
                 );
                 transform.position += direction.normalized * Mathf.Min(maxDistance, distance + Epsilon);
             }
-        }
-
-        public void OnDrawGizmos()
-        {
-            (var top, var bottom, var radius, var height) = GetParams();
-            Gizmos.DrawSphere(top, radius);
-            Gizmos.DrawSphere(bottom, radius);
         }
 
         public IEnumerable<Collider> GetOverlapping()
