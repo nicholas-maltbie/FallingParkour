@@ -99,6 +99,10 @@ namespace PropHunt.Character.Avatar
             {
                 LoadNewAvatar("SpacePerson");
             }
+            if (GUI.Button(new Rect(10, 100, 100, 20), "Change to Michelle"))
+            {
+                LoadNewAvatar("Michelle");
+            }
         }
 
 
