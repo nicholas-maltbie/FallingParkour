@@ -42,7 +42,7 @@ namespace PropHunt.Character.Avatar
             Enumerable.Range(0, modelBase.transform.childCount)
                 .Select(i => modelBase.transform.GetChild(i))
                 .ToList()
-                .ForEach(child => 
+                .ForEach(child =>
                 {
                     GameObject.Destroy(child.gameObject);
                 });
@@ -58,17 +58,20 @@ namespace PropHunt.Character.Avatar
 
             modelBase.GetComponent<Animator>().avatar = null;
             yield return new WaitForFixedUpdate();
-
             GameObject created = GameObject.Instantiate(avatar);
+            created.SetActive(false);
             created.transform.parent = modelBase.transform;
-            // Move child components to be parented by this object
-            while(created.transform.childCount > 0)
-            {
-                created.transform.GetChild(0).transform.parent = modelBase.transform;
-            }
+            modelBase.GetComponent<Animator>().avatar = created.GetComponent<Animator>().avatar;
             yield return new WaitForFixedUpdate();
 
-            modelBase.GetComponent<Animator>().avatar = created.GetComponent<Animator>().avatar;
+            // Move child components to be parented by this object
+            while (created.transform.childCount > 0)
+            {
+                GameObject child = created.transform.GetChild(0).gameObject;
+                child.transform.parent = modelBase.transform;
+                created.SetActive(true);
+            }
+
             yield return new WaitForFixedUpdate();
             // Delete the created avatar base
             GameObject.Destroy(created);
@@ -84,15 +87,15 @@ namespace PropHunt.Character.Avatar
 
         public void OnGUI()
         {
-            if(GUI.Button(new Rect(10, 10, 100, 20), "Change to xbot"))
+            if (GUI.Button(new Rect(10, 10, 100, 20), "Change to xbot"))
             {
                 LoadNewAvatar("xbot");
             }
-            if(GUI.Button(new Rect(10, 40, 100, 20), "Change to ybot"))
+            if (GUI.Button(new Rect(10, 40, 100, 20), "Change to ybot"))
             {
                 LoadNewAvatar("ybot");
             }
-            if(GUI.Button(new Rect(10, 70, 100, 20), "Change to space"))
+            if (GUI.Button(new Rect(10, 70, 100, 20), "Change to space"))
             {
                 LoadNewAvatar("SpacePerson");
             }
