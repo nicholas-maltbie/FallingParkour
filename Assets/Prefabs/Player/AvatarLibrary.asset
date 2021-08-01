@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16adb1f05bb41c447ada436dccd1441f, type: 3}
   m_Name: AvatarLibrary
   m_EditorClassIdentifier: 
-  defaultAvatar: {fileID: 3002032104044285871, guid: 02f2df1fc82bf5846bd1916b55e2542e, type: 3}
+  defaultAvatar: {fileID: 919132149155446097, guid: d4e85e6cad4bff14fa2e9dbf7768629f, type: 3}
   playerModels:
-  - {fileID: 359899977897281587, guid: 2bb116252750ff34fa26c04502a95fd5, type: 3}
-  - {fileID: 3163359782865301866, guid: a07a16248cb4e8a4c856b3710fa1fc57, type: 3}
-  - {fileID: 3002032104044285871, guid: 02f2df1fc82bf5846bd1916b55e2542e, type: 3}
+  - {fileID: 919132149155446097, guid: 2fe50b90de0f56b429fe6e254cc0441e, type: 3}
+  - {fileID: 919132149155446097, guid: 0942f38cf1dd220458b8e41658f2f49b, type: 3}
+  - {fileID: 919132149155446097, guid: d4e85e6cad4bff14fa2e9dbf7768629f, type: 3}

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using Mirror;
 using UnityEngine;
@@ -7,6 +8,7 @@ namespace PropHunt.Character.Avatar
     /// <summary>
     /// Have a character controller push any dynamic rigidbody it hits
     /// </summary>
+    [RequireComponent(typeof(NetworkAnimator))]
     public class CharacterAvatarManager : NetworkBehaviour
     {
         /// <summary>
@@ -35,58 +37,76 @@ namespace PropHunt.Character.Avatar
             }
         }
 
-        /// <summary>
-        /// Delete the current avatar stored for this character
-        /// </summary>
-        private void ClearAvatar()
+        private IEnumerator SetupAvatar(string avatarName)
         {
             Enumerable.Range(0, modelBase.transform.childCount)
                 .Select(i => modelBase.transform.GetChild(i))
                 .ToList()
-                .ForEach(child => GameObject.Destroy(child.gameObject));
-        }
+                .ForEach(child => 
+                {
+                    GameObject.Destroy(child.gameObject);
+                });
+            yield return new WaitForFixedUpdate();
 
-        private GameObject SetupAvatar(string avatarName)
-        {
             GameObject avatar = avatarLibrary.DefaultAvater;
+            avatar.transform.position = modelBase.transform.position;
+            avatar.transform.rotation = modelBase.transform.rotation;
             if (avatarLibrary.HasCharacterAvatar(avatarName))
             {
                 avatar = avatarLibrary.GetCharacterAvatar(avatarName);
             }
 
+            modelBase.GetComponent<Animator>().avatar = null;
+            yield return new WaitForFixedUpdate();
+
             GameObject created = GameObject.Instantiate(avatar);
-            created.transform.SetParent(modelBase.transform);
-            return created;
+            created.transform.parent = modelBase.transform;
+            // Move child components to be parented by this object
+            while(created.transform.childCount > 0)
+            {
+                created.transform.GetChild(0).transform.parent = modelBase.transform;
+            }
+            yield return new WaitForFixedUpdate();
+
+            modelBase.GetComponent<Animator>().avatar = created.GetComponent<Animator>().avatar;
+            yield return new WaitForFixedUpdate();
+            // Delete the created avatar base
+            GameObject.Destroy(created);
+            yield return new WaitForFixedUpdate();
+            loading = false;
         }
 
         [Command]
         public void CmdSetAvatar(string newlySelectedAvatar)
         {
             avatarSelected = newlySelectedAvatar;
-            LoadNewAvatar(newlySelectedAvatar);
         }
 
         public void OnGUI()
         {
             if(GUI.Button(new Rect(10, 10, 100, 20), "Change to xbot"))
             {
-                CmdSetAvatar("xbot");
+                LoadNewAvatar("xbot");
+            }
+            if(GUI.Button(new Rect(10, 40, 100, 20), "Change to ybot"))
+            {
+                LoadNewAvatar("ybot");
+            }
+            if(GUI.Button(new Rect(10, 70, 100, 20), "Change to space"))
+            {
+                LoadNewAvatar("SpacePerson");
             }
         }
 
+
+        private bool loading = false;
         public void LoadNewAvatar(string avatarName)
         {
-            ClearAvatar();
-            GameObject newAvatar = SetupAvatar(avatarName);
-            var networkAnimator = GetComponent<NetworkAnimator>();
-            var animator = newAvatar.GetComponent<Animator>();
-            if (networkAnimator != null)
+            if (!loading)
             {
-                networkAnimator.animator = animator;
+                loading = true;
+                StartCoroutine(SetupAvatar(avatarName));
             }
-            this.transform.GetComponentsInChildren<IAvatarChange>().ToList().ForEach(
-                change => change.OnAvatarChange(newAvatar)
-            );
         }
 
         public void OnAvatarChange(string _, string avatarName) => LoadNewAvatar(avatarName);

@@ -9,7 +9,7 @@ namespace PropHunt.Animation
     /// <summary>
     /// Manage IK For humanoid avatar over network
     /// </summary>
-    public class NetworkIKControl : NetworkBehaviour, IAvatarChange
+    public class NetworkIKControl : NetworkBehaviour
     {
         /// <summary>
         /// Target for player looking
@@ -377,11 +377,6 @@ namespace PropHunt.Animation
         public void CmdSetLookState(bool newLookState)
         {
             SetLookStateInternal(newLookState);
-        }
-
-        public void OnAvatarChange(GameObject newAvatar)
-        {
-            controller = newAvatar.GetComponent<IKControl>();
         }
     }
 }

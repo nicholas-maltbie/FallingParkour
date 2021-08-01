@@ -10,7 +10,7 @@ namespace PropHunt.Animation
     /// Allow for player food grounding synchronization over network
     /// </summary>
     [RequireComponent(typeof(NetworkIKControl))]
-    public class NetworkFootGrounding : NetworkBehaviour, IAvatarChange
+    public class NetworkFootGrounding : NetworkBehaviour
     {
         [SyncVar(hook = nameof(OnGroundFeetChange))]
         public bool groundFeet;
@@ -86,11 +86,6 @@ namespace PropHunt.Animation
         public void CmdSetFootGroundedState(bool newState)
         {
             SetFootGroundedStateInternal(newState);
-        }
-
-        public void OnAvatarChange(GameObject newAvatar)
-        {
-            this.playerFootGrounded = newAvatar.GetComponent<PlayerFootGrounded>();
         }
     }
 }

@@ -25,7 +25,7 @@ namespace PropHunt.Character.Avatar
         /// <summary>
         /// Has the library been initialized
         /// </summary>
-        private bool initialized = false;
+        private bool Initialized => avatarIDLookup.Count == playerModels.Length;
 
         /// <summary>
         /// Get the default avatar
@@ -43,7 +43,6 @@ namespace PropHunt.Character.Avatar
         /// </summary>
         public void ClearLookups()
         {
-            initialized = false;
             avatarIDLookup.Clear();
         }
 
@@ -52,7 +51,7 @@ namespace PropHunt.Character.Avatar
         /// </summary>
         public void VerifyLookups()
         {
-            if (!initialized)
+            if (!Initialized)
             {
                 ClearLookups();
                 SetupLookups();
@@ -68,7 +67,6 @@ namespace PropHunt.Character.Avatar
             {
                 avatarIDLookup.Add(model.name, model);
             }
-            initialized = true;
         }
 
         public bool HasCharacterAvatar(string avatarId)

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PropHunt.Character
 {
-    public class CharacterAnimator : NetworkBehaviour, IAvatarChange
+    public class CharacterAnimator : NetworkBehaviour
     {
         /// <summary>
         /// Dead zone to consider movement as stopped
@@ -82,11 +82,6 @@ namespace PropHunt.Character
             animator.SetBool("Turning", !moving && !jumpingOrFalling && Mathf.Abs(cameraController.frameRotation) > this.turningDeadZone);
             animator.SetBool("Jumping", jumping);
             animator.SetBool("Falling", falling);
-        }
-
-        public void OnAvatarChange(GameObject newAvatar)
-        {
-            this.animator = newAvatar.GetComponent<Animator>();
         }
     }
 

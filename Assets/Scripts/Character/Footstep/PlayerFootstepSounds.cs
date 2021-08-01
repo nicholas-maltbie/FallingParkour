@@ -10,7 +10,7 @@ namespace PropHunt.Character.Footstep
     /// <summary>
     /// Create footstep sounds based on player animation
     /// </summary>
-    public class PlayerFootstepSounds : TimedPlayerFootstepSound, IAvatarChange
+    public class PlayerFootstepSounds : TimedPlayerFootstepSound
     {
         /// <summary>
         /// Foot grounded component for detecting footsteps
@@ -34,12 +34,6 @@ namespace PropHunt.Character.Footstep
             }
 
             MakeFootstepAtPoint(footstepEvent.footstepPosition, footstepEvent.floor);
-        }
-
-        public void OnAvatarChange(GameObject newAvatar)
-        {
-            this.footGrounded = newAvatar.GetComponent<PlayerFootGrounded>();
-            footGrounded.PlayerFootstep += HandleFootstepEvent;
         }
     }
 }
