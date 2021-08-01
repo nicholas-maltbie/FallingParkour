@@ -83,25 +83,29 @@ namespace PropHunt.Character.Avatar
         public void CmdSetAvatar(string newlySelectedAvatar)
         {
             avatarSelected = newlySelectedAvatar;
+            LoadNewAvatar(newlySelectedAvatar);
         }
 
         public void OnGUI()
         {
-            if (GUI.Button(new Rect(10, 10, 100, 20), "Change to xbot"))
+            if (isLocalPlayer)
             {
-                LoadNewAvatar("xbot");
-            }
-            if (GUI.Button(new Rect(10, 40, 100, 20), "Change to ybot"))
-            {
-                LoadNewAvatar("ybot");
-            }
-            if (GUI.Button(new Rect(10, 70, 100, 20), "Change to space"))
-            {
-                LoadNewAvatar("SpacePerson");
-            }
-            if (GUI.Button(new Rect(10, 100, 100, 20), "Change to Michelle"))
-            {
-                LoadNewAvatar("Michelle");
+                if (GUI.Button(new Rect(10, 10, 100, 20), "Change to xbot"))
+                {
+                    CmdSetAvatar("xbot");
+                }
+                if (GUI.Button(new Rect(10, 40, 100, 20), "Change to ybot"))
+                {
+                    CmdSetAvatar("ybot");
+                }
+                if (GUI.Button(new Rect(10, 70, 100, 20), "Change to space"))
+                {
+                    CmdSetAvatar("SpacePerson");
+                }
+                if (GUI.Button(new Rect(10, 100, 100, 20), "Change to Michelle"))
+                {
+                    CmdSetAvatar("Michelle");
+                }
             }
         }
 
