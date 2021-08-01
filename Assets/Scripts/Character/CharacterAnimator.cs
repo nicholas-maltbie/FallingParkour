@@ -1,10 +1,11 @@
 ﻿using Mirror;
+using PropHunt.Character.Avatar;
 using PropHunt.Utils;
 using UnityEngine;
 
 namespace PropHunt.Character
 {
-    public class CharacterAnimator : NetworkBehaviour
+    public class CharacterAnimator : NetworkBehaviour, IAvatarChange
     {
         /// <summary>
         /// Dead zone to consider movement as stopped
@@ -60,6 +61,11 @@ namespace PropHunt.Character
                 return;
             }
 
+            if (animator == null)
+            {
+                return;
+            }
+
             bool jumping = kcc.Velocity.y >= 0.1f;
             bool falling = kcc.FallingTime >= fallingThreshold;
             bool jumpingOrFalling = jumping || falling;
@@ -76,6 +82,11 @@ namespace PropHunt.Character
             animator.SetBool("Turning", !moving && !jumpingOrFalling && Mathf.Abs(cameraController.frameRotation) > this.turningDeadZone);
             animator.SetBool("Jumping", jumping);
             animator.SetBool("Falling", falling);
+        }
+
+        public void OnAvatarChange(GameObject newAvatar)
+        {
+            this.animator = newAvatar.GetComponent<Animator>();
         }
     }
 

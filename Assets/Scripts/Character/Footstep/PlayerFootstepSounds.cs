@@ -1,5 +1,6 @@
 using Mirror;
 using PropHunt.Animation;
+using PropHunt.Character.Avatar;
 using PropHunt.Environment.Sound;
 using PropHunt.Utils;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace PropHunt.Character.Footstep
     /// <summary>
     /// Create footstep sounds based on player animation
     /// </summary>
-    public class PlayerFootstepSounds : TimedPlayerFootstepSound
+    public class PlayerFootstepSounds : TimedPlayerFootstepSound, IAvatarChange
     {
         /// <summary>
         /// Foot grounded component for detecting footsteps
@@ -19,7 +20,10 @@ namespace PropHunt.Character.Footstep
         public override void Start()
         {
             base.Start();
-            footGrounded.PlayerFootstep += HandleFootstepEvent;
+            if (footGrounded != null)
+            {
+                footGrounded.PlayerFootstep += HandleFootstepEvent;
+            }
         }
 
         public void HandleFootstepEvent(object sender, FootstepEvent footstepEvent)
@@ -30,6 +34,12 @@ namespace PropHunt.Character.Footstep
             }
 
             MakeFootstepAtPoint(footstepEvent.footstepPosition, footstepEvent.floor);
+        }
+
+        public void OnAvatarChange(GameObject newAvatar)
+        {
+            this.footGrounded = newAvatar.GetComponent<PlayerFootGrounded>();
+            footGrounded.PlayerFootstep += HandleFootstepEvent;
         }
     }
 }

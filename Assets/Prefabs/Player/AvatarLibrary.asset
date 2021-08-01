@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16adb1f05bb41c447ada436dccd1441f, type: 3}
+  m_Name: AvatarLibrary
+  m_EditorClassIdentifier: 
+  defaultAvatar: {fileID: 3002032104044285871, guid: 02f2df1fc82bf5846bd1916b55e2542e, type: 3}
+  playerModels:
+  - {fileID: 359899977897281587, guid: 2bb116252750ff34fa26c04502a95fd5, type: 3}
+  - {fileID: 3163359782865301866, guid: a07a16248cb4e8a4c856b3710fa1fc57, type: 3}
+  - {fileID: 3002032104044285871, guid: 02f2df1fc82bf5846bd1916b55e2542e, type: 3}
