@@ -14,13 +14,13 @@ namespace PropHunt.Character.Avatar
         /// Default avatar to give to players when no other is provided
         /// </summary>
         [SerializeField]
-        private GameObject defaultAvatar;
+        private CharacterAvatar defaultAvatar;
 
         /// <summary>
         /// Sets of character avatars that can be loaded from this library
         /// </summary>
         [SerializeField]
-        private GameObject[] playerModels;
+        private CharacterAvatar[] playerModels;
 
         /// <summary>
         /// Has the library been initialized
@@ -30,13 +30,13 @@ namespace PropHunt.Character.Avatar
         /// <summary>
         /// Get the default avatar
         /// </summary>
-        public GameObject DefaultAvater => defaultAvatar;
+        public CharacterAvatar DefaultAvater => defaultAvatar;
 
         /// <summary>
         /// Lookup table for character avatar by ID
         /// </summary>
-        private Dictionary<string, GameObject> avatarIDLookup =
-            new Dictionary<string, GameObject>();
+        private Dictionary<string, CharacterAvatar> avatarIDLookup =
+            new Dictionary<string, CharacterAvatar>();
 
         /// <summary>
         /// Resets the lookup tables for this library
@@ -63,9 +63,9 @@ namespace PropHunt.Character.Avatar
         /// </summary>
         public void SetupLookups()
         {
-            foreach (GameObject model in playerModels)
+            foreach (CharacterAvatar model in playerModels)
             {
-                avatarIDLookup.Add(model.name, model);
+                avatarIDLookup.Add(model.Name, model);
             }
         }
 
@@ -75,10 +75,19 @@ namespace PropHunt.Character.Avatar
             return avatarIDLookup.ContainsKey(avatarId);
         }
 
-        public GameObject GetCharacterAvatar(string avatarId)
+        public CharacterAvatar GetCharacterAvatar(string avatarId)
         {
             VerifyLookups();
             return avatarIDLookup[avatarId];
+        }
+
+        [Serializable]
+        public class CharacterAvatar
+        {
+            [SerializeField]
+            public GameObject avatar;
+
+            public string Name => avatar.name;
         }
     }
 }

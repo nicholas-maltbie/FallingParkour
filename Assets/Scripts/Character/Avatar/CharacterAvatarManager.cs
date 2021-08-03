@@ -33,7 +33,7 @@ namespace PropHunt.Character.Avatar
         {
             if (isLocalPlayer)
             {
-                CmdSetAvatar(avatarLibrary.DefaultAvater.name);
+                CmdSetAvatar(avatarLibrary.DefaultAvater.Name);
             }
         }
 
@@ -48,12 +48,12 @@ namespace PropHunt.Character.Avatar
                 });
             yield return new WaitForFixedUpdate();
 
-            GameObject avatar = avatarLibrary.DefaultAvater;
+            GameObject avatar = avatarLibrary.DefaultAvater.avatar;
             avatar.transform.position = modelBase.transform.position;
             avatar.transform.rotation = modelBase.transform.rotation;
             if (avatarLibrary.HasCharacterAvatar(avatarName))
             {
-                avatar = avatarLibrary.GetCharacterAvatar(avatarName);
+                avatar = avatarLibrary.GetCharacterAvatar(avatarName).avatar;
             }
 
             modelBase.GetComponent<Animator>().avatar = null;
