@@ -72,10 +72,20 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths:
+    - Among Us_basemodel_simplified
+    - Among Us_hand_simplified
+    - Cylinder
+    - Helmet
+    - Helmet_visor
+    - Cylinder.001
+    - Plane
+    - Oxygen_tank
+    - BezierCurve
+    - Plane.001
+    - Cylinder.003
+    - Cylinder.002
     - mixamorig:Hips
     - mixamorig:Hips/mixamorig:Spine
-    - mixamorig:Hips/mixamorig:LeftUpLeg
-    - mixamorig:Hips/mixamorig:RightUpLeg
     - mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1
     - mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2
     - mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:Neck
@@ -105,10 +115,12 @@ ModelImporter:
     - mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandIndex1/mixamorig:RightHandIndex2
     - mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandIndex1/mixamorig:RightHandIndex2/mixamorig:RightHandIndex3
     - mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandIndex1/mixamorig:RightHandIndex2/mixamorig:RightHandIndex3/mixamorig:RightHandIndex4
+    - mixamorig:Hips/mixamorig:LeftUpLeg
     - mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg
     - mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg/mixamorig:LeftFoot
     - mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg/mixamorig:LeftFoot/mixamorig:LeftToeBase
     - mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg/mixamorig:LeftFoot/mixamorig:LeftToeBase/mixamorig:LeftToe_End
+    - mixamorig:Hips/mixamorig:RightUpLeg
     - mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg
     - mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg/mixamorig:RightFoot
     - mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg/mixamorig:RightFoot/mixamorig:RightToeBase

@@ -166,6 +166,10 @@ namespace PropHunt.Animation
         {
             Transform leftFootTransform = animator.GetBoneTransform(HumanBodyBones.LeftFoot);
             Transform rightFootTransform = animator.GetBoneTransform(HumanBodyBones.RightFoot);
+            if (leftFootTransform == null || rightFootTransform == null)
+            {
+                return;
+            }
             Vector3 leftFoot = leftFootTransform.position;
             Vector3 rightFoot = rightFootTransform.position;
 

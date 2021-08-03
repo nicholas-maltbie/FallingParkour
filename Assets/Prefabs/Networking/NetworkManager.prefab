@@ -65,7 +65,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  inGamePlayer: {fileID: 245587927565386927, guid: 042d651bd63ca1d42bf47ae427994384, type: 3}
+  inGamePlayer: {fileID: 774360562829986131, guid: 94c1f054bcd31be429fd1ae1185e7267, type: 3}
   lobbyPlayer: {fileID: 1250752114043530695, guid: d3c7992bedb32c547a65b63a8702b3d8, type: 3}
 --- !u!114 &7367678013483490725
 MonoBehaviour:
@@ -166,6 +166,7 @@ MonoBehaviour:
   - {fileID: 245587927565386927, guid: 042d651bd63ca1d42bf47ae427994384, type: 3}
   - {fileID: 245587927565386927, guid: cd466bba068e4af4885e6e346a44616a, type: 3}
   - {fileID: 1250752114043530695, guid: d3c7992bedb32c547a65b63a8702b3d8, type: 3}
+  - {fileID: 774360562829986131, guid: 94c1f054bcd31be429fd1ae1185e7267, type: 3}
   timerPrefab: {fileID: 5660222951667944539, guid: 0d379e827af7e944095b2c2ee6ffa675, type: 3}
 --- !u!114 &8542409671753137159
 MonoBehaviour:

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Mirror;
+using PropHunt.Character.Avatar;
 using PropHunt.Utils;
 using UnityEngine;
 
@@ -72,14 +73,53 @@ namespace PropHunt.Animation
         /// </summary>
         public IKControl controller;
 
-        public void OnLookStateChange(bool _, bool newState) => this.controller.lookObj = newState ? ikLookTarget : null;
-        public void OnLookWeightChange(float _, float newWeight) => this.controller.lookWeight = newWeight;
-        public void UpdateIKGoalWeight(AvatarIKGoal goal, float newWeight) => this.controller.SetIKGoalWeight(goal, newWeight);
-        public void UpdateIKHintWeight(AvatarIKHint hint, float newWeight) => this.controller.SetIKHintWeight(hint, newWeight);
-        public void UpdateIKHintState(AvatarIKHint hint, bool newState) =>
-            this.controller.SetIKHintTransform(hint, newState ? ikHintTargets[hint] : null);
-        public void UpdateIKGoalState(AvatarIKGoal goal, bool newState) =>
-            this.controller.SetIKGoalTransform(goal, newState ? ikGoalTargets[goal] : null);
+        public void OnLookStateChange(bool _, bool newState)
+        {
+            if (this.controller != null)
+            {
+                this.controller.lookObj = newState ? ikLookTarget : null;
+            }
+        }
+
+        public void OnLookWeightChange(float _, float newWeight)
+        {
+            if (this.controller != null)
+            {
+                this.controller.lookWeight = newWeight;
+            }
+        }
+
+        public void UpdateIKGoalWeight(AvatarIKGoal goal, float newWeight)
+        {
+            if (this.controller != null)
+            {
+                this.controller.SetIKGoalWeight(goal, newWeight);
+            }
+        }
+
+        public void UpdateIKHintWeight(AvatarIKHint hint, float newWeight)
+        {
+            if (this.controller != null)
+            {
+                this.controller.SetIKHintWeight(hint, newWeight);
+            }
+        }
+
+        public void UpdateIKHintState(AvatarIKHint hint, bool newState)
+        {
+            if (this.controller != null)
+            {
+                this.controller.SetIKHintTransform(hint, newState ? ikHintTargets[hint] : null);
+            }
+        }
+
+        public void UpdateIKGoalState(AvatarIKGoal goal, bool newState)
+        {
+            if (this.controller != null)
+            {
+                this.controller.SetIKGoalTransform(goal, newState ? ikGoalTargets[goal] : null);
+            }
+        }
 
         public void OnIKGoalStateChange(SyncDictionary<AvatarIKGoal, bool>.Operation operation, AvatarIKGoal goal, bool state)
         {

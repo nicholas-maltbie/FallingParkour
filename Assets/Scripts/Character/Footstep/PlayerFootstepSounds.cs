@@ -1,5 +1,6 @@
 using Mirror;
 using PropHunt.Animation;
+using PropHunt.Character.Avatar;
 using PropHunt.Environment.Sound;
 using PropHunt.Utils;
 using UnityEngine;
@@ -19,7 +20,10 @@ namespace PropHunt.Character.Footstep
         public override void Start()
         {
             base.Start();
-            footGrounded.PlayerFootstep += HandleFootstepEvent;
+            if (footGrounded != null)
+            {
+                footGrounded.PlayerFootstep += HandleFootstepEvent;
+            }
         }
 
         public void HandleFootstepEvent(object sender, FootstepEvent footstepEvent)

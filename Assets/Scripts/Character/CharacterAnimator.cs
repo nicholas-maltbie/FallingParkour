@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using PropHunt.Character.Avatar;
 using PropHunt.Utils;
 using UnityEngine;
 
@@ -56,6 +57,11 @@ namespace PropHunt.Character
         {
             // If local player
             if (!networkService.isLocalPlayer)
+            {
+                return;
+            }
+
+            if (animator == null)
             {
                 return;
             }

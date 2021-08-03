@@ -1,5 +1,6 @@
 
 using Mirror;
+using PropHunt.Character.Avatar;
 using PropHunt.Utils;
 using UnityEngine;
 
@@ -31,7 +32,10 @@ namespace PropHunt.Animation
 
         public void OnGroundFeetChange(bool _, bool newState)
         {
-            playerFootGrounded.enableFootGrounded = newState;
+            if (playerFootGrounded != null)
+            {
+                playerFootGrounded.enableFootGrounded = newState;
+            }
         }
 
         private void SetFootGroundedStateInternal(bool newState)
@@ -51,7 +55,10 @@ namespace PropHunt.Animation
             else
             {
                 groundFeet = newState;
-                playerFootGrounded.enableFootGrounded = newState;
+                if (playerFootGrounded != null)
+                {
+                    playerFootGrounded.enableFootGrounded = newState;
+                }
             }
 
             if (networkService.isServer || networkService.isLocalPlayer)
