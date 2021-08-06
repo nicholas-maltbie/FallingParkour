@@ -7,11 +7,9 @@ namespace PropHunt.Environment
     /// <summary>
     /// Set parameters for a kinematic rigidbody
     /// </summary>
-    [RequireComponent(typeof(Rigidbody))]
     public class FixedRigidbodySet : NetworkBehaviour
     {
         public IUnityService unityService = new UnityService();
-        private Rigidbody attachedRigidbody;
 
         /// <summary>
         /// Angular velocity of object in degrees per second for each euclidian axis
@@ -39,8 +37,6 @@ namespace PropHunt.Environment
 
         public void Start()
         {
-            attachedRigidbody = GetComponent<Rigidbody>();
-            attachedRigidbody.isKinematic = true;
             attitude = this.transform.eulerAngles;
         }
 
@@ -52,9 +48,6 @@ namespace PropHunt.Environment
             }
 
             float deltaTime = unityService.fixedDeltaTime;
-
-            attachedRigidbody.angularVelocity = Vector3.zero;
-            attachedRigidbody.velocity = Vector3.zero;
 
             // move object by velocity
             transform.position += deltaTime * linearVelocity;
