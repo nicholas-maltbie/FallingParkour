@@ -505,7 +505,7 @@ namespace PropHunt.Character
         public IEnumerable<Collider> GetOverlapping()
         {
             (var top, var bottom, var radius, var height) = GetParams();
-            return Physics.OverlapCapsule(top, bottom, radius).Where(c => c.transform != transform);
+            return Physics.OverlapCapsule(top, bottom, radius, ~0, QueryTriggerInteraction.Ignore).Where(c => c.transform != transform);
         }
 
         /// <summary>

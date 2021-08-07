@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 708651594984797752}
   - component: {fileID: 7132874320890653670}
   - component: {fileID: 2723596458813897958}
+  - component: {fileID: -3663087370360975145}
   m_Layer: 0
   m_Name: PlayerVariation
   m_TagString: Player
@@ -608,6 +609,20 @@ MonoBehaviour:
   avatarLibrary: {fileID: 11400000, guid: cde5bbdb324fc9a4cb0ab4d8d3164ff2, type: 2}
   modelBase: {fileID: 8113388304753193640}
   avatarSelected: 
+--- !u!114 &-3663087370360975145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774360562829986131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b68e81ab14830944aa24087bf8feb23e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
 --- !u!1 &3969404203279134107
 GameObject:
   m_ObjectHideFlags: 0
