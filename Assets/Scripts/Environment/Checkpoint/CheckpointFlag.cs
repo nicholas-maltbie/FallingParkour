@@ -19,9 +19,10 @@ namespace PropHunt.Environment.Checkpoint
         public void OnTriggerEnter(Collider other)
         {
             CharacterCheckpoint character = other.gameObject.GetComponent<CharacterCheckpoint>();
-            if (character != null && !character.HasCrossedCheckpoint(GetCheckpoint()))
+            var newCheckpoint = GetCheckpoint();
+            if (character != null && !character.IsPreviousCheckpoint(newCheckpoint))
             {
-                character.UpdateCheckpoint(GetCheckpoint());
+                character.UpdateCheckpoint(newCheckpoint);
                 SoundEffectManager.CreateNetworkedSoundEffectAtPoint(character.transform.position, SoundMaterial.Misc, SoundType.Checkpoint);
             }
         }

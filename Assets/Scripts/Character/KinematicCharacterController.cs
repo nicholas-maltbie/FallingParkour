@@ -288,6 +288,21 @@ namespace PropHunt.Character
         public bool Falling => !StandingOnGround || angle > maxWalkAngle;
 
         /// <summary>
+        /// Was the player grounded the previous frame.
+        /// </summary>
+        private bool previousGrounded;
+
+        /// <summary>
+        /// Was the player falling the previous frame.
+        /// </summary>
+        private bool previousFalling;
+
+        /// <summary>
+        /// The velocity of the ground the previous frame
+        /// </summary>
+        private Vector3 previousGroundVelocity;
+
+        /// <summary>
         /// Can a player snap down this frame, a player is only allowed to snap down
         /// if they were standing on the ground this frame or was not falling within a given buffer time.
         /// Additionally, a player must have not jumped within a small buffer time in order to
@@ -354,7 +369,7 @@ namespace PropHunt.Character
             }
 
             // Compute player jump if they are attempting to jump
-            PlayerJump(deltaTime);
+            bool jumped = PlayerJump(deltaTime);
 
             // Rotate movement vector by player yaw (rotation about vertical axis)
             Quaternion horizPlaneView = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
@@ -368,6 +383,14 @@ namespace PropHunt.Character
             {
                 movement = Vector3.ProjectOnPlane(movement, surfaceNormal).normalized * movement.magnitude;
             }
+
+            // If the player was standing on the ground and is not now, increment velocity by ground
+            // velocity if the player did nto jump this frame
+            if (!StandingOnGround && previousGrounded && !jumped)
+            {
+                velocity += previousGroundVelocity;
+            }
+            
             // These are broken into two steps so the player's world velocity (usually due to falling)
             //    does not interfere with their ability to walk around according to inputs
             // Move the player according to their movement
@@ -383,6 +406,11 @@ namespace PropHunt.Character
             }
 
             CheckGrounded();
+
+            // Save state of player
+            previousFalling = Falling;
+            previousGrounded = StandingOnGround;
+            previousGroundVelocity = GetGroundVelocity();
 
             // make sure the rigidbody doesn't move according to velocity or angular velocity
             Rigidbody rigidbody = GetComponent<Rigidbody>();
@@ -421,26 +449,39 @@ namespace PropHunt.Character
         }
 
         /// <summary>
-        /// Give player vertical velocity if they can jump and are attempting to jump
+        /// Gets the velocity of the ground the player is standing on where the player is currently
+        /// </summary>
+        /// <returns>The velocity of the ground at the point the player is standong on</returns>
+        private Vector3 GetGroundVelocity()
+        {
+            Vector3 groundVelocity = Vector3.zero;
+            IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
+            if (movingGround != null)
+            {
+                groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition);
+            }
+
+            return groundVelocity;
+        }
+
+        /// <summary>
+        /// Give player vertical velocity if they can jump and are attempting to jump.
         /// </summary>
         /// <param name="deltaTime">Time in fixed update</param>
-        public void PlayerJump(float deltaTime)
+        /// <returns>true if the player successfully jumped, false otherwise</returns>
+        public bool PlayerJump(float deltaTime)
         {
             // Give the player some vertical velocity if they are jumping and grounded
             if (!Falling && attemptingJump)
             {
-                Vector3 groundVelocity = Vector3.zero;
-                IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
-                if (movingGround != null)
-                {
-                    groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition);
-                }
-                velocity = groundVelocity + this.jumpVelocity * -gravity.normalized;
+                velocity = GetGroundVelocity() + this.jumpVelocity * -gravity.normalized;
                 elapsedSinceJump = 0.0f;
+                return true;
             }
             else
             {
                 elapsedSinceJump += deltaTime;
+                return false;
             }
         }
 

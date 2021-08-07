@@ -11,6 +11,11 @@ namespace PropHunt.Environment.Checkpoint
     public interface ISpawnPointCollection
     {
         /// <summary>
+        /// The priority of this checkpoint. Players cannot go back in checkpoint priority.
+        /// </summary>
+        int Priority();
+
+        /// <summary>
         /// total number of spawn locations in the group
         /// </summary>
         /// <returns></returns>

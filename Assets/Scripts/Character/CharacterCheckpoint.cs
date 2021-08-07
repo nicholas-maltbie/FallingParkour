@@ -23,6 +23,11 @@ namespace PropHunt.Character
         private ISpawnPointCollection currentCheckpoint;
 
         /// <summary>
+        /// Highest priority checkpoint the player has passed
+        /// </summary>
+        private int maxCheckpointPriority;
+
+        /// <summary>
         /// Update the checpoint to be a new value
         /// </summary>
         /// <param name="newCheckpoint">new checkpoint to assing this player to</param>
@@ -32,6 +37,7 @@ namespace PropHunt.Character
             {
                 previousCheckpoints.Add(newCheckpoint);
             }
+            maxCheckpointPriority = Mathf.Max(newCheckpoint.Priority(), currentCheckpoint.Priority());
             currentCheckpoint = newCheckpoint;
         }
 
@@ -40,9 +46,9 @@ namespace PropHunt.Character
         /// </summary>
         /// <param name="checkpoint">Checkpoint to verify</param>
         /// <returns>True if the player has crossed a given checkpoint, false otherwise.</returns>
-        public bool HasCrossedCheckpoint(ISpawnPointCollection checkpoint)
+        public bool IsPreviousCheckpoint(ISpawnPointCollection checkpoint)
         {
-            return previousCheckpoints.Contains(checkpoint) || currentCheckpoint == checkpoint;
+            return previousCheckpoints.Contains(checkpoint) || currentCheckpoint == checkpoint || checkpoint.Priority() <= maxCheckpointPriority;
         }
 
         public void Start()

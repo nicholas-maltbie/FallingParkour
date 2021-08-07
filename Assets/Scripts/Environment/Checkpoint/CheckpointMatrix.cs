@@ -12,20 +12,33 @@ namespace PropHunt.Environment.Checkpoint
     public class CheckpointMatrix : MonoBehaviour, ISpawnPointCollection
     {
         /// <summary>
+        /// Order of this checkpoint relative to other checkpoints.
+        /// </summary>
+        [SerializeField]
+        [Tooltip("Order of checkpoint relative to others.")]
+        private int order;
+
+        /// <summary>
         /// Offset along the X and Z axis.
         /// </summary>
         /// <returns></returns>
-        public Vector2 offset = new Vector2(1, 1);
+        [SerializeField]
+        [Tooltip("Offset along the X and Z axis.")]
+        private Vector2 offset = new Vector2(1, 1);
 
         /// <summary>
         /// Number of rows of spawn locations.
         /// </summary>
-        public int rows = 1;
+        [SerializeField]
+        [Tooltip("Number of rows of spawn locations (corresponds to z axis).")]
+        private int rows = 1;
 
         /// <summary>
         /// Number of columns of spawn locations.
         /// </summary>
-        public int cols = 1;
+        [SerializeField]
+        [Tooltip("Number of columns of spawn locations (corresponds to x axis).")]
+        private int cols = 1;
 
         /// <summary>
         /// The initial starting point of the checkpoint array.
@@ -68,6 +81,12 @@ namespace PropHunt.Environment.Checkpoint
         {
             (int row, int col) = GetRowCol(index);
             return (Start + Offset(row, col), Rotation);
+        }
+
+        /// <inheritdoc/>
+        public int Priority()
+        {
+            return order;
         }
     }
 }
