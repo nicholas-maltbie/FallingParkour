@@ -1,6 +1,7 @@
 using UnityEngine;
 using Mirror;
 using System.Collections;
+using PropHunt.Environment.Checkpoint;
 
 namespace PropHunt.Game.Flow
 {
@@ -46,7 +47,14 @@ namespace PropHunt.Game.Flow
             // If in game, spawn a player for them... debug behaviour yay
             if (GameManager.gamePhase == GamePhase.InGame || GameManager.gamePhase == GamePhase.Score)
             {
-                StartCoroutine(SpawnPlayerCharacter(joinEvent.connection, inGamePlayer));
+                ISpawnPointCollection defaultCheckpoint = SpawnPointUtilities.GetDefaultCheckpoint();
+                Vector3 pos = Vector3.zero;
+                Quaternion rot = Quaternion.identity;
+                if (defaultCheckpoint != null)
+                {
+                    (pos, rot) = defaultCheckpoint.GetRandomSpawn();
+                }
+                StartCoroutine(SpawnPlayerCharacter(joinEvent.connection, inGamePlayer, pos, rot));
             }
             else if (GameManager.gamePhase == GamePhase.Lobby)
             {
@@ -56,11 +64,18 @@ namespace PropHunt.Game.Flow
 
         public IEnumerator SpawnPlayerCharacter(NetworkConnection conn, GameObject playerPrefab)
         {
+            return SpawnPlayerCharacter(conn, playerPrefab, Vector3.zero, Quaternion.identity);
+        }
+
+        public IEnumerator SpawnPlayerCharacter(NetworkConnection conn, GameObject playerPrefab, Vector3 pos, Quaternion rotation)
+        {
             if (!conn.isReady)
             {
                 yield return null;
             }
             GameObject newPlayer = GameObject.Instantiate(playerPrefab);
+            newPlayer.transform.rotation = rotation;
+            newPlayer.transform.position = pos;
             NetworkServer.DestroyPlayerForConnection(conn);
             NetworkServer.AddPlayerForConnection(conn, newPlayer);
         }
@@ -88,9 +103,21 @@ namespace PropHunt.Game.Flow
                 case GamePhase.InGame:
                     UnityEngine.Debug.Log("Spawning characters");
                     // When in game starts, spawn a player for each connection
+                    ISpawnPointCollection defaultCheckpoint = SpawnPointUtilities.GetDefaultCheckpoint();
+                    var spawnEnum = defaultCheckpoint != null ? defaultCheckpoint.GetRandomizedSpawns().GetEnumerator() : null;
                     foreach (NetworkConnection conn in NetworkServer.connections.Values)
                     {
-                        StartCoroutine(SpawnPlayerCharacter(conn, inGamePlayer));
+                        Vector3 pos = Vector3.zero;
+                        Quaternion rot = Quaternion.identity;
+                        if (spawnEnum != null)
+                        {
+                            if (!spawnEnum.MoveNext())
+                            {
+                                spawnEnum = defaultCheckpoint.GetRandomizedSpawns().GetEnumerator();
+                            }
+                            (pos, rot) = spawnEnum.Current;
+                        }
+                        StartCoroutine(SpawnPlayerCharacter(conn, inGamePlayer, pos, rot));
                     }
                     break;
                 case GamePhase.Score:

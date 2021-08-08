@@ -49,3 +49,7 @@ MonoBehaviour:
     soundType: 8
     audioClip: {fileID: 8300000, guid: 9a043ec5a138c3f459a455dd7fd63d24, type: 3}
     soundId: SFX-Death-Sound
+  - soundMaterial: 5
+    soundType: 9
+    audioClip: {fileID: 8300000, guid: 2ab2b2b7439907042ab3716d9d1b27f4, type: 3}
+    soundId: SFX-Checkpoint

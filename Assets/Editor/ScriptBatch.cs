@@ -17,7 +17,7 @@ public class ScriptBatch : IPostprocessBuildWithReport
         {
             "Assets/Scenes/MainMenu.unity",
             "Assets/Scenes/LobbyScene.unity",
-            "Assets/Scenes/BasicHouse.unity"
+            "Assets/Scenes/BigFans.unity"
         };
     }
 

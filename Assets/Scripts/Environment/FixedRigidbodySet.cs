@@ -7,11 +7,9 @@ namespace PropHunt.Environment
     /// <summary>
     /// Set parameters for a kinematic rigidbody
     /// </summary>
-    [RequireComponent(typeof(Rigidbody))]
     public class FixedRigidbodySet : NetworkBehaviour
     {
         public IUnityService unityService = new UnityService();
-        private Rigidbody attachedRigidbody;
 
         /// <summary>
         /// Angular velocity of object in degrees per second for each euclidian axis
@@ -20,6 +18,15 @@ namespace PropHunt.Environment
         [SyncVar]
         [Tooltip("Angular velocity of object in degrees per second for each euclidian axis")]
         protected Vector3 angularVelocity;
+
+        /// <summary>
+        /// Does this rotation work in local or world space. If true, will rotate in local space.
+        /// If false will rotate in world space.
+        /// </summary>
+        [SerializeField]
+        [SyncVar]
+        [Tooltip("Does this rotation work in local or world space")]
+        protected bool localRotation;
 
         /// <summary>
         /// Current rotation of the object as a euclidian degrees
@@ -39,9 +46,14 @@ namespace PropHunt.Environment
 
         public void Start()
         {
-            attachedRigidbody = GetComponent<Rigidbody>();
-            attachedRigidbody.isKinematic = true;
-            attitude = this.transform.eulerAngles;
+            if (localRotation)
+            {
+                attitude = transform.localEulerAngles;
+            }
+            else
+            {
+                attitude = transform.eulerAngles;
+            }
         }
 
         public void FixedUpdate()
@@ -53,9 +65,6 @@ namespace PropHunt.Environment
 
             float deltaTime = unityService.fixedDeltaTime;
 
-            attachedRigidbody.angularVelocity = Vector3.zero;
-            attachedRigidbody.velocity = Vector3.zero;
-
             // move object by velocity
             transform.position += deltaTime * linearVelocity;
             // rotate object by rotation
@@ -64,7 +73,14 @@ namespace PropHunt.Environment
             attitude.x %= 360;
             attitude.y %= 360;
             attitude.z %= 360;
-            transform.eulerAngles = attitude;
+            if (localRotation)
+            {
+                transform.localEulerAngles = attitude;
+            }
+            else
+            {
+                transform.eulerAngles = attitude;
+            }
         }
     }
 }

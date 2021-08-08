@@ -214,6 +214,7 @@ namespace PropHunt.Environment.Sound
         PropTransformation,
         Attack,
         Death,
+        Checkpoint,
     }
 
     /// <summary>
