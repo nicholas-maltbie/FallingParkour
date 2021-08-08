@@ -1,14 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class ScriptBatch : IPostprocessBuildWithReport
 {
+    public static string VersionNumber => $"v{Application.version}";
+
+    public static string AppName => $"{Application.productName}";
+
     public int callbackOrder { get { return 0; } }
 
     public static string[] GetScenes()
@@ -59,10 +59,10 @@ public class ScriptBatch : IPostprocessBuildWithReport
     {
         BuildSetup(scriptingImplementation: ScriptingImplementation.Mono2x);
         // Get filename.
-        string path = "Builds/MacOS";
+        string path = $"Builds/MacOS-{VersionNumber}";
         string[] levels = GetScenes();
 
-        string appFolder = path + "/FallingParkour.app";
+        string appFolder = path + $"/{AppName}.app";
 
         // Build player.
         BuildPipeline.BuildPlayer(levels, appFolder, BuildTarget.StandaloneOSX, BuildOptions.Development);
@@ -76,11 +76,11 @@ public class ScriptBatch : IPostprocessBuildWithReport
         BuildSetup(scriptingImplementation: ScriptingImplementation.Mono2x);
 
         // Get filename.
-        string path = "Builds/Linux";
+        string path = $"Builds/Linux-{VersionNumber}";
         string[] levels = GetScenes();
 
         // Build player.
-        BuildPipeline.BuildPlayer(levels, path + "/FallingParkour.x86_64", BuildTarget.StandaloneLinux64, BuildOptions.Development);
+        BuildPipeline.BuildPlayer(levels, path + $"/{AppName}.x86_64", BuildTarget.StandaloneLinux64, BuildOptions.Development);
 
         BuildCleanup();
     }
@@ -94,7 +94,7 @@ public class ScriptBatch : IPostprocessBuildWithReport
         BuildPlayerOptions options = new BuildPlayerOptions
         {
             scenes = GetScenes(),
-            locationPathName = "Builds/Win64/FallingParkour.exe",
+            locationPathName = $"Builds/Win64-{VersionNumber}/{AppName}.exe",
             targetGroup = BuildTargetGroup.Standalone,
             target = BuildTarget.StandaloneWindows64,
             options = BuildOptions.Development
@@ -115,7 +115,7 @@ public class ScriptBatch : IPostprocessBuildWithReport
         BuildPlayerOptions options = new BuildPlayerOptions
         {
             scenes = GetScenes(),
-            locationPathName = "Builds/Test-Win64/FallingParkour.exe",
+            locationPathName = $"Builds/Test-Win64-{VersionNumber}/{AppName}.exe",
             targetGroup = BuildTargetGroup.Standalone,
             target = BuildTarget.StandaloneWindows64,
             options = BuildOptions.Development
