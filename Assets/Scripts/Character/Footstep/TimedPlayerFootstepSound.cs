@@ -23,7 +23,7 @@ namespace PropHunt.Character.Footstep
         /// <summary>
         /// Volume of footsteps when walking
         /// </summary>
-        public float walkVolume = 0.45f;
+        public float walkVolume = 0.95f;
 
         /// <summary>
         /// Minimum pitch modulation for footsteps
@@ -85,7 +85,7 @@ namespace PropHunt.Character.Footstep
                     soundType).soundId,
                 point = point,
                 pitchValue = Random.Range(minPitchRange, maxPitchRange),
-                volume = kcc.Sprinting ? sprintVolume : walkVolume,
+                volume = walkVolume, // kcc.Sprinting ? sprintVolume : walkVolume,
                 mixerGroup = "Footsteps"
             };
             PlayFootstepSound(sfxEvent);

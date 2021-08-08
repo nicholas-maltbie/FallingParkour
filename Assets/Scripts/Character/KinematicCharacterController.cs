@@ -79,14 +79,7 @@ namespace PropHunt.Character
         /// </summary>
         [Tooltip("Speed of player when walking")]
         [SerializeField]
-        public float movementSpeed = 5.0f;
-
-        /// <summary>
-        /// Speed of player when sprinting
-        /// </summary>
-        [Tooltip("Speed of player when sprinting")]
-        [SerializeField]
-        public float sprintSpeed = 7.5f;
+        public float movementSpeed = 7.5f;
 
         /// <summary>
         /// Velocity of player jump in units per second
@@ -179,13 +172,6 @@ namespace PropHunt.Character
         [SerializeField]
         public bool attemptingJump;
 
-        /// <summary>
-        /// Is the player sprinting
-        /// </summary>
-        [Tooltip("Current sprinting state of the player")]
-        [SerializeField]
-        private bool isSprinting;
-
         [Header("Current Status")]
 
         /// <summary>
@@ -260,11 +246,6 @@ namespace PropHunt.Character
         /// How long has the player been falling
         /// </summary>
         public float FallingTime => elapsedFalling;
-
-        /// <summary>
-        /// Is the player currently sprinting
-        /// </summary>
-        public bool Sprinting => isSprinting;
 
         /// <summary>
         /// Intended direction of movement provided by
@@ -375,7 +356,7 @@ namespace PropHunt.Character
             Quaternion horizPlaneView = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
             Vector3 playerMovementDirection = horizPlaneView * inputMovement;
 
-            Vector3 movement = playerMovementDirection * (isSprinting ? sprintSpeed : movementSpeed);
+            Vector3 movement = playerMovementDirection * movementSpeed;
 
             // If the player is standing on the ground, project their movement onto the ground plane
             // This allows them to walk up gradual slopes without facing a hit in movement speed
@@ -708,7 +689,7 @@ namespace PropHunt.Character
 
         public void OnSprint(InputAction.CallbackContext context)
         {
-            isSprinting = context.ReadValueAsButton();
+            // isSprinting = context.ReadValueAsButton();
         }
     }
 }
