@@ -458,7 +458,14 @@ namespace PropHunt.Character
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
             if (movingGround != null)
             {
-                groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition);
+                if (distanceToGround > 0)
+                {
+                    groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition);
+                }
+                else
+                {
+                    groundVelocity = movingGround.GetVelocityAtPoint(transform.position);
+                }
             }
 
             return groundVelocity;
