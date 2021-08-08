@@ -76,7 +76,6 @@ namespace PropHunt.Character
             animator.SetFloat("MoveY", kcc.InputMovement.z);
             // Set moving if movement is greater than dead zone
             animator.SetBool("Moving", moving);
-            animator.SetBool("Sprinting", moving && kcc.Sprinting);
             // Set turning value based on turning direction
             animator.SetFloat("Rotation", cameraController.frameRotation > 0 ? 1 : -1);
             animator.SetBool("Turning", !moving && !jumpingOrFalling && Mathf.Abs(cameraController.frameRotation) > this.turningDeadZone);
