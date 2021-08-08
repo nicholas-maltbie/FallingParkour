@@ -390,7 +390,7 @@ namespace PropHunt.Character
             {
                 velocity += previousGroundVelocity;
             }
-            
+
             // These are broken into two steps so the player's world velocity (usually due to falling)
             //    does not interfere with their ability to walk around according to inputs
             // Move the player according to their movement
