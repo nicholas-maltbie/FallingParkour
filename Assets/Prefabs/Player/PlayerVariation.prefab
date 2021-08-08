@@ -280,7 +280,7 @@ MonoBehaviour:
   syncInterval: 0.1
   maxPitch: 90
   minPitch: -90
-  rotationRate: 180
+  rotationRate: 90
   frameRotation: 0
   cameraTransform: {fileID: 8719921445191087745}
   pitchBody: 0
