@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BlueTeal Fan Blades
+  m_Name: Fan Blades RedOrange
   m_Shader: {fileID: -6465566751694194690, guid: 6ee87c2d743bb7c4bb9f126fbc157abf, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -122,8 +122,8 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _Backgroun2: {r: 0, g: 0.28931952, b: 1, a: 1}
-    - _Background1: {r: 0.6556604, g: 0.9564144, b: 1, a: 0}
+    - _Backgroun2: {r: 1, g: 0.13624014, b: 0, a: 1}
+    - _Background1: {r: 1, g: 0.6227779, b: 0, a: 0}
     - _BaseColor: {r: 0.9063317, g: 0.9063317, b: 0.9063317, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
