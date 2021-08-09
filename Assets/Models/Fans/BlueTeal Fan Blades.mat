@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FanMaterial 1
+  m_Name: BlueTeal Fan Blades
   m_Shader: {fileID: -6465566751694194690, guid: 6ee87c2d743bb7c4bb9f126fbc157abf, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -71,6 +71,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_11072c7f5ce14a78a53118e32104ce6d_Out_0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_a5dd9a1ddd8440448869ff58ec442a86_Out_0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -114,13 +122,13 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _Backgroun2: {r: 1, g: 0, b: 0.10323143, a: 0}
-    - _Background1: {r: 1, g: 1, b: 1, a: 0}
+    - _Backgroun2: {r: 0, g: 0.28931952, b: 1, a: 1}
+    - _Background1: {r: 0.6556604, g: 0.9564144, b: 1, a: 0}
     - _BaseColor: {r: 0.9063317, g: 0.9063317, b: 0.9063317, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Offset: {r: 1, g: 1, b: 0, a: 0}
-    - _PatternColor: {r: 1, g: 0.08972853, b: 0, a: 0}
+    - _PatternColor: {r: 1, g: 1, b: 1, a: 0}
     - _PatternOffset: {r: 0, g: 0, b: 0, a: 0}
     - _PatternTiling: {r: 1, g: 1, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
