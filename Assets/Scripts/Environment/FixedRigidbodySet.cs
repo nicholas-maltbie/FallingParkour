@@ -58,11 +58,6 @@ namespace PropHunt.Environment
 
         public void FixedUpdate()
         {
-            if (!isServer)
-            {
-                return;
-            }
-
             float deltaTime = unityService.fixedDeltaTime;
 
             // move object by velocity
