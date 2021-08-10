@@ -350,8 +350,8 @@ namespace PropHunt.Character
             var radius = capsuleCollider.radius;
             var height = capsuleCollider.height;
 
-            var bottom = new Vector3(center.x, center.y - height / 2 + radius, center.z);
-            var top = new Vector3(center.x, center.y + height / 2 - radius, center.z);
+            var bottom = center + Down * (height / 2 - radius);
+            var top = center + Up * (height / 2 - radius);
             return (top, bottom, radius, height);
         }
 
