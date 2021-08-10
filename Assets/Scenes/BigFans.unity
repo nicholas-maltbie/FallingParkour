@@ -134,6 +134,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Reversed Fan Rotation Parent (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3b532d26f29474448990aa7eb6c6c8bf, type: 2}
+    - target: {fileID: 6063760973221824854, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 7346975576847820658, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -145,6 +153,10 @@ PrefabInstance:
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_RootOrder
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalPosition.x
@@ -216,6 +228,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 277034048}
     m_Modifications:
+    - target: {fileID: 1973615801941237969, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8492487aaecca9747aace4e83fda7a02, type: 2}
     - target: {fileID: 8431909921260752296, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -60
@@ -842,7 +858,11 @@ PrefabInstance:
     - target: {fileID: 1973615801941237969, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a1a363ba571fe7a40afb087c710fcba5, type: 2}
+      objectReference: {fileID: 2100000, guid: 8492487aaecca9747aace4e83fda7a02, type: 2}
+    - target: {fileID: 5862032396423058079, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 8431909921260752296, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: localRotation
       value: 1
@@ -1044,10 +1064,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Curved Fan Container
       objectReference: {fileID: 0}
+    - target: {fileID: 4028059115363820791, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 9070007851571091129, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a1a363ba571fe7a40afb087c710fcba5, type: 2}
+      objectReference: {fileID: 2100000, guid: 3b532d26f29474448990aa7eb6c6c8bf, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
 --- !u!4 &528767752 stripped
@@ -1266,7 +1290,7 @@ PrefabInstance:
     - target: {fileID: 9070007851571091129, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 7b7aa65b5ecc5ca4ca26a57a32982bc7, type: 2}
+      objectReference: {fileID: 2100000, guid: 3b532d26f29474448990aa7eb6c6c8bf, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
 --- !u!4 &631978578 stripped
@@ -1506,9 +1530,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fan Rotation Parent (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8e792dde1c7311e4bbd1df2bc7e9146d, type: 2}
+    - target: {fileID: 6063760973221824854, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1648,7 +1684,7 @@ PrefabInstance:
     - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 7b7aa65b5ecc5ca4ca26a57a32982bc7, type: 2}
+      objectReference: {fileID: 2100000, guid: 8492487aaecca9747aace4e83fda7a02, type: 2}
     - target: {fileID: 7346975576847820658, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -1747,6 +1783,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Reversed Fan Rotation Parent (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8492487aaecca9747aace4e83fda7a02, type: 2}
+    - target: {fileID: 6063760973221824854, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 7346975576847820658, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.75
@@ -1758,6 +1802,10 @@ PrefabInstance:
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1863,7 +1911,11 @@ PrefabInstance:
     - target: {fileID: 1973615801941237969, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a1a363ba571fe7a40afb087c710fcba5, type: 2}
+      objectReference: {fileID: 2100000, guid: 8e792dde1c7311e4bbd1df2bc7e9146d, type: 2}
+    - target: {fileID: 5862032396423058079, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 8431909921260752296, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: localRotation
       value: 1
@@ -1937,6 +1989,14 @@ PrefabInstance:
     - target: {fileID: 909467002374587693, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Name
       value: Fan Rotation Parent (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8e792dde1c7311e4bbd1df2bc7e9146d, type: 2}
+    - target: {fileID: 6063760973221824854, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_RootOrder
@@ -2362,6 +2422,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fan Rotation Parent (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8e792dde1c7311e4bbd1df2bc7e9146d, type: 2}
+    - target: {fileID: 6063760973221824854, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 7346975576847820658, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.75
@@ -2373,6 +2441,10 @@ PrefabInstance:
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_RootOrder
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2443,6 +2515,14 @@ PrefabInstance:
     - target: {fileID: 909467002374587693, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Name
       value: Reversed Fan Rotation Parent (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8492487aaecca9747aace4e83fda7a02, type: 2}
+    - target: {fileID: 6063760973221824854, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 7346975576847820658, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalScale.x
@@ -2534,6 +2614,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fan Rotation Parent (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3b532d26f29474448990aa7eb6c6c8bf, type: 2}
+    - target: {fileID: 6063760973221824854, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -2623,7 +2711,7 @@ PrefabInstance:
     - target: {fileID: 1973615801941237969, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a1a363ba571fe7a40afb087c710fcba5, type: 2}
+      objectReference: {fileID: 2100000, guid: 3b532d26f29474448990aa7eb6c6c8bf, type: 2}
     - target: {fileID: 8431909921260752296, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: localRotation
       value: 1
@@ -2631,6 +2719,10 @@ PrefabInstance:
     - target: {fileID: 8431909921260752297, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431909921260752297, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 8431909921260752297, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2833,6 +2925,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 277034048}
     m_Modifications:
+    - target: {fileID: 1973615801941237969, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8492487aaecca9747aace4e83fda7a02, type: 2}
     - target: {fileID: 8431909921260752296, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -60
@@ -2975,6 +3071,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Curved Fan Container
       objectReference: {fileID: 0}
+    - target: {fileID: 9070007851571091129, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8492487aaecca9747aace4e83fda7a02, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
 --- !u!4 &1470070955 stripped
@@ -3230,7 +3330,7 @@ PrefabInstance:
     - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 7b7aa65b5ecc5ca4ca26a57a32982bc7, type: 2}
+      objectReference: {fileID: 2100000, guid: 8e792dde1c7311e4bbd1df2bc7e9146d, type: 2}
     - target: {fileID: 7346975576847820658, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -3433,6 +3533,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1763611723}
     m_Modifications:
+    - target: {fileID: 1973615801941237969, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8492487aaecca9747aace4e83fda7a02, type: 2}
     - target: {fileID: 8431909921260752296, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: localRotation
       value: 1
@@ -3518,7 +3622,7 @@ PrefabInstance:
     - target: {fileID: 1973615801941237969, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a1a363ba571fe7a40afb087c710fcba5, type: 2}
+      objectReference: {fileID: 2100000, guid: 3b532d26f29474448990aa7eb6c6c8bf, type: 2}
     - target: {fileID: 8431909921260752296, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: localRotation
       value: 1
@@ -3526,6 +3630,10 @@ PrefabInstance:
     - target: {fileID: 8431909921260752297, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8431909921260752297, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 8431909921260752297, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3651,6 +3759,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fan Rotation Parent (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3b532d26f29474448990aa7eb6c6c8bf, type: 2}
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -4354,6 +4466,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1707871403}
     m_Modifications:
+    - target: {fileID: 1973615801941237969, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8492487aaecca9747aace4e83fda7a02, type: 2}
     - target: {fileID: 8431909921260752296, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: localRotation
       value: 1
@@ -4497,7 +4613,11 @@ PrefabInstance:
     - target: {fileID: 1973615801941237969, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a1a363ba571fe7a40afb087c710fcba5, type: 2}
+      objectReference: {fileID: 2100000, guid: 8e792dde1c7311e4bbd1df2bc7e9146d, type: 2}
+    - target: {fileID: 5862032396423058079, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 8431909921260752296, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: localRotation
       value: 1
@@ -4588,6 +4708,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Reversed Fan Rotation Parent
       objectReference: {fileID: 0}
+    - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8492487aaecca9747aace4e83fda7a02, type: 2}
+    - target: {fileID: 6063760973221824854, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 7346975576847820658, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.75
@@ -4599,6 +4727,10 @@ PrefabInstance:
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4731,7 +4863,11 @@ PrefabInstance:
     - target: {fileID: 1973615801941237969, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a1a363ba571fe7a40afb087c710fcba5, type: 2}
+      objectReference: {fileID: 2100000, guid: 8e792dde1c7311e4bbd1df2bc7e9146d, type: 2}
+    - target: {fileID: 5862032396423058079, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 8431909921260752297, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -4835,6 +4971,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fan Rotation Parent (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8e792dde1c7311e4bbd1df2bc7e9146d, type: 2}
+    - target: {fileID: 6063760973221824854, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -4913,6 +5057,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Reversed Fan Rotation Parent (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3b532d26f29474448990aa7eb6c6c8bf, type: 2}
+    - target: {fileID: 6063760973221824854, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 7346975576847820658, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -4924,6 +5076,10 @@ PrefabInstance:
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_RootOrder
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5209,6 +5365,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Curved Fan Container
       objectReference: {fileID: 0}
+    - target: {fileID: 9070007851571091129, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8e792dde1c7311e4bbd1df2bc7e9146d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
 --- !u!4 &200503509615603253 stripped
@@ -5242,9 +5402,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fan Rotation Parent
       objectReference: {fileID: 0}
+    - target: {fileID: 2170559102234491672, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3b532d26f29474448990aa7eb6c6c8bf, type: 2}
+    - target: {fileID: 6063760973221824854, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5315,7 +5487,11 @@ PrefabInstance:
     - target: {fileID: 1973615801941237969, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a1a363ba571fe7a40afb087c710fcba5, type: 2}
+      objectReference: {fileID: 2100000, guid: 8e792dde1c7311e4bbd1df2bc7e9146d, type: 2}
+    - target: {fileID: 5862032396423058079, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 8431909921260752297, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_RootOrder
       value: 0
