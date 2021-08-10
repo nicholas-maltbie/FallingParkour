@@ -72,6 +72,16 @@ namespace PropHunt.Character
         [SerializeField]
         public Vector3 gravity = new Vector3(0, -9.807f, 0);
 
+        /// <summary>
+        /// Direction of down relative to gravity with a unit length of 1
+        /// </summary>
+        public Vector3 Down => gravity.normalized;
+
+        /// <summary>
+        /// Direction of up relative to gravity with a unit length of 1
+        /// </summary>
+        public Vector3 Up => -gravity.normalized;
+
         [Header("Motion Settings")]
 
         /// <summary>
@@ -87,6 +97,37 @@ namespace PropHunt.Character
         [Tooltip("Vertical velocity of player jump")]
         [SerializeField]
         public float jumpVelocity = 5.0f;
+
+        /// <summary>
+        /// Maximum angle at which the player can jump (in degrees)
+        /// </summary>
+        [Tooltip("Maximum angle at which the player can jump (in degrees)")]
+        [SerializeField]
+        [Range(0, 90)]
+        public float maJumpAngle = 85f;
+
+        /// <summary>
+        /// Weight to which the player's jump is weighted towards the direction
+        /// of the surface they are standing on.
+        /// </summary>
+        [Tooltip("Weight to which the player's jump is weighted towards the angle of their surface")]
+        [SerializeField]
+        [Range(0, 1)]
+        public float jumpAngleWeightFactor = 0.2f;
+
+        /// <summary>
+        /// Minimum time in seconds between player jumps
+        /// </summary>
+        [Tooltip("Minimum time in seconds between player jumps")]
+        [SerializeField]
+        public float jumpCooldown = 0.5f;
+
+        /// <summary>
+        /// Time in seconds that a player can jump after their feet leave the ground
+        /// </summary>
+        [Tooltip("Time in seconds that a player can jump after their feet leave the ground")]
+        [SerializeField]
+        public float coyoteTime = 0.25f;
 
         /// <summary>
         /// Maximum number of time player can bounce of walls/floors/objects during an update
@@ -266,7 +307,8 @@ namespace PropHunt.Character
         /// the ground or if the angle between them and the ground is grater than the player's
         /// ability to walk.
         /// </summary>
-        public bool Falling => !StandingOnGround || angle > maxWalkAngle;
+        public bool Falling => FallingAngle(maxWalkAngle);
+        public bool FallingAngle(float maxAngle) => !StandingOnGround || angle > maxAngle;
 
         /// <summary>
         /// Was the player grounded the previous frame.
@@ -284,6 +326,12 @@ namespace PropHunt.Character
         private Vector3 previousGroundVelocity;
 
         /// <summary>
+        /// Can the player jump right now.
+        /// </summary>
+        public bool CanJump => elapsedFalling >= 0 && (!Falling || elapsedFalling <= coyoteTime) &&
+            attemptingJump && elapsedSinceJump >= jumpCooldown;
+
+        /// <summary>
         /// Can a player snap down this frame, a player is only allowed to snap down
         /// if they were standing on the ground this frame or was not falling within a given buffer time.
         /// Additionally, a player must have not jumped within a small buffer time in order to
@@ -291,7 +339,7 @@ namespace PropHunt.Character
         /// as they start to jump.
         /// </summary>
         /// <returns>If a player is allowed to snap down</returns>
-        private bool CanSnapDown => (StandingOnGround || elapsedFalling <= snapBufferTime) && (elapsedSinceJump >= snapBufferTime);
+        public bool CanSnapDown => (StandingOnGround || elapsedFalling <= snapBufferTime) && (elapsedSinceJump >= snapBufferTime);
 
         /// <summary>
         /// Gets transformed parameters describing this capsule collider
@@ -338,7 +386,7 @@ namespace PropHunt.Character
             PushOutOverlapping();
 
             // Update player velocity based on grounded state
-            if (!Falling && !attemptingJump)
+            if (!Falling)
             {
                 velocity = Vector3.zero;
                 this.elapsedFalling = 0.0f;
@@ -460,9 +508,9 @@ namespace PropHunt.Character
         public bool PlayerJump(float deltaTime)
         {
             // Give the player some vertical velocity if they are jumping and grounded
-            if (!Falling && attemptingJump)
+            if (CanJump)
             {
-                velocity = GetGroundVelocity() + this.jumpVelocity * -gravity.normalized;
+                velocity = GetGroundVelocity() + this.jumpVelocity * Up;
                 elapsedSinceJump = 0.0f;
                 return true;
             }
@@ -499,11 +547,11 @@ namespace PropHunt.Character
         /// </summary>
         public void SnapPlayerDown()
         {
-            bool didHit = CastSelf(gravity.normalized, verticalSnapDown, out var hit);
+            bool didHit = CastSelf(Down, verticalSnapDown, out var hit);
 
             if (didHit && hit.distance > Epsilon)
             {
-                transform.position += gravity.normalized * (hit.distance - Epsilon * 2);
+                transform.position += Down * (hit.distance - Epsilon * 2);
             }
         }
 
@@ -542,10 +590,10 @@ namespace PropHunt.Character
         /// </summary>
         public void CheckGrounded()
         {
-            bool didHit = CastSelf(gravity.normalized, groundCheckDistance, out var hit);
+            bool didHit = CastSelf(Down, groundCheckDistance, out var hit);
             (var top, var bottom, var radius, var height) = GetParams();
 
-            this.angle = Vector3.Angle(hit.normal, -gravity);
+            this.angle = Vector3.Angle(hit.normal, Down);
             this.distanceToGround = hit.distance;
             this.onGround = didHit;
             this.surfaceNormal = hit.normal;
@@ -569,10 +617,10 @@ namespace PropHunt.Character
         {
             // If we were to snap the player up and they moved forward, would they hit something?
             Vector3 currentPosition = transform.position;
-            Vector3 snapUp = distanceToSnap * Vector3.up;
+            Vector3 snapUp = distanceToSnap * Up;
             transform.position += snapUp;
 
-            Vector3 directionAfterSnap = Vector3.ProjectOnPlane(Vector3.Project(momentum, -hit.normal), Vector3.up).normalized * momentum.magnitude;
+            Vector3 directionAfterSnap = Vector3.ProjectOnPlane(Vector3.Project(momentum, -hit.normal), Up).normalized * momentum.magnitude;
             bool didSnapHit = this.CastSelf(directionAfterSnap.normalized, Mathf.Max(stepUpDepth, momentum.magnitude), out RaycastHit snapHit);
 
             // If they can move without instantly hitting something, then snap them up
@@ -580,7 +628,7 @@ namespace PropHunt.Character
             {
                 // Project rest of movement onto plane perpendicular to gravity
                 transform.position = currentPosition;
-                transform.position += distanceToSnap * Vector3.up;
+                transform.position += distanceToSnap * Up;
                 return true;
             }
             else

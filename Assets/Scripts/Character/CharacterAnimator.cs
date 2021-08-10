@@ -66,9 +66,9 @@ namespace PropHunt.Character
                 return;
             }
 
-            bool jumping = kcc.Velocity.y >= 0.1f;
+            bool jumping = kcc.CanJump && kcc.attemptingJump;
             bool falling = kcc.FallingTime >= fallingThreshold;
-            bool jumpingOrFalling = jumping || falling;
+            bool jumpingOrFalling = falling || jumping;
             bool moving = !jumpingOrFalling && kcc.InputMovement.magnitude > this.movementDeadZone;
 
             // Set animator fields based on information
