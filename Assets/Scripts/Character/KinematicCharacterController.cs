@@ -510,7 +510,8 @@ namespace PropHunt.Character
             // Give the player some vertical velocity if they are jumping and grounded
             if (CanJump)
             {
-                velocity = GetGroundVelocity() + this.jumpVelocity * Up;
+                Vector3 jumpDirection = Vector3.Lerp(StandingOnGround ? surfaceNormal : Up, Up, jumpAngleWeightFactor);
+                velocity = GetGroundVelocity() + this.jumpVelocity * jumpDirection;
                 elapsedSinceJump = 0.0f;
                 return true;
             }
@@ -547,11 +548,11 @@ namespace PropHunt.Character
         /// </summary>
         public void SnapPlayerDown()
         {
-            bool didHit = CastSelf(Down, verticalSnapDown, out var hit);
+            bool didHit = CastSelf(gravity.normalized, verticalSnapDown, out var hit);
 
             if (didHit && hit.distance > Epsilon)
             {
-                transform.position += Down * (hit.distance - Epsilon * 2);
+                transform.position += gravity.normalized * (hit.distance - Epsilon * 2);
             }
         }
 
@@ -590,10 +591,10 @@ namespace PropHunt.Character
         /// </summary>
         public void CheckGrounded()
         {
-            bool didHit = CastSelf(Down, groundCheckDistance, out var hit);
+            bool didHit = CastSelf(gravity.normalized, groundCheckDistance, out var hit);
             (var top, var bottom, var radius, var height) = GetParams();
 
-            this.angle = Vector3.Angle(hit.normal, Down);
+            this.angle = Vector3.Angle(hit.normal, -gravity);
             this.distanceToGround = hit.distance;
             this.onGround = didHit;
             this.surfaceNormal = hit.normal;
@@ -617,10 +618,10 @@ namespace PropHunt.Character
         {
             // If we were to snap the player up and they moved forward, would they hit something?
             Vector3 currentPosition = transform.position;
-            Vector3 snapUp = distanceToSnap * Up;
+            Vector3 snapUp = distanceToSnap * Vector3.up;
             transform.position += snapUp;
 
-            Vector3 directionAfterSnap = Vector3.ProjectOnPlane(Vector3.Project(momentum, -hit.normal), Up).normalized * momentum.magnitude;
+            Vector3 directionAfterSnap = Vector3.ProjectOnPlane(Vector3.Project(momentum, -hit.normal), Vector3.up).normalized * momentum.magnitude;
             bool didSnapHit = this.CastSelf(directionAfterSnap.normalized, Mathf.Max(stepUpDepth, momentum.magnitude), out RaycastHit snapHit);
 
             // If they can move without instantly hitting something, then snap them up
@@ -628,7 +629,7 @@ namespace PropHunt.Character
             {
                 // Project rest of movement onto plane perpendicular to gravity
                 transform.position = currentPosition;
-                transform.position += distanceToSnap * Up;
+                transform.position += distanceToSnap * Vector3.up;
                 return true;
             }
             else
