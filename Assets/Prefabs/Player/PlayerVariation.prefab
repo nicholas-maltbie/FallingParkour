@@ -316,8 +316,8 @@ MonoBehaviour:
   maxWalkAngle: 60
   gravity: {x: 0, y: -20, z: 0}
   movementSpeed: 5
-  sprintSpeed: 7.5
   jumpVelocity: 8
+  jumpCooldown: 0.5
   maxBounces: 5
   pushDecay: 0.9
   anglePower: 1
@@ -328,7 +328,6 @@ MonoBehaviour:
   snapBufferTime: 0.05
   inputMovement: {x: 0, y: 0, z: 0}
   attemptingJump: 0
-  isSprinting: 0
   elapsedFalling: 0
   velocity: {x: 0, y: 0, z: 0}
   distanceToGround: 0
