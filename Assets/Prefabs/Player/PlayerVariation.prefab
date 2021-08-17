@@ -259,8 +259,9 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   movementDeadZone: 0.001
-  turningDeadZone: 0.001
+  turningDeadZone: 15
   fallingThreshold: 0.05
+  longFallingThreshold: 1.5
   kcc: {fileID: 8963333518367223407}
   cameraController: {fileID: 6735585361067305556}
   animator: {fileID: 3257078712940819048}
