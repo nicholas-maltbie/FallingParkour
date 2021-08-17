@@ -104,7 +104,7 @@ namespace PropHunt.Character
         [Tooltip("Maximum angle at which the player can jump (in degrees)")]
         [SerializeField]
         [Range(0, 90)]
-        public float maJumpAngle = 85f;
+        public float maxJumpAngle = 85f;
 
         /// <summary>
         /// Weight to which the player's jump is weighted towards the direction
@@ -328,7 +328,7 @@ namespace PropHunt.Character
         /// <summary>
         /// Can the player jump right now.
         /// </summary>
-        public bool CanJump => elapsedFalling >= 0 && (!Falling || elapsedFalling <= coyoteTime) &&
+        public bool CanJump => elapsedFalling >= 0 && (!FallingAngle(maxJumpAngle) || elapsedFalling <= coyoteTime) &&
             attemptingJump && elapsedSinceJump >= jumpCooldown;
 
         /// <summary>
