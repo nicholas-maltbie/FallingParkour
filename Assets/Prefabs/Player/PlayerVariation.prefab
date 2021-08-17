@@ -259,8 +259,9 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   movementDeadZone: 0.001
-  turningDeadZone: 0.001
+  turningDeadZone: 15
   fallingThreshold: 0.05
+  longFallingThreshold: 1.5
   kcc: {fileID: 8963333518367223407}
   cameraController: {fileID: 6735585361067305556}
   animator: {fileID: 3257078712940819048}
@@ -317,7 +318,10 @@ MonoBehaviour:
   gravity: {x: 0, y: -20, z: 0}
   movementSpeed: 5
   jumpVelocity: 8
+  maJumpAngle: 85
+  jumpAngleWeightFactor: 0.2
   jumpCooldown: 0.5
+  coyoteTime: 0.25
   maxBounces: 5
   pushDecay: 0.9
   anglePower: 1
@@ -407,7 +411,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 774360562829986131}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe567c0785e30cf4c902b0fc7fa8504b, type: 3}
   m_Name: 

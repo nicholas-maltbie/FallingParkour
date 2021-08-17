@@ -15,12 +15,17 @@ namespace PropHunt.Character
         /// <summary>
         /// Dead zone to consider turning action as stopped
         /// </summary>
-        public float turningDeadZone = 0.01f;
+        public float turningDeadZone = 0.1f;
 
         /// <summary>
         /// Amount of time falling to switch to falling animation
         /// </summary>
         public float fallingThreshold = 0.1f;
+
+        /// <summary>
+        /// Falling time before player goes into long falling animation
+        /// </summary>
+        public float longFallingThreshold = 1.5f;
 
         /// <summary>
         /// Network service for managing network calls
@@ -81,6 +86,7 @@ namespace PropHunt.Character
             animator.SetBool("Turning", !moving && !jumpingOrFalling && Mathf.Abs(cameraController.frameRotation) > this.turningDeadZone);
             animator.SetBool("Jumping", jumping);
             animator.SetBool("Falling", falling);
+            animator.SetBool("Long Falling", kcc.FallingTime >= longFallingThreshold);
         }
     }
 
