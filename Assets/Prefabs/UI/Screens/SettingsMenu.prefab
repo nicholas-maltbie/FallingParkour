@@ -1569,16 +1569,20 @@ MonoBehaviour:
     m_ActionName: Player/Interact[/Keyboard/e]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 3aa4111b-bb68-412d-bd3f-17bda7f2ca5d
-    m_ActionName: Player/Sprint[/Keyboard/leftShift]
-  - m_PersistentCalls:
-      m_Calls: []
     m_ActionId: e1d5dee9-5e26-4579-9d27-657776fa136c
     m_ActionName: Player/Fire[/Mouse/leftButton]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: fb8d5e39-01f1-46e5-98de-be5b1d1f8f23
     m_ActionName: Player/Look[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 04cf4c18-3190-4ab3-a318-eb918e165214
+    m_ActionName: Player/Forward[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 01410572-e941-40b5-b45f-c5b2c59ca171
+    m_ActionName: Player/Backward[/Keyboard/leftCtrl]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: UI
@@ -2102,10 +2106,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 379990221835961574}
     m_Modifications:
+    - target: {fileID: 178613091296661988, guid: 41ed1f3ea1c87a642aff34e3ef31d741, type: 3}
+      propertyPath: menuController
+      value: 
+      objectReference: {fileID: 8387962290575963714}
     - target: {fileID: 1190656660190202813, guid: 41ed1f3ea1c87a642aff34e3ef31d741, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1358142589426519030, guid: 41ed1f3ea1c87a642aff34e3ef31d741, type: 3}
+      propertyPath: menuController
+      value: 
+      objectReference: {fileID: 8387962290575963714}
     - target: {fileID: 1970485735994188474, guid: 41ed1f3ea1c87a642aff34e3ef31d741, type: 3}
       propertyPath: menuController
       value: 
@@ -2122,6 +2134,14 @@ PrefabInstance:
       propertyPath: menuController
       value: 
       objectReference: {fileID: 8387962290575963714}
+    - target: {fileID: 4966987007247063967, guid: 41ed1f3ea1c87a642aff34e3ef31d741, type: 3}
+      propertyPath: m_Text
+      value: Spectate Next
+      objectReference: {fileID: 0}
+    - target: {fileID: 6074740762125336973, guid: 41ed1f3ea1c87a642aff34e3ef31d741, type: 3}
+      propertyPath: m_Text
+      value: Spectate Previous
+      objectReference: {fileID: 0}
     - target: {fileID: 7062921866573081865, guid: 41ed1f3ea1c87a642aff34e3ef31d741, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2273,6 +2293,10 @@ PrefabInstance:
       propertyPath: settingsMenuController
       value: 
       objectReference: {fileID: 8387962290575963714}
+    - target: {fileID: 6187564329407797762, guid: d506a7fdd3f951b48884766faf07bbbb, type: 3}
+      propertyPath: m_Value
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7694884257995294999, guid: d506a7fdd3f951b48884766faf07bbbb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -2394,6 +2418,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2341118136139976102, guid: d32b2dbaab0edd84482f589d5d271415, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2470670762500057116, guid: d32b2dbaab0edd84482f589d5d271415, type: 3}
+      propertyPath: m_Value
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3196738492181952199, guid: d32b2dbaab0edd84482f589d5d271415, type: 3}

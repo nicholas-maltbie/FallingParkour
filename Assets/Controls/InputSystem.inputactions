@@ -30,14 +30,6 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Sprint",
-                    "type": "Button",
-                    "id": "3aa4111b-bb68-412d-bd3f-17bda7f2ca5d",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
                     "name": "Fire",
                     "type": "Button",
                     "id": "e1d5dee9-5e26-4579-9d27-657776fa136c",
@@ -50,6 +42,22 @@
                     "type": "Value",
                     "id": "fb8d5e39-01f1-46e5-98de-be5b1d1f8f23",
                     "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Forward",
+                    "type": "Button",
+                    "id": "04cf4c18-3190-4ab3-a318-eb918e165214",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Backward",
+                    "type": "Button",
+                    "id": "01410572-e941-40b5-b45f-c5b2c59ca171",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 }
@@ -189,17 +197,6 @@
                 },
                 {
                     "name": "",
-                    "id": "6663e169-adaf-4d37-af8d-c5ce731ea772",
-                    "path": "<Keyboard>/leftShift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Sprint",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "6ef13908-b9cf-4e5c-8a60-6da07d34c7b6",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
@@ -239,6 +236,28 @@
                     "processors": "",
                     "groups": "Joystick",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "54d360b7-ba76-42f3-b4da-d13fe361b6b6",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Backward",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "65177b74-5b51-4ede-b040-2ac7f6fba989",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Forward",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
