@@ -318,7 +318,7 @@ MonoBehaviour:
   gravity: {x: 0, y: -20, z: 0}
   movementSpeed: 5
   jumpVelocity: 8
-  maxJumpAngle: 89
+  maxJumpAngle: 85
   jumpAngleWeightFactor: 0.2
   jumpCooldown: 0.5
   coyoteTime: 0.25
