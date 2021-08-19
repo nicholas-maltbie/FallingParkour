@@ -12,6 +12,18 @@ namespace PropHunt.Spectator
     public class SpectatorFollow : NetworkBehaviour
     {
         /// <summary>
+        /// Minimum time between player target swaps.
+        /// </summary>
+        [SerializeField]
+        [Tooltip("Minimum time between player follow target swaps")]
+        private float minSwapTime = 0.05f;
+
+        /// <summary>
+        /// Last time in which the player swapped targets.
+        /// </summary>
+        private float lastSwapTime = Mathf.NegativeInfinity;
+
+        /// <summary>
         /// What is the player currently following?
         /// </summary>
         [SerializeField]
@@ -35,7 +47,7 @@ namespace PropHunt.Spectator
         {
             NextTarget(0);
         }
-        
+
         /// <summary>
         /// Get the list of all followable objects currently in the scene.
         /// Will return followable objects in a consistent order
@@ -54,8 +66,9 @@ namespace PropHunt.Spectator
         /// <param name="step">Direction and count to move forward in followable list.</param>
         public void NextTarget(int step = 1)
         {
-            if (isLocalPlayer)
+            if (isLocalPlayer && Time.time - lastSwapTime >= minSwapTime)
             {
+                lastSwapTime = Time.time;
                 List<Followable> followables = GetFollowables();
                 UnityEngine.Debug.Log("followables = " + followables + " total = " + followables.Count.ToString());
                 if (followables.Count > 0)
