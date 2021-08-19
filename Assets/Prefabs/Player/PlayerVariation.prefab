@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 7132874320890653670}
   - component: {fileID: 2723596458813897958}
   - component: {fileID: -3663087370360975145}
+  - component: {fileID: 4705303200167846707}
   m_Layer: 0
   m_Name: PlayerVariation
   m_TagString: Player
@@ -543,23 +544,6 @@ MonoBehaviour:
     m_ActionName: Player/Interact[/Keyboard/e]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8963333518367223407}
-        m_TargetAssemblyTypeName: PropHunt.Character.KinematicCharacterController,
-          PropHunt
-        m_MethodName: OnSprint
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 3aa4111b-bb68-412d-bd3f-17bda7f2ca5d
-    m_ActionName: Player/Sprint[/Keyboard/leftShift]
-  - m_PersistentCalls:
-      m_Calls:
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PropHunt.Combat.BasicRangedAttack, PropHunt
         m_MethodName: Attack
@@ -590,6 +574,14 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: fb8d5e39-01f1-46e5-98de-be5b1d1f8f23
     m_ActionName: Player/Look[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 04cf4c18-3190-4ab3-a318-eb918e165214
+    m_ActionName: Player/Forward[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 01410572-e941-40b5-b45f-c5b2c59ca171
+    m_ActionName: Player/Backward[/Keyboard/leftCtrl]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -626,6 +618,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+--- !u!114 &4705303200167846707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774360562829986131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da859f811529b0b428b2f67bec07515c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3969404203279134107
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,17 +5,32 @@ using PropHunt.Environment.Checkpoint;
 
 namespace PropHunt.Game.Flow
 {
+    /// <summary>
+    /// Spawn manager for creating and managing player in the game. 
+    /// </summary>
     public class PlayerSpawnManager : NetworkBehaviour
     {
+        /// <summary>
+        /// In game player for running through levels.
+        /// </summary>
         public GameObject inGamePlayer;
 
+        /// <summary>
+        /// Lobby player for sitting in the lobby scene.
+        /// </summary>
         public GameObject lobbyPlayer;
+
+        /// <summary>
+        /// Spectator player for watching other players in the game.
+        /// </summary>
+        public GameObject spectatorPlayer;
 
         public override void OnStartClient()
         {
             base.OnStartClient();
             NetworkClient.RegisterPrefab(inGamePlayer);
             NetworkClient.RegisterPrefab(lobbyPlayer);
+            NetworkClient.RegisterPrefab(spectatorPlayer);
         }
 
         public override void OnStartServer()
@@ -54,10 +69,15 @@ namespace PropHunt.Game.Flow
                 {
                     (pos, rot) = defaultCheckpoint.GetRandomSpawn();
                 }
-                StartCoroutine(SpawnPlayerCharacter(joinEvent.connection, inGamePlayer, pos, rot));
+                StartCoroutine(SpawnPlayerCharacter(joinEvent.connection, spectatorPlayer, pos, rot));
             }
             else if (GameManager.gamePhase == GamePhase.Lobby)
             {
+                StartCoroutine(SpawnPlayerCharacter(joinEvent.connection, lobbyPlayer));
+            }
+            else
+            {
+                // Default spawn a lobby player for the player character
                 StartCoroutine(SpawnPlayerCharacter(joinEvent.connection, lobbyPlayer));
             }
         }
