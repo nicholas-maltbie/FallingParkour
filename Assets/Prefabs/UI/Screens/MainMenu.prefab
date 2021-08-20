@@ -2631,16 +2631,20 @@ MonoBehaviour:
     m_ActionName: Player/Interact[/Keyboard/e]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 3aa4111b-bb68-412d-bd3f-17bda7f2ca5d
-    m_ActionName: Player/Sprint[/Keyboard/leftShift]
-  - m_PersistentCalls:
-      m_Calls: []
     m_ActionId: e1d5dee9-5e26-4579-9d27-657776fa136c
     m_ActionName: Player/Fire[/Mouse/leftButton]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: fb8d5e39-01f1-46e5-98de-be5b1d1f8f23
     m_ActionName: Player/Look[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 04cf4c18-3190-4ab3-a318-eb918e165214
+    m_ActionName: Player/Forward[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 01410572-e941-40b5-b45f-c5b2c59ca171
+    m_ActionName: Player/Backward[/Keyboard/leftCtrl]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: UI
