@@ -17,14 +17,14 @@ namespace PropHunt.Spectator
         /// </summary>
         [SerializeField]
         [Tooltip("Minimum time between player follow target swaps")]
-        private UnityEngine.InputSystem.InputActionReference forwardAction;
+        private InputActionReference forwardAction;
 
         /// <summary>
         /// Action to move to previous spectator object.
         /// </summary>
         [SerializeField]
         [Tooltip("Minimum time between player follow target swaps")]
-        private UnityEngine.InputSystem.InputActionReference backwardAction;
+        private InputActionReference backwardAction;
 
         /// <summary>
         /// What is the player currently following?
