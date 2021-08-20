@@ -51,7 +51,7 @@
                     "id": "04cf4c18-3190-4ab3-a318-eb918e165214",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press"
                 },
                 {
                     "name": "Backward",
@@ -59,7 +59,7 @@
                     "id": "01410572-e941-40b5-b45f-c5b2c59ca171",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press"
                 }
             ],
             "bindings": [
@@ -243,7 +243,7 @@
                     "name": "",
                     "id": "54d360b7-ba76-42f3-b4da-d13fe361b6b6",
                     "path": "<Keyboard>/leftCtrl",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "Backward",
@@ -254,7 +254,7 @@
                     "name": "",
                     "id": "65177b74-5b51-4ede-b040-2ac7f6fba989",
                     "path": "<Keyboard>/leftShift",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "Forward",
@@ -289,7 +289,7 @@
                     "id": "8d0c0094-dc57-4415-bf10-a3f3e0ff1f6b",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press"
                 },
                 {
                     "name": "Point",

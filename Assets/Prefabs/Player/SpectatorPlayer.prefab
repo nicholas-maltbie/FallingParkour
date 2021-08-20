@@ -107,6 +107,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   minSwapTime: 0.05
+  forwardAction: {fileID: -8014285966804362514, guid: 4852f26cd5a256d49a424ab8104ce90f, type: 3}
+  backwardAction: {fileID: -2296981732642237548, guid: 4852f26cd5a256d49a424ab8104ce90f, type: 3}
   target: {fileID: 0}
 --- !u!114 &7336392193004563287
 MonoBehaviour:
@@ -206,35 +208,11 @@ MonoBehaviour:
     m_ActionId: d7430d8f-71d9-483c-8731-3fd065fcf16e
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: -3571169171947004586}
-        m_TargetAssemblyTypeName: PropHunt.Spectator.SpectatorFollow, FallingParkour
-        m_MethodName: NextTarget
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 04cf4c18-3190-4ab3-a318-eb918e165214
     m_ActionName: Player/Forward[/Keyboard/leftShift]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: -3571169171947004586}
-        m_TargetAssemblyTypeName: PropHunt.Spectator.SpectatorFollow, FallingParkour
-        m_MethodName: NextTarget
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: -1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 01410572-e941-40b5-b45f-c5b2c59ca171
     m_ActionName: Player/Backward[/Keyboard/leftCtrl]
   m_NeverAutoSwitchControlSchemes: 0

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Mirror;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace PropHunt.Spectator
 {
@@ -12,16 +13,18 @@ namespace PropHunt.Spectator
     public class SpectatorFollow : NetworkBehaviour
     {
         /// <summary>
-        /// Minimum time between player target swaps.
+        /// Action to move to next spectator object.
         /// </summary>
         [SerializeField]
         [Tooltip("Minimum time between player follow target swaps")]
-        private float minSwapTime = 0.05f;
+        private UnityEngine.InputSystem.InputActionReference forwardAction;
 
         /// <summary>
-        /// Last time in which the player swapped targets.
+        /// Action to move to previous spectator object.
         /// </summary>
-        private float lastSwapTime = Mathf.NegativeInfinity;
+        [SerializeField]
+        [Tooltip("Minimum time between player follow target swaps")]
+        private UnityEngine.InputSystem.InputActionReference backwardAction;
 
         /// <summary>
         /// What is the player currently following?
@@ -46,6 +49,8 @@ namespace PropHunt.Spectator
         public void Start()
         {
             NextTarget(0);
+            forwardAction.action.started += action => NextTarget(1);
+            backwardAction.action.started += action => NextTarget(-1);
         }
 
         /// <summary>
@@ -66,11 +71,9 @@ namespace PropHunt.Spectator
         /// <param name="step">Direction and count to move forward in followable list.</param>
         public void NextTarget(int step = 1)
         {
-            if (isLocalPlayer && Time.time - lastSwapTime >= minSwapTime)
+            if (isLocalPlayer)
             {
-                lastSwapTime = Time.time;
                 List<Followable> followables = GetFollowables();
-                UnityEngine.Debug.Log("followables = " + followables + " total = " + followables.Count.ToString());
                 if (followables.Count > 0)
                 {
                     int index = followables.FindIndex(0, other => other == target);
