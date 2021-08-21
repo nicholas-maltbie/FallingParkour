@@ -21,6 +21,11 @@ namespace PropHunt.Spectator
         /// </summary>
         public Guid Id => id;
 
+        /// <summary>
+        /// GameObject to ignore collider of when following this object
+        /// </summary>
+        public GameObject ignoreCollider;
+
         public int CompareTo(Followable other)
         {
             return id.CompareTo(other.id);
