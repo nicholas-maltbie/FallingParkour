@@ -106,10 +106,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  minSwapTime: 0.05
   forwardAction: {fileID: -8014285966804362514, guid: 4852f26cd5a256d49a424ab8104ce90f, type: 3}
   backwardAction: {fileID: -2296981732642237548, guid: 4852f26cd5a256d49a424ab8104ce90f, type: 3}
-  target: {fileID: 0}
 --- !u!114 &7336392193004563287
 MonoBehaviour:
   m_ObjectHideFlags: 0

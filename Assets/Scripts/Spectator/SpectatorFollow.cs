@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Mirror;
+using PropHunt.Character;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,6 +11,7 @@ namespace PropHunt.Spectator
     /// <summary>
     /// Script to track a spectatable object
     /// </summary>
+    [RequireComponent(typeof(CameraController))]
     public class SpectatorFollow : NetworkBehaviour
     {
         /// <summary>
@@ -29,17 +31,38 @@ namespace PropHunt.Spectator
         /// <summary>
         /// What is the player currently following?
         /// </summary>
-        [SerializeField]
-        private Followable target;
+        private Followable follow;
+
+        private Followable Follow
+        {
+            get => follow;
+            set
+            {
+                if (follow != null)
+                {
+                    cameraController.RemoveIgnoreObject(follow.gameObject);
+                }
+                if (value != null)
+                {
+                    cameraController.AddIgnoreObject(value.ignoreCollider);
+                }
+                follow = value;
+            }
+        }
+
+        /// <summary>
+        /// Camera controller associated with this player
+        /// </summary>
+        private CameraController cameraController;
 
         /// <summary>
         /// Update function to have the player follow the current target object.
         /// </summary>
         public void LateUpdate()
         {
-            if (target != null)
+            if (Follow != null)
             {
-                transform.position = target.transform.position;
+                transform.position = Follow.transform.position;
             }
         }
 
@@ -48,6 +71,7 @@ namespace PropHunt.Spectator
         /// </summary>
         public void Start()
         {
+            this.cameraController = GetComponent<CameraController>();
             NextTarget(0);
             forwardAction.action.started += action => NextTarget(1);
             backwardAction.action.started += action => NextTarget(-1);
@@ -76,8 +100,8 @@ namespace PropHunt.Spectator
                 List<Followable> followables = GetFollowables();
                 if (followables.Count > 0)
                 {
-                    int index = followables.FindIndex(0, other => other == target);
-                    target = followables[((index + step) + followables.Count) % followables.Count];
+                    int index = followables.FindIndex(0, other => other == Follow);
+                    Follow = followables[((index + step) + followables.Count) % followables.Count];
                 }
             }
         }

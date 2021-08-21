@@ -1,5 +1,6 @@
 
 using System.Collections;
+using System.Collections.Generic;
 using Mirror;
 using PropHunt.Utils;
 using UnityEngine;
@@ -106,6 +107,21 @@ namespace PropHunt.Character
         private float previousOpacity = 0.0f;
 
         /// <summary>
+        /// Change in yaw from mouse movement
+        /// </summary>
+        private float yawChange;
+
+        /// <summary>
+        /// Change in pitch from mouse movement
+        /// </summary>
+        private float pitchChange;
+
+        /// <summary>
+        /// Objects to ignore when drawing raycast for camera
+        /// </summary>
+        private List<GameObject> ignoreObjects = new List<GameObject>();
+
+        /// <summary>
         /// Get the current distance of the camera from the player camera location
         /// </summary>
         public float CameraDistance { get; private set; }
@@ -116,34 +132,37 @@ namespace PropHunt.Character
         /// </summary>
         public Vector3 CameraSource => transform.TransformDirection(this.baseCameraOffset) + transform.position;
 
+        /// <summary>
+        /// Add an object to the ignore list when raycasting camera position
+        /// </summary>
+        /// <param name="go"></param>
+        public void AddIgnoreObject(GameObject go) => ignoreObjects.Add(go);
+
+        /// <summary>
+        /// Remove an object to the ignore list when raycasting camera position
+        /// </summary>
+        /// <param name="go"></param>
+        public bool RemoveIgnoreObject(GameObject go) => ignoreObjects.Remove(go);
+
         public void Start()
         {
             this.networkService = new NetworkService(this);
             this.baseCameraOffset = this.cameraTransform.localPosition;
             this.currentDistance = minCameraDistance;
+            this.ignoreObjects.Add(gameObject);
         }
 
         public bool RaycastFromCameraBase(float maxDistance, LayerMask layerMask, QueryTriggerInteraction queryTriggerInteraction, out RaycastHit hit)
         {
-            return PhysicsUtils.RaycastFirstHitIgnore(gameObject, CameraSource, cameraTransform.forward, maxDistance,
+            return PhysicsUtils.RaycastFirstHitIgnore(ignoreObjects, CameraSource, cameraTransform.forward, maxDistance,
                 layerMask, queryTriggerInteraction, out hit);
         }
 
         public bool SpherecastFromCameraBase(float maxDistance, LayerMask layerMask, float sphereRadius, QueryTriggerInteraction queryTriggerInteraction, out RaycastHit hit)
         {
-            return PhysicsUtils.SphereCastFirstHitIgnore(gameObject, CameraSource, sphereRadius, cameraTransform.forward, maxDistance,
+            return PhysicsUtils.SphereCastFirstHitIgnore(ignoreObjects, CameraSource, sphereRadius, cameraTransform.forward, maxDistance,
                 layerMask, queryTriggerInteraction, out hit);
         }
-
-        /// <summary>
-        /// Change in yaw from mouse movement
-        /// </summary>
-        private float yawChange;
-
-        /// <summary>
-        /// Change in pitch from mouse movement
-        /// </summary>
-        private float pitchChange;
 
         /// <summary>
         /// Look action changes for camera movement
@@ -197,7 +216,7 @@ namespace PropHunt.Character
             // Draw a line from our camera source in the camera direction. If the line hits anything that isn't us
             // Limit the distance by how far away that object is
             // If we hit something
-            if (PhysicsUtils.SphereCastFirstHitIgnore(gameObject, cameraSource, 0.01f, cameraDirection, cameraDirection.magnitude,
+            if (PhysicsUtils.SphereCastFirstHitIgnore(ignoreObjects, cameraSource, 0.01f, cameraDirection, cameraDirection.magnitude,
                 this.cameraRaycastMask, QueryTriggerInteraction.Ignore, out RaycastHit hit))
             {
                 // limit the movement by that hit
