@@ -87,6 +87,9 @@ namespace PropHunt.Character.Avatar
             [SerializeField]
             public GameObject avatar;
 
+            [SerializeField]
+            public Sprite characterSprite;
+
             public string Name => avatar.name;
         }
     }
