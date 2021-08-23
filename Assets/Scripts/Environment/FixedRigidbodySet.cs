@@ -56,9 +56,9 @@ namespace PropHunt.Environment
             }
         }
 
-        public void FixedUpdate()
+        public void Update()
         {
-            float deltaTime = unityService.fixedDeltaTime;
+            float deltaTime = unityService.deltaTime;
 
             // move object by velocity
             transform.position += deltaTime * linearVelocity;

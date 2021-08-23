@@ -373,7 +373,7 @@ namespace PropHunt.Character
             feetFollowObj.transform.SetParent(transform);
         }
 
-        public void FixedUpdate()
+        public void Update()
         {
             if (!networkService.isLocalPlayer)
             {
@@ -381,7 +381,7 @@ namespace PropHunt.Character
                 return;
             }
 
-            float deltaTime = unityService.fixedDeltaTime;
+            float deltaTime = unityService.deltaTime;
 
             // If player is not allowed to move, stop player movement
             if (PlayerInputManager.playerMovementState == PlayerInputState.Deny)
