@@ -326,6 +326,11 @@ namespace PropHunt.Character
         private Vector3 previousGroundVelocity;
 
         /// <summary>
+        /// Object for feet to follow
+        /// </summary>
+        private GameObject feetFollowObj;
+
+        /// <summary>
         /// Can the player jump right now.
         /// </summary>
         public bool CanJump => elapsedFalling >= 0 && (!FallingAngle(maxJumpAngle) || elapsedFalling <= coyoteTime) &&
@@ -355,10 +360,17 @@ namespace PropHunt.Character
             return (top, bottom, radius, height);
         }
 
+        public void OnDestroy()
+        {
+            GameObject.Destroy(feetFollowObj);
+        }
+
         public void Start()
         {
             this.networkService = new NetworkService(this);
             this.capsuleCollider = GetComponent<CapsuleCollider>();
+            feetFollowObj = new GameObject();
+            feetFollowObj.transform.SetParent(transform);
         }
 
         public void FixedUpdate()
@@ -435,6 +447,7 @@ namespace PropHunt.Character
             }
 
             CheckGrounded();
+            feetFollowObj.transform.position = transform.position;
 
             // Save state of player
             previousFalling = Falling;
@@ -528,17 +541,23 @@ namespace PropHunt.Character
         /// </summary>
         public void MoveWithGround()
         {
+            if (feetFollowObj.transform.parent != transform)
+            {
+                transform.position = feetFollowObj.transform.position;
+            }
             // Check if we were standing on moving ground the previous frame
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
             if (movingGround == null || Falling)
             {
                 // We aren't standing on something, don't do anything
+                feetFollowObj.transform.parent = transform;
                 return;
             }
             // Otherwise, get the displacement of the floor at the previous position
             Vector3 displacement = movingGround.GetDisplacementAtPoint(groundHitPosition);
             // Move player by that displacement amount
-            transform.position += displacement;
+            // transform.position += displacement;
+            feetFollowObj.transform.parent = floor.transform;
 
             PushOutOverlapping(displacement.magnitude * 2);
         }
@@ -599,7 +618,7 @@ namespace PropHunt.Character
             this.onGround = didHit;
             this.surfaceNormal = hit.normal;
             this.floor = hit.collider != null ? hit.collider.gameObject : null;
-            this.groundHitPosition = hit.point;
+            this.groundHitPosition = hit.distance > 0 ? hit.point : transform.position;
         }
 
         /// <summary>

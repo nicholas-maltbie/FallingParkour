@@ -175,7 +175,7 @@ namespace PropHunt.Character
             pitchChange = look.y;
         }
 
-        public void Update()
+        public void LateUpdate()
         {
             if (!networkService.isLocalPlayer)
             {
