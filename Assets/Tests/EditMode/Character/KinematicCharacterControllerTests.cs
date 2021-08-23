@@ -56,7 +56,7 @@ namespace Tests.EditMode.Character
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
             this.kcc.gameObject.AddComponent<Rigidbody>();
             this.kcc.inputMovement = new Vector3(0, 0, 1.0f);
-            this.kcc.FixedUpdate();
+            this.kcc.Update();
             Assert.IsTrue(this.kcc.transform.position == Vector3.zero);
         }
 
@@ -65,7 +65,7 @@ namespace Tests.EditMode.Character
         {
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(false);
             // this.kcc.Update();
-            this.kcc.FixedUpdate();
+            this.kcc.Update();
         }
 
         [Test]
@@ -75,13 +75,13 @@ namespace Tests.EditMode.Character
             PlayerInputManager.playerMovementState = PlayerInputState.Deny;
             this.networkServiceMock.Setup(e => e.isLocalPlayer).Returns(true);
             // this.kcc.Update();
-            this.kcc.FixedUpdate();
+            this.kcc.Update();
 
             Assert.IsTrue(this.kcc.transform.position == Vector3.zero);
 
             PlayerInputManager.playerMovementState = PlayerInputState.Allow;
             // this.kcc.Update();
-            this.kcc.FixedUpdate();
+            this.kcc.Update();
 
             Assert.IsTrue(this.kcc.transform.position == Vector3.zero);
         }
@@ -117,14 +117,14 @@ namespace Tests.EditMode.Character
                     normal = Vector3.up
                 }
             );
-            this.kcc.FixedUpdate();
+            this.kcc.Update();
             Assert.IsTrue(this.kcc.StandingOnGround);
             Assert.IsFalse(this.kcc.Falling);
 
             // Allow player to attempt to jump
             this.kcc.OnJump(new UnityEngine.InputSystem.InputAction.CallbackContext());
             this.kcc.attemptingJump = true;
-            this.kcc.FixedUpdate();
+            this.kcc.Update();
 
             // Assert that we are jumping
             UnityEngine.Debug.Log(this.kcc.Velocity);
@@ -147,7 +147,7 @@ namespace Tests.EditMode.Character
                     normal = Vector3.up
                 }
             );
-            this.kcc.FixedUpdate();
+            this.kcc.Update();
             Assert.IsTrue(this.kcc.StandingOnGround);
             Assert.IsTrue(!this.kcc.Falling);
 
@@ -162,7 +162,7 @@ namespace Tests.EditMode.Character
                     normal = Vector3.right
                 }
             );
-            this.kcc.FixedUpdate();
+            this.kcc.Update();
             Assert.IsTrue(this.kcc.StandingOnGround);
             Assert.IsTrue(this.kcc.Falling);
 
@@ -175,7 +175,7 @@ namespace Tests.EditMode.Character
                     hit = false
                 }
             );
-            this.kcc.FixedUpdate();
+            this.kcc.Update();
             Assert.IsTrue(!this.kcc.StandingOnGround);
             Assert.IsTrue(this.kcc.Falling);
         }
