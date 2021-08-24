@@ -83,7 +83,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   lobbyScene: Assets/Scenes/LobbyScene.unity
-  gameScene: Assets/Scenes/BasicHouse.unity
+  gameScene: Assets/Scenes/BrokenFloor.unity
 --- !u!114 &6751860484789558292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,6 +169,7 @@ MonoBehaviour:
   - {fileID: 1250752114043530695, guid: d3c7992bedb32c547a65b63a8702b3d8, type: 3}
   - {fileID: 774360562829986131, guid: 94c1f054bcd31be429fd1ae1185e7267, type: 3}
   - {fileID: 1250752114043530695, guid: 2eeed3e45e5247b4a91826a6b0eb0f20, type: 3}
+  - {fileID: 6340813144003598840, guid: 4f8063a8ec0b177489f97ac492d7cb67, type: 3}
   timerPrefab: {fileID: 5660222951667944539, guid: 0d379e827af7e944095b2c2ee6ffa675, type: 3}
 --- !u!114 &8542409671753137159
 MonoBehaviour:

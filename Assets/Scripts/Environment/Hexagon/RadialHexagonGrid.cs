@@ -8,7 +8,7 @@ namespace PropHunt.Environment.Hexagon
     /// <summary>
     /// Create a radial grid of hexagons starting from a single point
     /// </summary>
-    public class RadialHexagonGrid : MonoBehaviour
+    public class RadialHexagonGrid : NetworkBehaviour
     {
         /// <summary>
         /// Hexagon prefab to spawn in areas
@@ -41,6 +41,17 @@ namespace PropHunt.Environment.Hexagon
         /// </summary>
         public const float rad60deg = Mathf.Deg2Rad * 60;
 
+        /// <summary>
+        /// Base for attaching hexagons to
+        /// </summary>
+        private GameObject hexBase;
+
+        /// <summary>
+        /// Spawn a hex relative to the center of the hexagon grid
+        /// </summary>
+        /// <param name="arm">Which of the six arms is this hex on [0-6)</param>
+        /// <param name="distance">How many hexagons is this away from the center</param>
+        /// <param name="step">Which step along the arm is the hexagon (away from the radial line)</param>
         public void SpawnHex(int arm, int distance, int step)
         {
             // Get direction of this arm
@@ -59,6 +70,8 @@ namespace PropHunt.Environment.Hexagon
             Vector3 hexPos = new Vector3(newPos.x, 0, newPos.y);
             hex.transform.position = transform.position + hexPos;
             hex.transform.parent = transform;
+
+            NetworkServer.Spawn(hex);
         }
 
         /// <summary>
@@ -106,7 +119,13 @@ namespace PropHunt.Environment.Hexagon
 
         public void Start()
         {
+            NetworkClient.RegisterPrefab(hexagonPrefab);
+        }
+
+        public override void OnStartServer()
+        {
             StartCoroutine(CreateGrid());
+            hexBase = new GameObject();
         }
     }
 }

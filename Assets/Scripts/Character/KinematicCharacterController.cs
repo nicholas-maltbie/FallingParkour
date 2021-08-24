@@ -326,6 +326,11 @@ namespace PropHunt.Character
         private Vector3 previousGroundVelocity;
 
         /// <summary>
+        /// Previous floor that the player was standing on
+        /// </summary>
+        private GameObject previousFloor;
+
+        /// <summary>
         /// Object for feet to follow
         /// </summary>
         private GameObject feetFollowObj;
@@ -460,10 +465,27 @@ namespace PropHunt.Character
             feetFollowObj.transform.position = groundHitPosition;
             footOffset = transform.position - groundHitPosition;
 
+            // Detect if the floor the player is standing on has changed
+            if (floor != previousFloor)
+            {
+                DetectPlayerStand detect = floor != null ? floor.GetComponent<DetectPlayerStand>() : null;
+                DetectPlayerStand previousDetect =
+                    previousFloor != null ? previousFloor.GetComponent<DetectPlayerStand>() : null;
+                if (detect != null)
+                {
+                    detect.CmdStepOn();
+                }
+                if (previousDetect != null)
+                {
+                    previousDetect.CmdStepOff();
+                }
+            }
+
             // Save state of player
             previousFalling = Falling;
             previousGrounded = StandingOnGround;
             previousGroundVelocity = GetGroundVelocity();
+            previousFloor = floor;
 
             // make sure the rigidbody doesn't move according to velocity or angular velocity
             Rigidbody rigidbody = GetComponent<Rigidbody>();

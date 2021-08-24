@@ -26,5 +26,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BigFans.unity
     guid: be78e93b8569c1b4cb6faab2f4bcfbd6
+  - enabled: 1
+    path: Assets/Scenes/BrokenFloor.unity
+    guid: 1102c0b21c2a5094c9ffdfb81635563e
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: b90dafd9da192a041b170ef2a3ab1dc7, type: 2}
