@@ -331,6 +331,11 @@ namespace PropHunt.Character
         private GameObject feetFollowObj;
 
         /// <summary>
+        /// Offset of feet from character image
+        /// </summary>
+        private Vector3 footOffset;
+
+        /// <summary>
         /// Can the player jump right now.
         /// </summary>
         public bool CanJump => elapsedFalling >= 0 && (!FallingAngle(maxJumpAngle) || elapsedFalling <= coyoteTime) &&
@@ -370,6 +375,7 @@ namespace PropHunt.Character
             this.networkService = new NetworkService(this);
             this.capsuleCollider = GetComponent<CapsuleCollider>();
             feetFollowObj = new GameObject();
+            feetFollowObj.name = "feetFollowObj";
             feetFollowObj.transform.SetParent(transform);
         }
 
@@ -429,6 +435,10 @@ namespace PropHunt.Character
             // velocity if the player did nto jump this frame
             if (!StandingOnGround && previousGrounded && !jumped)
             {
+                velocity = previousGroundVelocity;
+            }
+            else if (!StandingOnGround && previousGrounded && jumped)
+            {
                 velocity += previousGroundVelocity;
             }
 
@@ -447,7 +457,8 @@ namespace PropHunt.Character
             }
 
             CheckGrounded();
-            feetFollowObj.transform.position = transform.position;
+            feetFollowObj.transform.position = groundHitPosition;
+            footOffset = transform.position - groundHitPosition;
 
             // Save state of player
             previousFalling = Falling;
@@ -498,16 +509,9 @@ namespace PropHunt.Character
         {
             Vector3 groundVelocity = Vector3.zero;
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
-            if (movingGround != null)
+            if (movingGround != null && !movingGround.AvoidTransferMomentum())
             {
-                if (distanceToGround > 0)
-                {
-                    groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition);
-                }
-                else
-                {
-                    groundVelocity = movingGround.GetVelocityAtPoint(transform.position);
-                }
+                groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition);
             }
 
             return groundVelocity;
@@ -516,14 +520,17 @@ namespace PropHunt.Character
         /// <summary>
         /// Give player vertical velocity if they can jump and are attempting to jump.
         /// </summary>
-        /// <param name="deltaTime">Time in fixed update</param>
+        /// <param name="deltaTime">Time in an update</param>
         /// <returns>true if the player successfully jumped, false otherwise</returns>
         public bool PlayerJump(float deltaTime)
         {
             // Give the player some vertical velocity if they are jumping and grounded
             if (CanJump)
             {
-                Vector3 jumpDirection = Vector3.Lerp(StandingOnGround ? surfaceNormal : Up, Up, jumpAngleWeightFactor);
+                Vector3 jumpDirection = (
+                    (StandingOnGround ? surfaceNormal : Up) *
+                    jumpAngleWeightFactor + Up * (1 - jumpAngleWeightFactor)
+                    ).normalized;
                 velocity = GetGroundVelocity() + this.jumpVelocity * jumpDirection;
                 elapsedSinceJump = 0.0f;
                 return true;
@@ -543,11 +550,11 @@ namespace PropHunt.Character
         {
             if (feetFollowObj.transform.parent != transform)
             {
-                transform.position = feetFollowObj.transform.position;
+                transform.position = feetFollowObj.transform.position + footOffset;
             }
             // Check if we were standing on moving ground the previous frame
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
-            if (movingGround == null || Falling)
+            if (movingGround == null || FallingAngle(maxJumpAngle))
             {
                 // We aren't standing on something, don't do anything
                 feetFollowObj.transform.parent = transform;
@@ -555,10 +562,19 @@ namespace PropHunt.Character
             }
             // Otherwise, get the displacement of the floor at the previous position
             Vector3 displacement = movingGround.GetDisplacementAtPoint(groundHitPosition);
-            // Move player by that displacement amount
-            // transform.position += displacement;
-            feetFollowObj.transform.parent = floor.transform;
 
+            if (movingGround.ShouldAttach())
+            {
+                // Attach foot follow object to floor
+                feetFollowObj.transform.parent = floor.transform;
+            }
+            else
+            {
+                // Move player by floor displacement this frame
+                transform.position += displacement;
+            }
+
+            // Ensure player doesn't get stuck in floor
             PushOutOverlapping(displacement.magnitude * 2);
         }
 
@@ -582,7 +598,7 @@ namespace PropHunt.Character
         /// </summary>
         public void PushOutOverlapping()
         {
-            float deltaTime = unityService.fixedDeltaTime;
+            float deltaTime = unityService.deltaTime;
             PushOutOverlapping(maxPushSpeed * deltaTime);
         }
 

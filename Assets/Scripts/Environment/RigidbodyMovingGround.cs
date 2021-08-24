@@ -12,6 +12,18 @@ namespace PropHunt.Environment
         public IUnityService unityService = new UnityService();
         private Rigidbody attachedRigidbody;
 
+        /// <summary>
+        /// Should momentum be transferred to players when they
+        /// leave this object.
+        /// </summary>
+        public bool avoidTransferMomentum;
+
+        /// <inheritdoc/>
+        public bool AvoidTransferMomentum() => avoidTransferMomentum;
+
+        /// <inheritdoc/>
+        public bool ShouldAttach() => false;
+
         public void Start()
         {
             attachedRigidbody = GetComponent<Rigidbody>();
