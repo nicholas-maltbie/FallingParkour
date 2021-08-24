@@ -23,7 +23,7 @@ namespace PropHunt.Environment
         /// <returns>Displacement on the surface of this object from that point
         /// for the current fixed update</returns>
         Vector3 GetDisplacementAtPoint(Vector3 point);
-        
+
         /// <summary>
         /// Should momentum be transferred to players when they
         /// leave this object.
