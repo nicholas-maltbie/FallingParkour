@@ -343,39 +343,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 176122825087899554, guid: fcbd6f431e688bd4cbbe3408d4fdd924, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 176122825087899554, guid: fcbd6f431e688bd4cbbe3408d4fdd924, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 176122825087899554, guid: fcbd6f431e688bd4cbbe3408d4fdd924, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 176122825087899554, guid: fcbd6f431e688bd4cbbe3408d4fdd924, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.89239913
       objectReference: {fileID: 0}
     - target: {fileID: 176122825087899554, guid: fcbd6f431e688bd4cbbe3408d4fdd924, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 0.23911765
       objectReference: {fileID: 0}
     - target: {fileID: 176122825087899554, guid: fcbd6f431e688bd4cbbe3408d4fdd924, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.3696438
       objectReference: {fileID: 0}
     - target: {fileID: 176122825087899554, guid: fcbd6f431e688bd4cbbe3408d4fdd924, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.09904577
       objectReference: {fileID: 0}
     - target: {fileID: 176122825087899554, guid: fcbd6f431e688bd4cbbe3408d4fdd924, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 176122825087899554, guid: fcbd6f431e688bd4cbbe3408d4fdd924, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -45
       objectReference: {fileID: 0}
     - target: {fileID: 176122825087899554, guid: fcbd6f431e688bd4cbbe3408d4fdd924, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -461,7 +461,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hexagonPrefab: {fileID: 6340813144003598840, guid: 4f8063a8ec0b177489f97ac492d7cb67, type: 3}
   hexagonRadius: 0.5
-  tileRadius: 4
+  tileRadius: 10
+  timeAnimationDelay: 0
 --- !u!1 &820096635
 GameObject:
   m_ObjectHideFlags: 0
@@ -853,7 +854,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-6886
+  m_Name: pb_Mesh-80936
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1204,6 +1205,10 @@ PrefabInstance:
     - target: {fileID: 6340813144003598840, guid: 4f8063a8ec0b177489f97ac492d7cb67, type: 3}
       propertyPath: m_Name
       value: Hex
+      objectReference: {fileID: 0}
+    - target: {fileID: 6340813144003598840, guid: 4f8063a8ec0b177489f97ac492d7cb67, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6340813144003598842, guid: 4f8063a8ec0b177489f97ac492d7cb67, type: 3}
       propertyPath: m_Mesh
