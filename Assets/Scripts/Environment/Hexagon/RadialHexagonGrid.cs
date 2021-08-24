@@ -69,7 +69,7 @@ namespace PropHunt.Environment.Hexagon
             Vector2 newPos = distanceOffset + step * side;
             Vector3 hexPos = new Vector3(newPos.x, 0, newPos.y);
             hex.transform.position = transform.position + hexPos;
-            hex.transform.parent = transform;
+            hex.transform.parent = hexBase.transform;
 
             NetworkServer.Spawn(hex);
         }
@@ -124,8 +124,9 @@ namespace PropHunt.Environment.Hexagon
 
         public override void OnStartServer()
         {
-            StartCoroutine(CreateGrid());
             hexBase = new GameObject();
+            hexBase.name = "Hexagon Base";
+            StartCoroutine(CreateGrid());
         }
     }
 }

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6340813144003598843}
   - component: {fileID: 7125767718379644503}
   - component: {fileID: 612720353805045669}
+  - component: {fileID: 7474255078518709566}
   m_Layer: 0
   m_Name: Hex
   m_TagString: Untagged
@@ -851,3 +852,24 @@ MonoBehaviour:
   compressRotation: 0
   interpolateScale: 1
   syncScale: 1
+--- !u!114 &7474255078518709566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6340813144003598840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 791ce8556f44eef489ad9dbcefa6bec6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  deleteTime: 0.4
+  extraTime: 0.1
+  deleting: 0
+  normalColor1: {r: 1, g: 0.6396222, b: 0, a: 0}
+  normalColor2: {r: 0.9339623, g: 0.90660065, b: 0.22467959, a: 0}
+  fadeColor1: {r: 1, g: 0.9471471, b: 0.8537736, a: 0}
+  fadeColor2: {r: 0.9811321, g: 0.9723619, b: 0.754361, a: 0}

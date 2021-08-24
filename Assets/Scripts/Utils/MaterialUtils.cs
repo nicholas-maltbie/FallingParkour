@@ -24,5 +24,16 @@ namespace PropHunt.Utils
                 }
             }
         }
+
+        public static void RecursiveSetColorProperty(GameObject original, string property, Color value)
+        {
+            foreach (Renderer renderer in original.GetComponentsInChildren<Renderer>())
+            {
+                foreach (Material mat in renderer.materials)
+                {
+                    mat.SetColor(property, value);
+                }
+            }
+        }
     }
 }
