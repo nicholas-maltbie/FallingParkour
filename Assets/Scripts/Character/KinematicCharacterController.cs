@@ -370,6 +370,7 @@ namespace PropHunt.Character
             this.networkService = new NetworkService(this);
             this.capsuleCollider = GetComponent<CapsuleCollider>();
             feetFollowObj = new GameObject();
+            feetFollowObj.name = "feetFollowObj";
             feetFollowObj.transform.SetParent(transform);
         }
 
@@ -498,7 +499,7 @@ namespace PropHunt.Character
         {
             Vector3 groundVelocity = Vector3.zero;
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
-            if (movingGround != null)
+            if (movingGround != null && !movingGround.AvoidTransferMomentum())
             {
                 if (distanceToGround > 0)
                 {
@@ -516,7 +517,7 @@ namespace PropHunt.Character
         /// <summary>
         /// Give player vertical velocity if they can jump and are attempting to jump.
         /// </summary>
-        /// <param name="deltaTime">Time in fixed update</param>
+        /// <param name="deltaTime">Time in an update</param>
         /// <returns>true if the player successfully jumped, false otherwise</returns>
         public bool PlayerJump(float deltaTime)
         {
@@ -555,10 +556,19 @@ namespace PropHunt.Character
             }
             // Otherwise, get the displacement of the floor at the previous position
             Vector3 displacement = movingGround.GetDisplacementAtPoint(groundHitPosition);
-            // Move player by that displacement amount
-            // transform.position += displacement;
-            feetFollowObj.transform.parent = floor.transform;
 
+            if (movingGround.ShouldAttach())
+            {
+                // Attach foot follow object to floor
+                feetFollowObj.transform.parent = floor.transform;
+            }
+            else
+            {
+                // Move player by floor displacement this frame
+                transform.position += displacement;
+            }
+
+            // Ensure player doesn't get stuck in floor
             PushOutOverlapping(displacement.magnitude * 2);
         }
 
@@ -582,7 +592,7 @@ namespace PropHunt.Character
         /// </summary>
         public void PushOutOverlapping()
         {
-            float deltaTime = unityService.fixedDeltaTime;
+            float deltaTime = unityService.deltaTime;
             PushOutOverlapping(maxPushSpeed * deltaTime);
         }
 
