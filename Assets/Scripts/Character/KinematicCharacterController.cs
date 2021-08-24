@@ -527,7 +527,10 @@ namespace PropHunt.Character
             // Give the player some vertical velocity if they are jumping and grounded
             if (CanJump)
             {
-                Vector3 jumpDirection = Vector3.Lerp(StandingOnGround ? surfaceNormal : Up, Up, jumpAngleWeightFactor);
+                Vector3 jumpDirection = (
+                    (StandingOnGround ? surfaceNormal : Up) *
+                    jumpAngleWeightFactor + Up * (1 - jumpAngleWeightFactor)
+                    ).normalized;
                 velocity = GetGroundVelocity() + this.jumpVelocity * jumpDirection;
                 elapsedSinceJump = 0.0f;
                 return true;
