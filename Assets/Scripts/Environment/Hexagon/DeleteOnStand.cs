@@ -32,30 +32,51 @@ namespace PropHunt.Environment.Hexagon
         /// <summary>
         /// How long has this cube been fading
         /// </summary>
+        [SyncVar]
         private float deleteElapsed = 0.0f;
         
+        /// <summary>
+        /// Normal color 1 of hex when it's not being deleted
+        /// </summary>
         [SyncVar]
         public Color normalColor1;
 
+        /// <summary>
+        /// Normal color 2 of hex when it's not being deleted
+        /// </summary>
         [SyncVar]
         public Color normalColor2;
         
+        /// <summary>
+        /// COlor to fade color 1 towards when being deleted
+        /// </summary>
         [SyncVar]
         public Color fadeColor1;
 
+        /// <summary>
+        /// COlor to fade color 2 towards when being deleted
+        /// </summary>
         [SyncVar]
         public Color fadeColor2;
 
-        public void Start()
+        /// <summary>
+        /// Update current colors of the hex
+        /// </summary>
+        public void UpdateColor()
         {
             MaterialUtils.RecursiveSetColorProperty(
                 gameObject,
                 "_Background1",
-                normalColor1);
+                Color.Lerp(normalColor1, fadeColor1, deleteElapsed / deleteTime + extraStep));
             MaterialUtils.RecursiveSetColorProperty(
                 gameObject,
                 "_Background2",
-                normalColor2);
+                Color.Lerp(normalColor2, fadeColor2, deleteElapsed / deleteTime + extraStep));
+        }
+
+        public void Start()
+        {
+            UpdateColor();
         }
 
         public void Update()
@@ -63,14 +84,7 @@ namespace PropHunt.Environment.Hexagon
             if (deleting)
             {
                 deleteElapsed += Time.deltaTime;
-                MaterialUtils.RecursiveSetColorProperty(
-                    gameObject,
-                    "_Background1",
-                    Color.Lerp(normalColor1, fadeColor1, deleteElapsed / deleteTime + extraStep));
-                MaterialUtils.RecursiveSetColorProperty(
-                    gameObject,
-                    "_Background2",
-                    Color.Lerp(normalColor2, fadeColor2, deleteElapsed / deleteTime + extraStep));
+                UpdateColor();
             }
             if (isServer && deleteElapsed >= (deleteTime + extraTime))
             {

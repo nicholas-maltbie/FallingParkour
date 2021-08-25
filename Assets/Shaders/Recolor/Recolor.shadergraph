@@ -664,10 +664,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -907.9998168945313,
-            "y": 288.7999572753906,
-            "width": 176.7999725341797,
-            "height": 33.60000228881836
+            "x": -908.0,
+            "y": 289.0,
+            "width": 173.00001525878907,
+            "height": 34.0
         }
     },
     "m_Slots": [
@@ -1922,7 +1922,7 @@
     },
     "m_Name": "Background Black",
     "m_DefaultReferenceName": "",
-    "m_OverrideReferenceName": "_Backgroun2",
+    "m_OverrideReferenceName": "_Background2",
     "m_GeneratePropertyBlock": true,
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
