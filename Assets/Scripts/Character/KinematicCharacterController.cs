@@ -51,6 +51,13 @@ namespace PropHunt.Character
         public float groundedDistance = 0.01f;
 
         /// <summary>
+        /// Distance to ground at which player is considered standing on something
+        /// </summary>
+        [Tooltip("Distance to ground at which player is considered standing on something")]
+        [SerializeField]
+        public float standingDistance = 0.1f;
+
+        /// <summary>
         /// Distance to check player distance to ground
         /// </summary>
         [Tooltip("Distance to draw rays down when checking if player is grounded")]
@@ -326,6 +333,21 @@ namespace PropHunt.Character
         private Vector3 previousGroundVelocity;
 
         /// <summary>
+        /// Previous objects that the player is standing on.
+        /// </summary>
+        private List<GameObject> previousStanding = new List<GameObject>();
+
+        /// <summary>
+        /// Object for feet to follow
+        /// </summary>
+        private GameObject feetFollowObj;
+
+        /// <summary>
+        /// Offset of feet from character image
+        /// </summary>
+        private Vector3 footOffset;
+
+        /// <summary>
         /// Can the player jump right now.
         /// </summary>
         public bool CanJump => elapsedFalling >= 0 && (!FallingAngle(maxJumpAngle) || elapsedFalling <= coyoteTime) &&
@@ -355,13 +377,21 @@ namespace PropHunt.Character
             return (top, bottom, radius, height);
         }
 
+        public void OnDestroy()
+        {
+            GameObject.Destroy(feetFollowObj);
+        }
+
         public void Start()
         {
             this.networkService = new NetworkService(this);
             this.capsuleCollider = GetComponent<CapsuleCollider>();
+            feetFollowObj = new GameObject();
+            feetFollowObj.name = "feetFollowObj";
+            feetFollowObj.transform.SetParent(transform);
         }
 
-        public void FixedUpdate()
+        public void Update()
         {
             if (!networkService.isLocalPlayer)
             {
@@ -369,7 +399,7 @@ namespace PropHunt.Character
                 return;
             }
 
-            float deltaTime = unityService.fixedDeltaTime;
+            float deltaTime = unityService.deltaTime;
 
             // If player is not allowed to move, stop player movement
             if (PlayerInputManager.playerMovementState == PlayerInputState.Deny)
@@ -417,6 +447,10 @@ namespace PropHunt.Character
             // velocity if the player did nto jump this frame
             if (!StandingOnGround && previousGrounded && !jumped)
             {
+                velocity = previousGroundVelocity;
+            }
+            else if (!StandingOnGround && previousGrounded && jumped)
+            {
                 velocity += previousGroundVelocity;
             }
 
@@ -435,11 +469,33 @@ namespace PropHunt.Character
             }
 
             CheckGrounded();
+            feetFollowObj.transform.position = groundHitPosition;
+            footOffset = transform.position - groundHitPosition;
+
+            var currentStanding = GetHits(Down, standingDistance).Select(hit => hit.collider.gameObject).ToList();
+
+            // Detect if the floor the player is standing on has changed
+            // For each object that we are currently standing on that we were not standing on the previous update
+            currentStanding.Where(floor => !previousStanding.Contains(floor))
+                .Where(floor => floor != null)
+                .Select(floor => floor.GetComponent<DetectPlayerStand>())
+                .Where(detectStand => detectStand != null)
+                .ToList()
+                .ForEach(detectStand => detectStand.CmdStepOn());
+
+            // For each object that were standing on previously that we are not standing on now
+            previousStanding.Where(floor => !currentStanding.Contains(floor))
+                .Where(floor => floor != null)
+                .Select(floor => floor.GetComponent<DetectPlayerStand>())
+                .Where(detectStand => detectStand != null)
+                .ToList()
+                .ForEach(detectStand => detectStand.CmdStepOff());
 
             // Save state of player
             previousFalling = Falling;
             previousGrounded = StandingOnGround;
             previousGroundVelocity = GetGroundVelocity();
+            previousStanding = GetHits(Down, groundedDistance).Select(hit => hit.collider.gameObject).ToList();
 
             // make sure the rigidbody doesn't move according to velocity or angular velocity
             Rigidbody rigidbody = GetComponent<Rigidbody>();
@@ -450,6 +506,12 @@ namespace PropHunt.Character
             }
         }
 
+        /// <summary>
+        /// Cast self and get the objects hit that exclude this object.
+        /// </summary>
+        /// <param name="direction">Direction to cast self collider.</param>
+        /// <param name="distance">Distance to cast self collider.</param>
+        /// <returns></returns>
         public IEnumerable<RaycastHit> GetHits(Vector3 direction, float distance)
         {
             (var top, var bottom, var radius, _) = GetParams();
@@ -457,6 +519,14 @@ namespace PropHunt.Character
                 .Where(hit => hit.collider.transform != transform);
         }
 
+        /// <summary>
+        /// Cast self in a given direction and get the first object hit.
+        /// </summary>
+        /// <param name="direction">Direction of the raycast.</param>
+        /// <param name="distance">Maximum distance of raycast.</param>
+        /// <param name="hit">First object hit and related information, will have a distance of Mathf.Infinity if none
+        /// is found.</param>
+        /// <returns>True if an object is hit within distance, false otherwise.</returns>
         public bool CastSelf(Vector3 direction, float distance, out RaycastHit hit)
         {
             RaycastHit closest = new RaycastHit() { distance = Mathf.Infinity };
@@ -485,16 +555,9 @@ namespace PropHunt.Character
         {
             Vector3 groundVelocity = Vector3.zero;
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
-            if (movingGround != null)
+            if (movingGround != null && !movingGround.AvoidTransferMomentum())
             {
-                if (distanceToGround > 0)
-                {
-                    groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition);
-                }
-                else
-                {
-                    groundVelocity = movingGround.GetVelocityAtPoint(transform.position);
-                }
+                groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition);
             }
 
             return groundVelocity;
@@ -503,14 +566,17 @@ namespace PropHunt.Character
         /// <summary>
         /// Give player vertical velocity if they can jump and are attempting to jump.
         /// </summary>
-        /// <param name="deltaTime">Time in fixed update</param>
+        /// <param name="deltaTime">Time in an update</param>
         /// <returns>true if the player successfully jumped, false otherwise</returns>
         public bool PlayerJump(float deltaTime)
         {
             // Give the player some vertical velocity if they are jumping and grounded
             if (CanJump)
             {
-                Vector3 jumpDirection = Vector3.Lerp(StandingOnGround ? surfaceNormal : Up, Up, jumpAngleWeightFactor);
+                Vector3 jumpDirection = (
+                    (StandingOnGround ? surfaceNormal : Up) *
+                    jumpAngleWeightFactor + Up * (1 - jumpAngleWeightFactor)
+                    ).normalized;
                 velocity = GetGroundVelocity() + this.jumpVelocity * jumpDirection;
                 elapsedSinceJump = 0.0f;
                 return true;
@@ -528,18 +594,33 @@ namespace PropHunt.Character
         /// </summary>
         public void MoveWithGround()
         {
+            if (feetFollowObj.transform.parent != transform)
+            {
+                transform.position = feetFollowObj.transform.position + footOffset;
+            }
             // Check if we were standing on moving ground the previous frame
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
-            if (movingGround == null || Falling)
+            if (movingGround == null || FallingAngle(maxJumpAngle))
             {
                 // We aren't standing on something, don't do anything
+                feetFollowObj.transform.parent = transform;
                 return;
             }
             // Otherwise, get the displacement of the floor at the previous position
             Vector3 displacement = movingGround.GetDisplacementAtPoint(groundHitPosition);
-            // Move player by that displacement amount
-            transform.position += displacement;
 
+            if (movingGround.ShouldAttach())
+            {
+                // Attach foot follow object to floor
+                feetFollowObj.transform.parent = floor.transform;
+            }
+            else
+            {
+                // Move player by floor displacement this frame
+                transform.position += displacement;
+            }
+
+            // Ensure player doesn't get stuck in floor
             PushOutOverlapping(displacement.magnitude * 2);
         }
 
@@ -563,7 +644,7 @@ namespace PropHunt.Character
         /// </summary>
         public void PushOutOverlapping()
         {
-            float deltaTime = unityService.fixedDeltaTime;
+            float deltaTime = unityService.deltaTime;
             PushOutOverlapping(maxPushSpeed * deltaTime);
         }
 
@@ -598,8 +679,8 @@ namespace PropHunt.Character
             this.distanceToGround = hit.distance;
             this.onGround = didHit;
             this.surfaceNormal = hit.normal;
-            this.floor = hit.collider != null ? hit.collider.gameObject : null;
-            this.groundHitPosition = hit.point;
+            this.groundHitPosition = hit.distance > 0 ? hit.point : transform.position;
+            this.floor = hit.collider != null && StandingOnGround ? hit.collider.gameObject : null;
         }
 
         /// <summary>

@@ -44,7 +44,7 @@ namespace PropHunt.Environment
         [Tooltip("Linear velocity of object in units per second for each axis")]
         protected Vector3 linearVelocity;
 
-        public void Start()
+        public override void OnStartServer()
         {
             if (localRotation)
             {
@@ -56,14 +56,9 @@ namespace PropHunt.Environment
             }
         }
 
-        public void FixedUpdate()
+        public void Update()
         {
-            if (!isServer)
-            {
-                return;
-            }
-
-            float deltaTime = unityService.fixedDeltaTime;
+            float deltaTime = unityService.deltaTime;
 
             // move object by velocity
             transform.position += deltaTime * linearVelocity;
