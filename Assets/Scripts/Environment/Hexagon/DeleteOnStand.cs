@@ -34,7 +34,7 @@ namespace PropHunt.Environment.Hexagon
         /// </summary>
         [SyncVar]
         private float deleteElapsed = 0.0f;
-        
+
         /// <summary>
         /// Normal color 1 of hex when it's not being deleted
         /// </summary>
@@ -46,7 +46,7 @@ namespace PropHunt.Environment.Hexagon
         /// </summary>
         [SyncVar]
         public Color normalColor2;
-        
+
         /// <summary>
         /// COlor to fade color 1 towards when being deleted
         /// </summary>

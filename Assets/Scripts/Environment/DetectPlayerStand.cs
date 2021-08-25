@@ -13,13 +13,13 @@ namespace PropHunt.Environment
         /// </summary>
         /// <param name="sender">Who stepped on this object</param>
         [Command(requiresAuthority = false)]
-        public virtual void CmdStepOn(NetworkConnectionToClient sender = null) {}
+        public virtual void CmdStepOn(NetworkConnectionToClient sender = null) { }
 
         /// <summary>
         /// When a player steps off of this tile
         /// </summary>
         /// <param name="sender">Who stepped on this object</param>
         [Command(requiresAuthority = false)]
-        public virtual void CmdStepOff(NetworkConnectionToClient sender = null) {}
+        public virtual void CmdStepOff(NetworkConnectionToClient sender = null) { }
     }
 }
