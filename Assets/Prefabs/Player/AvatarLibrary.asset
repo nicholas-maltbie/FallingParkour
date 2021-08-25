@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultAvatar:
     avatar: {fileID: 919132149155446097, guid: 0942f38cf1dd220458b8e41658f2f49b, type: 3}
-    characterSprite: {fileID: 0}
+    characterSprite: {fileID: 21300000, guid: 704ec75165b866c40816179a88031c37, type: 3}
   playerModels:
   - avatar: {fileID: 919132149155446097, guid: 2fe50b90de0f56b429fe6e254cc0441e, type: 3}
     characterSprite: {fileID: 21300000, guid: e8e964272a167184191013798141f863, type: 3}

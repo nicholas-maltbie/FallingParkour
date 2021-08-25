@@ -39,6 +39,18 @@ namespace PropHunt.Character.Avatar
             new Dictionary<string, CharacterAvatar>();
 
         /// <summary>
+        /// Enumerates all avatar IDs and returns them as a list of strings
+        /// </summary>
+        /// <returns>
+        /// List<string> containing all avatar IDs
+        /// </returns>
+        public List<string> GetAvatarIds()
+        {
+            VerifyLookups();
+            return new List<string>(avatarIDLookup.Keys);
+        }
+
+        /// <summary>
         /// Resets the lookup tables for this library
         /// </summary>
         public void ClearLookups()
