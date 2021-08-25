@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 46361211}
   - component: {fileID: 46361212}
   m_Layer: 0
-  m_Name: Checkpoint Matrix
+  m_Name: Spawn Points
   m_TagString: DefaultCheckpoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -193,13 +193,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 46361210}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4802a01e94b1afd498a51a6bf302c089, type: 3}
+  m_Script: {fileID: 11500000, guid: 8226ca65a3f6093429f8a945ffa1801f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   order: 0
-  offset: {x: 1, y: 1}
-  rows: 3
-  cols: 9
+  radius: 5
+  size: 12
+  degrees: 360
+  spawnAtFinalDegree: 0
+  degreeOffset: 0
 --- !u!1 &72499352
 GameObject:
   m_ObjectHideFlags: 0
