@@ -296,10 +296,6 @@ PrefabInstance:
       propertyPath: m_AssetId
       value: 128bf2dcaa8d43942a6e23d498102de3
       objectReference: {fileID: 0}
-    - target: {fileID: 7367678013483490725, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
-      propertyPath: gameScene
-      value: Assets/Scenes/BigFans.unity
-      objectReference: {fileID: 0}
     - target: {fileID: 8542409671753137158, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
       propertyPath: m_Name
       value: NetworkManager
