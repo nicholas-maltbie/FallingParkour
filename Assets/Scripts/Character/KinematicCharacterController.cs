@@ -655,8 +655,8 @@ namespace PropHunt.Character
             this.distanceToGround = hit.distance;
             this.onGround = didHit;
             this.surfaceNormal = hit.normal;
-            this.floor = hit.collider != null ? hit.collider.gameObject : null;
             this.groundHitPosition = hit.distance > 0 ? hit.point : transform.position;
+            this.floor = hit.collider != null && StandingOnGround ? hit.collider.gameObject : null;
         }
 
         /// <summary>
