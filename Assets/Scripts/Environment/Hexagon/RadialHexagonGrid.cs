@@ -83,8 +83,8 @@ namespace PropHunt.Environment.Hexagon
                 hexDelete.normalColor2 = recolor2;
                 Color.RGBToHSV(recolor1, out float h1, out float s1, out float v1);
                 Color.RGBToHSV(recolor2, out float h2, out float s2, out float v2);
-                hexDelete.fadeColor1 = Color.HSVToRGB(h1, s1 * 0.05f, 1 - ((1 - v1) * 0.05f));
-                hexDelete.fadeColor2 = Color.HSVToRGB(h2, s2 * 0.05f, 1 - ((1 - v2) * 0.05f));
+                hexDelete.fadeColor1 = Color.HSVToRGB(h1, s1 * 0.2f, 1 - ((1 - v1) * 0.2f));
+                hexDelete.fadeColor2 = Color.HSVToRGB(h2, s2 * 0.2f, 1 - ((1 - v2) * 0.2f));
                 hexDelete.UpdateColor();
             }
             Vector2 newPos = distanceOffset + step * side;
