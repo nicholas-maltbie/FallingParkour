@@ -51,6 +51,13 @@ namespace PropHunt.Character
         public float groundedDistance = 0.01f;
 
         /// <summary>
+        /// Distance to ground at which player is considered standing on something
+        /// </summary>
+        [Tooltip("Distance to ground at which player is considered standing on something")]
+        [SerializeField]
+        public float standingDistance = 0.1f;
+
+        /// <summary>
         /// Distance to check player distance to ground
         /// </summary>
         [Tooltip("Distance to draw rays down when checking if player is grounded")]
@@ -326,9 +333,9 @@ namespace PropHunt.Character
         private Vector3 previousGroundVelocity;
 
         /// <summary>
-        /// Previous floor that the player was standing on
+        /// Previous objects that the player is standing on.
         /// </summary>
-        private GameObject previousFloor;
+        private List<GameObject> previousStanding = new List<GameObject>();
 
         /// <summary>
         /// Object for feet to follow
@@ -465,27 +472,30 @@ namespace PropHunt.Character
             feetFollowObj.transform.position = groundHitPosition;
             footOffset = transform.position - groundHitPosition;
 
+            var currentStanding = GetHits(Down, standingDistance).Select(hit => hit.collider.gameObject).ToList();
+
             // Detect if the floor the player is standing on has changed
-            if (floor != previousFloor)
-            {
-                DetectPlayerStand detect = floor != null ? floor.GetComponent<DetectPlayerStand>() : null;
-                DetectPlayerStand previousDetect =
-                    previousFloor != null ? previousFloor.GetComponent<DetectPlayerStand>() : null;
-                if (detect != null)
-                {
-                    detect.CmdStepOn();
-                }
-                if (previousDetect != null)
-                {
-                    previousDetect.CmdStepOff();
-                }
-            }
+            // For each object that we are currently standing on that we were not standing on the previous update
+            currentStanding.Where(floor => !previousStanding.Contains(floor))
+                .Where(floor => floor != null)
+                .Select(floor => floor.GetComponent<DetectPlayerStand>())
+                .Where(detectStand => detectStand != null)
+                .ToList()
+                .ForEach(detectStand => detectStand.CmdStepOn());
+
+            // For each object that were standing on previously that we are not standing on now
+            previousStanding.Where(floor => !currentStanding.Contains(floor))
+                .Where(floor => floor != null)
+                .Select(floor => floor.GetComponent<DetectPlayerStand>())
+                .Where(detectStand => detectStand != null)
+                .ToList()
+                .ForEach(detectStand => detectStand.CmdStepOff());
 
             // Save state of player
             previousFalling = Falling;
             previousGrounded = StandingOnGround;
             previousGroundVelocity = GetGroundVelocity();
-            previousFloor = floor;
+            previousStanding = GetHits(Down, groundedDistance).Select(hit => hit.collider.gameObject).ToList();
 
             // make sure the rigidbody doesn't move according to velocity or angular velocity
             Rigidbody rigidbody = GetComponent<Rigidbody>();
@@ -496,6 +506,12 @@ namespace PropHunt.Character
             }
         }
 
+        /// <summary>
+        /// Cast self and get the objects hit that exclude this object.
+        /// </summary>
+        /// <param name="direction">Direction to cast self collider.</param>
+        /// <param name="distance">Distance to cast self collider.</param>
+        /// <returns></returns>
         public IEnumerable<RaycastHit> GetHits(Vector3 direction, float distance)
         {
             (var top, var bottom, var radius, _) = GetParams();
@@ -503,6 +519,14 @@ namespace PropHunt.Character
                 .Where(hit => hit.collider.transform != transform);
         }
 
+        /// <summary>
+        /// Cast self in a given direction and get the first object hit.
+        /// </summary>
+        /// <param name="direction">Direction of the raycast.</param>
+        /// <param name="distance">Maximum distance of raycast.</param>
+        /// <param name="hit">First object hit and related information, will have a distance of Mathf.Infinity if none
+        /// is found.</param>
+        /// <returns>True if an object is hit within distance, false otherwise.</returns>
         public bool CastSelf(Vector3 direction, float distance, out RaycastHit hit)
         {
             RaycastHit closest = new RaycastHit() { distance = Mathf.Infinity };
