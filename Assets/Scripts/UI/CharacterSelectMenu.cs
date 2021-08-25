@@ -20,7 +20,7 @@ public class CharacterSelectMenu : MonoBehaviour
     /// <summary>
     /// Horizontal space between edges of buttons
     /// </summary>
-    public float buttonWhitespace = 266f;
+    public float buttonWhitespace = 10f;
 
     [SerializeField]
     private List<CharacterSelectButton> buttons;
@@ -29,24 +29,38 @@ public class CharacterSelectMenu : MonoBehaviour
     {
         buttons = new List<CharacterSelectButton>();
         var avatarIds = avatarLibrary.GetAvatarIds();
-        print(avatarIds.Count);
         var count = 0;
+        var totalSpace = 0f;
 
         foreach(var id in avatarIds)
         {
             var button = Instantiate(characterSelectButtonPrefab, transform.position, Quaternion.identity, this.transform);
             var buttonComponent = button.GetComponent<CharacterSelectButton>();
-            buttonComponent.InitializeButton(id);
+            var toggleGroupComponent = GetComponent<ToggleGroup>();
+
+            try {
+                buttonComponent.InitializeButton(id);
+            }
+            catch {
+                // Skip this button
+                Destroy(button);
+                print("Failed to initialize button for avatar " + id);
+                continue;
+            }
+
+            button.GetComponent<Toggle>().group = toggleGroupComponent;
             buttons.Add(buttonComponent);
 
-            // Could create issues if sprites accidentally have different sizes. 
-            // As of now, keep sprites to size of 128x128
-            var offset = count * buttonWhitespace;
-            print(button.GetComponent<RectTransform>().rect.width);
+            // Sprites should all be kept the same size. 
+            var offset = buttonWhitespace + count * (button.GetComponent<RectTransform>().rect.width + buttonWhitespace);
+            totalSpace = offset;
 
             button.transform.position += transform.right * offset;
-
             count++;
         }
+
+        // Increase width of this object's rect so horizontal scrolling works correctly.
+        var rt = GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(totalSpace + buttonWhitespace, rt.sizeDelta[1]);
     }
 }
