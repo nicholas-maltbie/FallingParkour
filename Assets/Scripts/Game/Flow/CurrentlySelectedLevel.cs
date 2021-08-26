@@ -47,7 +47,7 @@ namespace PropHunt.Game.Flow
 
         public void UpdateSelectedLevel(GameLevel _, GameLevel selected)
         {
-            LevelSelectList.LevelSelect( new LevelSelectEvent{ level = selected } );
+            LevelSelectList.LevelSelect(new LevelSelectEvent { level = selected });
         }
     }
 }
