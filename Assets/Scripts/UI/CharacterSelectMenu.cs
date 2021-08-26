@@ -3,64 +3,77 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class CharacterSelectMenu : MonoBehaviour
+
+namespace PropHunt.UI
 {
-    /// <summary>
-    /// Avatar library for accessing 
-    /// </summary>
-    [SerializeField]
-    private CharacterAvatarLibrary avatarLibrary;
-    
-    /// <summary>
-    /// CharacterSelectButton prefab to instantiate with
-    /// </summary>
-    [SerializeField]
-    private GameObject characterSelectButtonPrefab;
-
-    /// <summary>
-    /// Horizontal space between edges of buttons
-    /// </summary>
-    public float buttonWhitespace = 10f;
-
-    [SerializeField]
-    private List<CharacterSelectButton> buttons;
-
-    void Start()
+    public class CharacterSelectMenu : MonoBehaviour
     {
-        buttons = new List<CharacterSelectButton>();
-        var avatarIds = avatarLibrary.GetAvatarIds();
-        var count = 0;
-        var totalSpace = 0f;
+        /// <summary>
+        /// Avatar library for accessing 
+        /// </summary>
+        [SerializeField]
+        private CharacterAvatarLibrary avatarLibrary;
+        
+        /// <summary>
+        /// CharacterSelectButton prefab to instantiate with
+        /// </summary>
+        [SerializeField]
+        private GameObject characterSelectButtonPrefab;
 
-        foreach(var id in avatarIds)
+        /// <summary>
+        /// Horizontal space between edges of buttons
+        /// </summary>
+        public float buttonWhitespace = 10f;
+
+        [SerializeField]
+        private List<CharacterSelectButton> buttons;
+
+        void Awake()
         {
-            var button = Instantiate(characterSelectButtonPrefab, transform.position, Quaternion.identity, this.transform);
-            var buttonComponent = button.GetComponent<CharacterSelectButton>();
-            var toggleGroupComponent = GetComponent<ToggleGroup>();
-
-            try {
-                buttonComponent.InitializeButton(id);
-            }
-            catch {
-                // Skip this button
-                Destroy(button);
-                print("Failed to initialize button for avatar " + id);
-                continue;
-            }
-
-            button.GetComponent<Toggle>().group = toggleGroupComponent;
-            buttons.Add(buttonComponent);
-
-            // Sprites should all be kept the same size. 
-            var offset = buttonWhitespace + count * (button.GetComponent<RectTransform>().rect.width + buttonWhitespace);
-            totalSpace = offset;
-
-            button.transform.position += transform.right * offset;
-            count++;
+            // Load the default selected avatar
+            CharacterAvatarManager.defaultAvatar = PlayerPrefs.GetString(
+                CharacterSelectButton.CharacterSelectPerfKey,
+                CharacterAvatarManager.defaultAvatar
+            );
         }
 
-        // Increase width of this object's rect so horizontal scrolling works correctly.
-        var rt = GetComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(totalSpace + buttonWhitespace, rt.sizeDelta[1]);
+        void Start()
+        {
+            buttons = new List<CharacterSelectButton>();
+            var avatarIds = avatarLibrary.GetAvatarIds();
+            var count = 0;
+            var totalSpace = 0f;
+
+            foreach(var id in avatarIds)
+            {
+                var button = Instantiate(characterSelectButtonPrefab, transform.position, Quaternion.identity, this.transform);
+                var buttonComponent = button.GetComponent<CharacterSelectButton>();
+                var toggleGroupComponent = GetComponent<ToggleGroup>();
+
+                try {
+                    buttonComponent.InitializeButton(id, avatarLibrary);
+                }
+                catch {
+                    // Skip this button
+                    Destroy(button);
+                    print("Failed to initialize button for avatar " + id);
+                    continue;
+                }
+
+                button.GetComponent<Toggle>().group = toggleGroupComponent;
+                buttons.Add(buttonComponent);
+
+                // Sprites should all be kept the same size. 
+                var offset = buttonWhitespace + count * (button.GetComponent<RectTransform>().rect.width + buttonWhitespace);
+                totalSpace = offset;
+
+                button.transform.position += transform.right * offset;
+                count++;
+            }
+
+            // Increase width of this object's rect so horizontal scrolling works correctly.
+            var rt = GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(totalSpace + buttonWhitespace, rt.sizeDelta[1]);
+        }
     }
 }

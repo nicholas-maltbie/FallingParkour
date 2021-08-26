@@ -12,6 +12,11 @@ namespace PropHunt.Character.Avatar
     public class CharacterAvatarManager : NetworkBehaviour
     {
         /// <summary>
+        /// Default avatar to select for character
+        /// </summary>
+        public static string defaultAvatar = "";
+
+        /// <summary>
         /// Library of all avatars that the player can use
         /// </summary>
         [SerializeField]
@@ -33,7 +38,7 @@ namespace PropHunt.Character.Avatar
         {
             if (isLocalPlayer)
             {
-                CmdSetAvatar(avatarLibrary.DefaultAvater.Name);
+                CmdSetAvatar(string.IsNullOrEmpty(defaultAvatar) ? avatarLibrary.DefaultAvater.Name : defaultAvatar);
             }
         }
 
@@ -85,30 +90,6 @@ namespace PropHunt.Character.Avatar
             avatarSelected = newlySelectedAvatar;
             LoadNewAvatar(newlySelectedAvatar);
         }
-
-        public void OnGUI()
-        {
-            if (isLocalPlayer)
-            {
-                if (GUI.Button(new Rect(10, 10, 100, 20), "Change to xbot"))
-                {
-                    CmdSetAvatar("xbot");
-                }
-                if (GUI.Button(new Rect(10, 40, 100, 20), "Change to ybot"))
-                {
-                    CmdSetAvatar("ybot");
-                }
-                if (GUI.Button(new Rect(10, 70, 100, 20), "Change to space"))
-                {
-                    CmdSetAvatar("SpacePerson");
-                }
-                if (GUI.Button(new Rect(10, 100, 100, 20), "Change to Michelle"))
-                {
-                    CmdSetAvatar("Michelle");
-                }
-            }
-        }
-
 
         private bool loading = false;
         public void LoadNewAvatar(string avatarName)
