@@ -85,11 +85,12 @@ namespace PropHunt.UI
                     RectTransform rectTransform = sceneButton.GetComponent<RectTransform>();
 
                     float offsetY = (rectTransform.rect.size.y + 5) * index + 5;
+                    float rectHeight = rectTransform.rect.height;
 
                     buttonText.text = level.displayName;
                     sceneButton.transform.parent = levelSelectListLocation.transform;
-                    rectTransform.localPosition = new Vector3(0, -offsetY, 0);
-                    rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 5, levelSelectListLocation.rect.size.x - 10);
+                    rectTransform.offsetMin = new Vector2(5, -offsetY - rectHeight);
+                    rectTransform.offsetMax = new Vector2(-5, -offsetY);
 
                     button.onClick.AddListener(() =>
                     {
