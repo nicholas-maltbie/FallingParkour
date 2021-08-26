@@ -6,6 +6,8 @@ using PropHunt.Environment.Sound;
 using System.Collections;
 using PropHunt.Character;
 using System.Collections.Generic;
+using static PropHunt.Character.Level.GameLevelLibrary;
+using PropHunt.UI;
 
 namespace PropHunt.Game.Flow
 {
@@ -121,6 +123,7 @@ namespace PropHunt.Game.Flow
             DebugChatLog.ClearChatLog();
             NetworkClient.RegisterHandler<ChatMessage>(DebugChatLog.OnMessage);
             NetworkClient.RegisterHandler<SoundEffectEvent>(SoundEffectManager.CreateSoundEffectAtPoint);
+            NetworkClient.RegisterHandler<LevelSelectEvent>(LevelSelectList.LevelSelect);
         }
 
         public override void OnStopClient()
@@ -128,6 +131,8 @@ namespace PropHunt.Game.Flow
             base.OnStopClient();
             NetworkClient.UnregisterHandler<ChatMessage>();
             NetworkClient.UnregisterHandler<SoundEffectEvent>();
+            NetworkClient.UnregisterHandler<SoundEffectEvent>();
+            NetworkClient.UnregisterHandler<LevelSelectEvent>();
         }
 
         public override void OnServerDisconnect(NetworkConnection conn)
