@@ -72,7 +72,6 @@ namespace PropHunt.UI
 
         public void Start()
         {
-            GameObject.FindObjectOfType<GameSceneManager>().gameScene = levels.DefaultLevel.levelName;
             List<GameLevel> scenes = levels.EnumerateLevels().ToList();
             scenes.Sort((level1, level2) => level1.displayName.CompareTo(level2.displayName));
             Enumerable.Range(0, scenes.Count)
