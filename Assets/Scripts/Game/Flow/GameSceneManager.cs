@@ -6,7 +6,7 @@ using PropHunt.Environment.Sound;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using PropHunt.Utils;
-using PropHunt.Character.Level;
+using PropHunt.Game.Level;
 
 namespace PropHunt.Game.Flow
 {
@@ -17,8 +17,7 @@ namespace PropHunt.Game.Flow
         [Scene]
         public string lobbyScene;
 
-        [Scene]
-        public string gameScene;
+        public string gameScene { get; private set; }
 
         public GameLevelLibrary levelLibrary;
 
@@ -26,16 +25,27 @@ namespace PropHunt.Game.Flow
 
         private GameTimer gamePhaseTimer;
 
+        private static bool loaded = false;
+
         public void Start()
         {
             newtworkService = new NetworkService(this);
+            if (string.IsNullOrEmpty(gameScene))
+            {
+                UnityEngine.Debug.Log("NANIIII");
+                gameScene = levelLibrary.DefaultLevel.levelName;
+            }
+        }
+
+        public void ChangeScene(string newScene)
+        {
+            gameScene = newScene;
         }
 
         public override void OnStartServer()
         {
             GameManager.OnGamePhaseChange += HandleGamePhaseChange;
             GameManager.ChangePhase(GamePhase.Reset);
-            gameScene = levelLibrary.DefaultLevel.levelName;
         }
 
         public override void OnStopServer()

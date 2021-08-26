@@ -6,7 +6,7 @@ using PropHunt.Environment.Sound;
 using System.Collections;
 using PropHunt.Character;
 using System.Collections.Generic;
-using static PropHunt.Character.Level.GameLevelLibrary;
+using static PropHunt.Game.Level.GameLevelLibrary;
 using PropHunt.UI;
 
 namespace PropHunt.Game.Flow

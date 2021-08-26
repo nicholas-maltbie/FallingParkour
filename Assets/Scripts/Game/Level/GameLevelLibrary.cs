@@ -4,7 +4,7 @@ using System.Linq;
 using Mirror;
 using UnityEngine;
 
-namespace PropHunt.Character.Level
+namespace PropHunt.Game.Level
 {
     /// <summary>
     /// Library file that contains sets of all game levels

@@ -1,12 +1,12 @@
 using Mirror;
-using PropHunt.Character.Level;
+using PropHunt.Game.Level;
 using PropHunt.Game.Flow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using static PropHunt.Character.Level.GameLevelLibrary;
+using static PropHunt.Game.Level.GameLevelLibrary;
 
 namespace PropHunt.UI
 {
@@ -95,7 +95,8 @@ namespace PropHunt.UI
                     button.onClick.AddListener(() =>
                     {
                         this.selectedScene = level.levelName;
-                        GameObject.FindObjectOfType<GameSceneManager>().gameScene = this.selectedScene;
+                        GameObject.FindObjectOfType<GameSceneManager>().ChangeScene(this.selectedScene);
+                        GameObject.FindObjectOfType<CurrentlySelectedLevel>().UpdateLevel(level);
                         NetworkServer.SendToAll<LevelSelectEvent>(new LevelSelectEvent { level = level });
                     });
                 });
