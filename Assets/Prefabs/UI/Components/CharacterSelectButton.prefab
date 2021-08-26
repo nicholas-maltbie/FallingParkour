@@ -59,7 +59,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86ce0b7a84a3c814fbc0a9b2fdf519e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatarLibrary: {fileID: 11400000, guid: cde5bbdb324fc9a4cb0ab4d8d3164ff2, type: 2}
   avatarId: 
 --- !u!114 &5516088158645988573
 MonoBehaviour:
@@ -115,7 +114,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.70354223, g: 0.9622642, b: 0.774797, a: 1}
+    m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
