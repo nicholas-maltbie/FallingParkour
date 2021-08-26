@@ -32,7 +32,6 @@ namespace PropHunt.Game.Flow
             newtworkService = new NetworkService(this);
             if (string.IsNullOrEmpty(gameScene))
             {
-                UnityEngine.Debug.Log("NANIIII");
                 gameScene = levelLibrary.DefaultLevel.levelName;
             }
         }
@@ -103,6 +102,7 @@ namespace PropHunt.Game.Flow
                 case GamePhase.Lobby:
                     break;
                 case GamePhase.Setup:
+                    NetworkServer.SetAllClientsNotReady();
                     CustomNetworkManager.Instance.ServerChangeScene(gameScene);
                     // Once loading is complete, go to InGame
                     break;
@@ -140,8 +140,16 @@ namespace PropHunt.Game.Flow
             switch (GameManager.gamePhase)
             {
                 case GamePhase.Setup:
+                    bool allReady = true;
+                    foreach (NetworkConnection client in NetworkServer.connections.Values)
+                    {
+                        if (!client.isReady)
+                        {
+                            allReady = false;
+                        }
+                    }
                     // As soon as scene is loaded, move to in game
-                    if (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone)
+                    if (allReady && (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone))
                     {
                         GameManager.ChangePhase(GamePhase.InGame);
                     }
