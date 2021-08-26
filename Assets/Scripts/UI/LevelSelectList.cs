@@ -77,7 +77,7 @@ namespace PropHunt.UI
             scenes.Sort((level1, level2) => level1.displayName.CompareTo(level2.displayName));
             Enumerable.Range(0, scenes.Count)
                 .ToList()
-                .ForEach(index => 
+                .ForEach(index =>
                 {
                     GameLevel level = scenes[index];
                     GameObject sceneButton = GameObject.Instantiate(sceneButtonPrefab);
@@ -92,7 +92,7 @@ namespace PropHunt.UI
                     rectTransform.localPosition = new Vector3(0, -offsetY, 0);
                     rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 5, levelSelectListLocation.rect.size.x - 10);
 
-                    button.onClick.AddListener(() => 
+                    button.onClick.AddListener(() =>
                     {
                         this.selectedScene = level.levelName;
                         GameObject.FindObjectOfType<GameSceneManager>().gameScene = this.selectedScene;
