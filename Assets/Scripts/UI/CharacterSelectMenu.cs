@@ -13,7 +13,7 @@ namespace PropHunt.UI
         /// </summary>
         [SerializeField]
         private CharacterAvatarLibrary avatarLibrary;
-        
+
         /// <summary>
         /// CharacterSelectButton prefab to instantiate with
         /// </summary>
@@ -44,16 +44,18 @@ namespace PropHunt.UI
             var count = 0;
             var totalSpace = 0f;
 
-            foreach(var id in avatarIds)
+            foreach (var id in avatarIds)
             {
                 var button = Instantiate(characterSelectButtonPrefab, transform.position, Quaternion.identity, this.transform);
                 var buttonComponent = button.GetComponent<CharacterSelectButton>();
                 var toggleGroupComponent = GetComponent<ToggleGroup>();
 
-                try {
+                try
+                {
                     buttonComponent.InitializeButton(id, avatarLibrary);
                 }
-                catch {
+                catch
+                {
                     // Skip this button
                     Destroy(button);
                     print("Failed to initialize button for avatar " + id);
