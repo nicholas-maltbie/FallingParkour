@@ -6,6 +6,7 @@ using PropHunt.Environment.Sound;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using PropHunt.Utils;
+using PropHunt.Character.Level;
 
 namespace PropHunt.Game.Flow
 {
@@ -18,6 +19,8 @@ namespace PropHunt.Game.Flow
 
         [Scene]
         public string gameScene;
+
+        public GameLevelLibrary levelLibrary;
 
         public INetworkService newtworkService;
 
@@ -32,6 +35,7 @@ namespace PropHunt.Game.Flow
         {
             GameManager.OnGamePhaseChange += HandleGamePhaseChange;
             GameManager.ChangePhase(GamePhase.Reset);
+            gameScene = levelLibrary.DefaultLevel.levelName;
         }
 
         public override void OnStopServer()
