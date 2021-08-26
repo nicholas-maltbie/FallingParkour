@@ -91,6 +91,7 @@ namespace PropHunt.UI
                     sceneButton.transform.parent = levelSelectListLocation.transform;
                     rectTransform.offsetMin = new Vector2(5, -offsetY - rectHeight);
                     rectTransform.offsetMax = new Vector2(-5, -offsetY);
+                    rectTransform.localScale = Vector3.one;
 
                     button.onClick.AddListener(() =>
                     {
