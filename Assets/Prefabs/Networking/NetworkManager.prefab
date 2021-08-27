@@ -84,6 +84,7 @@ MonoBehaviour:
   syncInterval: 0.1
   lobbyScene: Assets/Scenes/LobbyScene.unity
   gameScene: Assets/Scenes/BrokenFloor.unity
+  levelLibrary: {fileID: 11400000, guid: 4ed5fac5c4fbdb54eac040549d921916, type: 2}
 --- !u!114 &6751860484789558292
 MonoBehaviour:
   m_ObjectHideFlags: 0

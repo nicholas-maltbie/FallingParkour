@@ -6,6 +6,7 @@ using PropHunt.Environment.Sound;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using PropHunt.Utils;
+using PropHunt.Game.Level;
 
 namespace PropHunt.Game.Flow
 {
@@ -16,16 +17,28 @@ namespace PropHunt.Game.Flow
         [Scene]
         public string lobbyScene;
 
-        [Scene]
-        public string gameScene;
+        public string gameScene { get; private set; }
+
+        public GameLevelLibrary levelLibrary;
 
         public INetworkService newtworkService;
 
         private GameTimer gamePhaseTimer;
 
+        private static bool loaded = false;
+
         public void Start()
         {
             newtworkService = new NetworkService(this);
+            if (string.IsNullOrEmpty(gameScene))
+            {
+                gameScene = levelLibrary.DefaultLevel.levelName;
+            }
+        }
+
+        public void ChangeScene(string newScene)
+        {
+            gameScene = newScene;
         }
 
         public override void OnStartServer()
@@ -89,6 +102,7 @@ namespace PropHunt.Game.Flow
                 case GamePhase.Lobby:
                     break;
                 case GamePhase.Setup:
+                    NetworkServer.SetAllClientsNotReady();
                     CustomNetworkManager.Instance.ServerChangeScene(gameScene);
                     // Once loading is complete, go to InGame
                     break;
@@ -126,8 +140,16 @@ namespace PropHunt.Game.Flow
             switch (GameManager.gamePhase)
             {
                 case GamePhase.Setup:
+                    bool allReady = true;
+                    foreach (NetworkConnection client in NetworkServer.connections.Values)
+                    {
+                        if (!client.isReady)
+                        {
+                            allReady = false;
+                        }
+                    }
                     // As soon as scene is loaded, move to in game
-                    if (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone)
+                    if (allReady && (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone))
                     {
                         GameManager.ChangePhase(GamePhase.InGame);
                     }
