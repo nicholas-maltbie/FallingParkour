@@ -27,6 +27,16 @@ namespace PropHunt.Game.Flow
 
         private static bool loaded = false;
 
+        /// <summary>
+        /// Buffer time between setup and in game phases
+        /// </summary>
+        public float bufferTime = 1.0f;
+
+        /// <summary>
+        /// Buffer time that has elapsed so far
+        /// </summary>
+        private float bufferElapsed = 0.0f;
+
         public void Start()
         {
             newtworkService = new NetworkService(this);
@@ -102,6 +112,7 @@ namespace PropHunt.Game.Flow
                 case GamePhase.Lobby:
                     break;
                 case GamePhase.Setup:
+                    bufferElapsed = 0.0f;
                     NetworkServer.SetAllClientsNotReady();
                     CustomNetworkManager.Instance.ServerChangeScene(gameScene);
                     // Once loading is complete, go to InGame
@@ -148,8 +159,14 @@ namespace PropHunt.Game.Flow
                             allReady = false;
                         }
                     }
+                    if (allReady)
+                    {
+                        bufferElapsed += Time.deltaTime;
+                    }
                     // As soon as scene is loaded, move to in game
-                    if (allReady && (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone))
+                    if (bufferElapsed >= bufferTime &&
+                        allReady &&
+                        (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone))
                     {
                         GameManager.ChangePhase(GamePhase.InGame);
                     }
