@@ -131,7 +131,6 @@ namespace PropHunt.Game.Flow
             base.OnStopClient();
             NetworkClient.UnregisterHandler<ChatMessage>();
             NetworkClient.UnregisterHandler<SoundEffectEvent>();
-            NetworkClient.UnregisterHandler<SoundEffectEvent>();
             NetworkClient.UnregisterHandler<LevelSelectEvent>();
         }
 
