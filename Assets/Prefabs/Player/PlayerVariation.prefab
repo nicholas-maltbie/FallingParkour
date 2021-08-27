@@ -314,6 +314,7 @@ MonoBehaviour:
   syncInterval: 0.1
   capsuleCollider: {fileID: 0}
   groundedDistance: 0.01
+  standingDistance: 0.1
   groundCheckDistance: 1
   maxWalkAngle: 60
   gravity: {x: 0, y: -20, z: 0}
@@ -322,7 +323,7 @@ MonoBehaviour:
   maxJumpAngle: 85
   jumpAngleWeightFactor: 0
   jumpCooldown: 0.5
-  coyoteTime: 0.25
+  coyoteTime: 0.045
   maxBounces: 5
   pushDecay: 0.9
   anglePower: 1

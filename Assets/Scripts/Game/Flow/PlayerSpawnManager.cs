@@ -89,10 +89,10 @@ namespace PropHunt.Game.Flow
 
         public IEnumerator SpawnPlayerCharacter(NetworkConnection conn, GameObject playerPrefab, Vector3 pos, Quaternion rotation)
         {
-            if (!conn.isReady)
-            {
-                yield return null;
-            }
+            // if (!conn.isReady)
+            // {
+            yield return null;
+            // }
             GameObject newPlayer = GameObject.Instantiate(playerPrefab);
             newPlayer.transform.rotation = rotation;
             newPlayer.transform.position = pos;
@@ -124,7 +124,8 @@ namespace PropHunt.Game.Flow
                     UnityEngine.Debug.Log("Spawning characters");
                     // When in game starts, spawn a player for each connection
                     ISpawnPointCollection defaultCheckpoint = SpawnPointUtilities.GetDefaultCheckpoint();
-                    var spawnEnum = defaultCheckpoint != null ? defaultCheckpoint.GetRandomizedSpawns().GetEnumerator() : null;
+                    var spawnEnum = defaultCheckpoint != null ?
+                        defaultCheckpoint.GetRandomizedSpawns().GetEnumerator() : null;
                     foreach (NetworkConnection conn in NetworkServer.connections.Values)
                     {
                         Vector3 pos = Vector3.zero;
