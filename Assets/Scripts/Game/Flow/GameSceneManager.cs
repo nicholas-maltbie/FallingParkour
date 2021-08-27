@@ -164,7 +164,7 @@ namespace PropHunt.Game.Flow
                         bufferElapsed += Time.deltaTime;
                     }
                     // As soon as scene is loaded, move to in game
-                    if (bufferElapsed >= bufferTime && 
+                    if (bufferElapsed >= bufferTime &&
                         allReady &&
                         (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone))
                     {
