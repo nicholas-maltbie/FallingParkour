@@ -29,8 +29,8 @@ namespace PropHunt.Character
         public static readonly float maximumMouseSensitivity = 1.0f;
 
         /// <summary>
-        /// Mouse sensitivity multiplier (should be between 0.1 and 5.0 hopefully)
+        /// Mouse sensitivity multiplier (should be between 0.05 and 1.0 hopefully)
         /// </summary>
-        public static float mouseSensitivity = 0.75f;
+        public static float mouseSensitivity = 0.25f;
     }
 }

@@ -57,7 +57,8 @@ namespace PropHunt.UI.Actions
         /// </summary>
         public void Awake()
         {
-            PlayerInputManager.mouseSensitivity = PlayerPrefs.GetFloat(mouseSensitivityPlayerPref, 1.0f);
+            PlayerInputManager.mouseSensitivity = PlayerPrefs.GetFloat(
+                mouseSensitivityPlayerPref, PlayerInputManager.mouseSensitivity);
             slider.SetValueWithoutNotify(GetSliderValue(PlayerInputManager.mouseSensitivity));
             // Update saved and current value on player input
             slider.onValueChanged.AddListener(value =>
