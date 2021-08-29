@@ -33,7 +33,7 @@ namespace PropHunt.UI
         /// <summary>
         /// Current mode we have selected
         /// </summary>
-        public MultiplayerMode currentMode = MultiplayerMode.TelepathyTransport;
+        public MultiplayerMode currentMode = MultiplayerMode.KcpTransport;
 
         /// <summary>
         /// Prefab of settings for KcpTransport

@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cfe481634257194495b3632112dce18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMode: 3
+  currentMode: 1
   kcpTransportPrefab: {fileID: 4000378363632139773, guid: f8b0771faa8c69e4fb6b86805ce52ee6, type: 3}
   telepathyTransport: {fileID: 4000378363632139773, guid: 49e203cd3808b6240b91046c6c63080e, type: 3}
   fizzySteamworksPrefab: {fileID: 4808816533550693423, guid: 9d70228972f0cd447b9d1c6122dbf8ae, type: 3}
