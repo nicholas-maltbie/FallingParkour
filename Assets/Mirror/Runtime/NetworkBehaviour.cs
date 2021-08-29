@@ -82,7 +82,7 @@ namespace Mirror
         // component index from in here by searching all NetworkComponents.
 
         /// <summary>Returns the NetworkIdentity of this object</summary>
-        public NetworkIdentity netIdentity { get; internal set; }
+        public NetworkIdentity netIdentity { get; set; }
 
         /// <summary>Returns the index of the component on this object</summary>
         public int ComponentIndex { get; internal set; }
