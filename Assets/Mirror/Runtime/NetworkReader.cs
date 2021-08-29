@@ -261,12 +261,16 @@ namespace Mirror
 
         public static Vector2 ReadVector2(this NetworkReader reader) => new Vector2(reader.ReadFloat(), reader.ReadFloat());
         public static Vector3 ReadVector3(this NetworkReader reader) => new Vector3(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat());
+        // TODO add nullable support to weaver instead
+        public static Vector3? ReadVector3Nullable(this NetworkReader reader) => reader.ReadBool() ? ReadVector3(reader) : default;
         public static Vector4 ReadVector4(this NetworkReader reader) => new Vector4(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat());
         public static Vector2Int ReadVector2Int(this NetworkReader reader) => new Vector2Int(reader.ReadInt(), reader.ReadInt());
         public static Vector3Int ReadVector3Int(this NetworkReader reader) => new Vector3Int(reader.ReadInt(), reader.ReadInt(), reader.ReadInt());
         public static Color ReadColor(this NetworkReader reader) => new Color(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat());
         public static Color32 ReadColor32(this NetworkReader reader) => new Color32(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
         public static Quaternion ReadQuaternion(this NetworkReader reader) => new Quaternion(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat());
+        // TODO add nullable support to weaver instead
+        public static Quaternion? ReadQuaternionNullable(this NetworkReader reader) => reader.ReadBool() ? ReadQuaternion(reader) : default;
         public static Rect ReadRect(this NetworkReader reader) => new Rect(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat());
         public static Plane ReadPlane(this NetworkReader reader) => new Plane(reader.ReadVector3(), reader.ReadFloat());
         public static Ray ReadRay(this NetworkReader reader) => new Ray(reader.ReadVector3(), reader.ReadVector3());
@@ -320,10 +324,15 @@ namespace Mirror
             if (netId == 0)
                 return null;
 
-            if (NetworkIdentity.spawned.TryGetValue(netId, out NetworkIdentity identity))
-            {
-                return identity;
-            }
+            // look in server spawned
+            if (NetworkServer.active &&
+                NetworkServer.spawned.TryGetValue(netId, out NetworkIdentity serverIdentity))
+                return serverIdentity;
+
+            // look in client spawned
+            if (NetworkClient.active &&
+                NetworkClient.spawned.TryGetValue(netId, out NetworkIdentity clientIdentity))
+                return clientIdentity;
 
             // a netId not being in spawned is common.
             // for example, "[SyncVar] NetworkIdentity target" netId would not
@@ -334,23 +343,19 @@ namespace Mirror
 
         public static NetworkBehaviour ReadNetworkBehaviour(this NetworkReader reader)
         {
-            uint netId = reader.ReadUInt();
-            if (netId == 0)
-                return null;
-
-            // if netId is not 0, then index is also sent to read before returning
-            byte componentIndex = reader.ReadByte();
-
-            if (NetworkIdentity.spawned.TryGetValue(netId, out NetworkIdentity identity))
-            {
-                return identity.NetworkBehaviours[componentIndex];
-            }
+            // reuse ReadNetworkIdentity, get the component at index
+            NetworkIdentity identity = ReadNetworkIdentity(reader);
 
             // a netId not being in spawned is common.
             // for example, "[SyncVar] NetworkBehaviour target" netId would not
             // be known on client if the monster walks out of proximity for a
             // moment. no need to log any error or warning here.
-            return null;
+            if (identity == null)
+                return null;
+
+            // if identity isn't null, then index is also sent to read before returning
+            byte componentIndex = reader.ReadByte();
+            return identity.NetworkBehaviours[componentIndex];
         }
 
         public static T ReadNetworkBehaviour<T>(this NetworkReader reader) where T : NetworkBehaviour

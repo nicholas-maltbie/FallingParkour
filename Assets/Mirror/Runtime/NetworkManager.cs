@@ -119,8 +119,7 @@ namespace Mirror
         public int numPlayers => NetworkServer.connections.Count(kv => kv.Value.identity != null);
 
         /// <summary>True if the server is running or client is connected/connecting.</summary>
-        [NonSerialized]
-        public bool isNetworkActive;
+        public bool isNetworkActive => NetworkServer.active || NetworkClient.active;
 
         // TODO remove this
         static NetworkConnection clientReadyConnection;
@@ -142,6 +141,20 @@ namespace Mirror
         // virtual so that inheriting classes' OnValidate() can call base.OnValidate() too
         public virtual void OnValidate()
         {
+            // make sure someone doesn't accidentally add another NetworkManager
+            // need transform.root because when adding to a child, the parent's
+            // OnValidate isn't called.
+            foreach (NetworkManager manager in transform.root.GetComponentsInChildren<NetworkManager>())
+            {
+                if (manager != this)
+                {
+                    Debug.LogError($"{name} detected another component of type {typeof(NetworkManager)} in its hierarchy on {manager.name}. There can only be one, please remove one of them.");
+                    // return early so that transport component isn't auto-added
+                    // to the duplicate NetworkManager.
+                    return;
+                }
+            }
+
             // add transport if there is none yet. makes upgrading easier.
             if (transport == null)
             {
@@ -242,7 +255,7 @@ namespace Mirror
                 authenticator.OnServerAuthenticated.AddListener(OnServerAuthenticated);
             }
 
-            ConfigureServerFrameRate();
+            ConfigureHeadlessFrameRate();
 
             // Copy auto-disconnect settings to NetworkServer
 #pragma warning disable 618
@@ -265,8 +278,6 @@ namespace Mirror
 
             // this must be after Listen(), since that registers the default message handlers
             RegisterServerMessages();
-
-            isNetworkActive = true;
         }
 
         /// <summary>Starts the server, listening for incoming connections.</summary>
@@ -332,10 +343,8 @@ namespace Mirror
                 authenticator.OnClientAuthenticated.AddListener(OnClientAuthenticated);
             }
 
-            isNetworkActive = true;
-
             // In case this is a headless client...
-            ConfigureServerFrameRate();
+            ConfigureHeadlessFrameRate();
 
             RegisterClientMessages();
 
@@ -372,8 +381,6 @@ namespace Mirror
                 authenticator.OnStartClient();
                 authenticator.OnClientAuthenticated.AddListener(OnClientAuthenticated);
             }
-
-            isNetworkActive = true;
 
             RegisterClientMessages();
 
@@ -532,6 +539,7 @@ namespace Mirror
         /// <summary>Stops the server from listening and simulating the game.</summary>
         public void StopServer()
         {
+            // return if already stopped to avoid recursion deadlock
             if (!NetworkServer.active)
                 return;
 
@@ -556,7 +564,6 @@ namespace Mirror
             OnStopServer();
 
             //Debug.Log("NetworkManager StopServer");
-            isNetworkActive = false;
             NetworkServer.Shutdown();
 
             // set offline mode BEFORE changing scene so that FinishStartScene
@@ -597,7 +604,6 @@ namespace Mirror
             OnStopClient();
 
             //Debug.Log("NetworkManager StopClient");
-            isNetworkActive = false;
 
             // shutdown client
             NetworkClient.Disconnect();
@@ -640,14 +646,24 @@ namespace Mirror
             }
         }
 
-        /// <summary>Set the frame rate for a headless server. Override to disable or modify.</summary>
-        public virtual void ConfigureServerFrameRate()
+        // DEPRECATED 2021-07-21
+        [Obsolete("Renamed to ConfigureHeadlessFrameRate()")]
+        public virtual void ConfigureServerFrameRate() {}
+
+        /// <summary>Set the frame rate for a headless builds. Override to disable or modify.</summary>
+        // useful for dedicated servers.
+        // useful for headless benchmark clients.
+        public virtual void ConfigureHeadlessFrameRate()
         {
-            // only set framerate for server build
 #if UNITY_SERVER
             Application.targetFrameRate = serverTickRate;
             // Debug.Log("Server Tick Rate set to: " + Application.targetFrameRate + " Hz.");
 #endif
+
+            // call the obsolete function in case someone did anything important
+#pragma warning disable 618
+            ConfigureServerFrameRate();
+#pragma warning restore 618
         }
 
         bool InitializeSingleton()
@@ -665,13 +681,13 @@ namespace Mirror
                     // Return false to not allow collision-destroyed second instance to continue.
                     return false;
                 }
-                Debug.Log("NetworkManager created singleton (DontDestroyOnLoad)");
+                //Debug.Log("NetworkManager created singleton (DontDestroyOnLoad)");
                 singleton = this;
                 if (Application.isPlaying) DontDestroyOnLoad(gameObject);
             }
             else
             {
-                Debug.Log("NetworkManager created singleton (ForScene)");
+                //Debug.Log("NetworkManager created singleton (ForScene)");
                 singleton = this;
             }
 
@@ -685,6 +701,7 @@ namespace Mirror
         {
             NetworkServer.OnConnectedEvent = OnServerConnectInternal;
             NetworkServer.OnDisconnectedEvent = OnServerDisconnect;
+            NetworkServer.OnErrorEvent = OnServerError;
             NetworkServer.RegisterHandler<AddPlayerMessage>(OnServerAddPlayerInternal);
 
             // Network Server initially registers its own handler for this, so we replace it here.
@@ -695,6 +712,7 @@ namespace Mirror
         {
             NetworkClient.OnConnectedEvent = OnClientConnectInternal;
             NetworkClient.OnDisconnectedEvent = OnClientDisconnectInternal;
+            NetworkClient.OnErrorEvent = OnClientError;
             NetworkClient.RegisterHandler<NotReadyMessage>(OnClientNotReadyMessageInternal);
             NetworkClient.RegisterHandler<SceneMessage>(OnClientSceneInternal, false);
 
@@ -786,6 +804,14 @@ namespace Mirror
 
             // Debug.Log("ClientChangeScene newSceneName:" + newSceneName + " networkSceneName:" + networkSceneName);
 
+            // Let client prepare for scene change
+            OnClientChangeScene(newSceneName, sceneOperation, customHandling);
+
+            // After calling OnClientChangeScene, exit if server since server is already doing
+            // the actual scene change, and we don't need to do it for the host client
+            if (NetworkServer.active)
+                return;
+
             // set client flag to stop processing messages while loading scenes.
             // otherwise we would process messages and then lose all the state
             // as soon as the load is finishing, causing all kinds of bugs
@@ -797,14 +823,6 @@ namespace Mirror
             // Cache sceneOperation so we know what was requested by the
             // Scene message in OnClientChangeScene and OnClientSceneChanged
             clientSceneOperation = sceneOperation;
-
-            // Let client prepare for scene change
-            OnClientChangeScene(newSceneName, sceneOperation, customHandling);
-
-            // After calling OnClientChangeScene, exit if server since server is already doing
-            // the actual scene change, and we don't need to do it for the host client
-            if (NetworkServer.active)
-                return;
 
             // scene handling will happen in overrides of OnClientChangeScene and/or OnClientSceneChanged
             // Do not call FinishLoadScene here. Custom handler will assign loadingSceneAsync and we need
@@ -1232,6 +1250,9 @@ namespace Mirror
         [Obsolete("OnServerError was removed because it hasn't been used in a long time.")]
         public virtual void OnServerError(NetworkConnection conn, int errorCode) {}
 
+        /// <summary>Called on server when transport raises an exception. NetworkConnection may be null.</summary>
+        public virtual void OnServerError(NetworkConnection conn, Exception exception) {}
+
         /// <summary>Called from ServerChangeScene immediately before SceneManager.LoadSceneAsync is executed</summary>
         public virtual void OnServerChangeScene(string newSceneName) {}
 
@@ -1268,6 +1289,9 @@ namespace Mirror
         // Deprecated 2021-02-13
         [Obsolete("OnClientError was removed because it hasn't been used in a long time.")]
         public virtual void OnClientError(NetworkConnection conn, int errorCode) {}
+
+        /// <summary>Called on client when transport raises an exception.</summary>
+        public virtual void OnClientError(Exception exception) {}
 
         /// <summary>Called on clients when a servers tells the client it is no longer ready, e.g. when switching scenes.</summary>
         // TODO client only ever uses NetworkClient.connection. this parameter is redundant.

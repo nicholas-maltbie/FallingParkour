@@ -7,6 +7,7 @@ using Mirror;
 
 namespace kcp2k
 {
+    [HelpURL("https://mirror-networking.gitbook.io/docs/transports/kcp-transport")]
     [DisallowMultipleComponent]
     public class KcpTransport : Transport
     {
@@ -16,6 +17,8 @@ namespace kcp2k
         // common
         [Header("Transport Configuration")]
         public ushort Port = 7777;
+        [Tooltip("DualMode listens to IPv6 and IPv4 simultaneously. Disable if the platform only supports IPv4.")]
+        public bool DualMode = true;
         [Tooltip("NoDelay is recommended to reduce latency. This also scales better without buffers getting full.")]
         public bool NoDelay = true;
         [Tooltip("KCP internal update interval. 100ms is KCP default, but a lower interval is recommended to minimize latency and to scale to more networked entities.")]
@@ -32,8 +35,10 @@ namespace kcp2k
         public uint SendWindowSize = 4096; //Kcp.WND_SND; 32 by default. Mirror sends a lot, so we need a lot more.
         [Tooltip("KCP window size can be modified to support higher loads.")]
         public uint ReceiveWindowSize = 4096; //Kcp.WND_RCV; 128 by default. Mirror sends a lot, so we need a lot more.
+        [Tooltip("Enable to use where-allocation NonAlloc KcpServer/Client/Connection versions. Highly recommended on all Unity platforms.")]
+        public bool NonAlloc = true;
 
-        // server & client
+        // server & client (where-allocation NonAlloc versions)
         KcpServer server;
         KcpClient client;
 
@@ -58,25 +63,42 @@ namespace kcp2k
             Log.Error = Debug.LogError;
 
             // client
-            client = new KcpClient(
-                () => OnClientConnected.Invoke(),
-                (message) => OnClientDataReceived.Invoke(message, Channels.Reliable),
-                () => OnClientDisconnected.Invoke()
-            );
+            client = NonAlloc
+                ? new KcpClientNonAlloc(
+                      () => OnClientConnected.Invoke(),
+                      (message) => OnClientDataReceived.Invoke(message, Channels.Reliable),
+                      () => OnClientDisconnected.Invoke())
+                : new KcpClient(
+                      () => OnClientConnected.Invoke(),
+                      (message) => OnClientDataReceived.Invoke(message, Channels.Reliable),
+                      () => OnClientDisconnected.Invoke());
 
             // server
-            server = new KcpServer(
-                (connectionId) => OnServerConnected.Invoke(connectionId),
-                (connectionId, message) => OnServerDataReceived.Invoke(connectionId, message, Channels.Reliable),
-                (connectionId) => OnServerDisconnected.Invoke(connectionId),
-                NoDelay,
-                Interval,
-                FastResend,
-                CongestionWindow,
-                SendWindowSize,
-                ReceiveWindowSize,
-                Timeout
-            );
+            server = NonAlloc
+                ? new KcpServerNonAlloc(
+                      (connectionId) => OnServerConnected.Invoke(connectionId),
+                      (connectionId, message) => OnServerDataReceived.Invoke(connectionId, message, Channels.Reliable),
+                      (connectionId) => OnServerDisconnected.Invoke(connectionId),
+                      DualMode,
+                      NoDelay,
+                      Interval,
+                      FastResend,
+                      CongestionWindow,
+                      SendWindowSize,
+                      ReceiveWindowSize,
+                      Timeout)
+                : new KcpServer(
+                      (connectionId) => OnServerConnected.Invoke(connectionId),
+                      (connectionId, message) => OnServerDataReceived.Invoke(connectionId, message, Channels.Reliable),
+                      (connectionId) => OnServerDisconnected.Invoke(connectionId),
+                      DualMode,
+                      NoDelay,
+                      Interval,
+                      FastResend,
+                      CongestionWindow,
+                      SendWindowSize,
+                      ReceiveWindowSize,
+                      Timeout);
 
             if (statisticsLog)
                 InvokeRepeating(nameof(OnLogStatistics), 1, 1);
@@ -251,6 +273,8 @@ namespace kcp2k
             return $"{(bytes / (1024f * 1024f * 1024f)):F2} GB";
         }
 
+// OnGUI allocates even if it does nothing. avoid in release.
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         void OnGUI()
         {
             if (!statisticsGUI) return;
@@ -286,6 +310,7 @@ namespace kcp2k
 
             GUILayout.EndArea();
         }
+#endif
 
         void OnLogStatistics()
         {

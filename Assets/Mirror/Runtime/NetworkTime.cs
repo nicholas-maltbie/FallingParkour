@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 using Stopwatch = System.Diagnostics.Stopwatch;
 
 namespace Mirror
@@ -32,7 +31,10 @@ namespace Mirror
         static double offsetMax = double.MaxValue;
 
         /// <summary>Returns double precision clock time _in this system_, unaffected by the network.</summary>
-        // => useful until we have Unity's 'double' Time.time
+        // useful until we have Unity's 'double' Time.time
+        //
+        // CAREFUL: unlike Time.time, this is not a FRAME time.
+        //          it changes during the frame too.
         public static double localTime => stopwatch.Elapsed.TotalSeconds;
 
         /// <summary>The time in seconds since the server started.</summary>
@@ -94,15 +96,17 @@ namespace Mirror
             _offset = new ExponentialMovingAverage(PingWindowSize);
             offsetMin = double.MinValue;
             offsetMax = double.MaxValue;
+            lastPingTime = 0;
         }
 
         internal static void UpdateClient()
         {
-            if (Time.time - lastPingTime >= PingFrequency)
+            // localTime (double) instead of Time.time for accuracy over days
+            if (localTime - lastPingTime >= PingFrequency)
             {
                 NetworkPingMessage pingMessage = new NetworkPingMessage(localTime);
                 NetworkClient.Send(pingMessage, Channels.Unreliable);
-                lastPingTime = Time.time;
+                lastPingTime = localTime;
             }
         }
 
