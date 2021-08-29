@@ -17,8 +17,8 @@ namespace Mirror
     public static class NetworkClient
     {
         // message handlers by messageId
-        static readonly Dictionary<int, NetworkMessageDelegate> handlers =
-            new Dictionary<int, NetworkMessageDelegate>();
+        internal static readonly Dictionary<ushort, NetworkMessageDelegate> handlers =
+            new Dictionary<ushort, NetworkMessageDelegate>();
 
         /// <summary>Client's NetworkConnection to server.</summary>
         public static NetworkConnection connection { get; internal set; }
@@ -33,6 +33,7 @@ namespace Mirror
 
         /// <summary>The NetworkConnection object that is currently "ready".</summary>
         // TODO this is from UNET. it's redundant and we should probably obsolete it.
+        // Deprecated 2021-03-10
         [Obsolete("NetworkClient.readyConnection is redundant. Use NetworkClient.connection and use NetworkClient.ready to check if it's ready.")]
         public static NetworkConnection readyConnection => ready ? connection : null;
 
@@ -57,15 +58,19 @@ namespace Mirror
         /// <summary>Check if client is connected (after connecting).</summary>
         public static bool isConnected => connectState == ConnectState.Connected;
 
-        /// <summary>NetworkClient can connect to local server in host mode too</summary>
-        public static bool isLocalClient => connection is LocalConnectionToServer;
+        /// <summary>True if client is running in host mode.</summary>
+        public static bool isHostClient => connection is LocalConnectionToServer;
+        // Deprecated 2021-05-26
+        [Obsolete("isLocalClient was renamed to isHostClient because that's what it actually means.")]
+        public static bool isLocalClient => isHostClient;
 
         // OnConnected / OnDisconnected used to be NetworkMessages that were
         // invoked. this introduced a bug where external clients could send
         // Connected/Disconnected messages over the network causing undefined
         // behaviour.
-        internal static Action OnConnectedEvent;
-        internal static Action OnDisconnectedEvent;
+        // => public so that custom NetworkManagers can hook into it
+        public static Action OnConnectedEvent;
+        public static Action OnDisconnectedEvent;
 
         /// <summary>Registered spawnable prefabs by assetId.</summary>
         public static readonly Dictionary<Guid, GameObject> prefabs =
@@ -84,12 +89,17 @@ namespace Mirror
         internal static readonly Dictionary<ulong, NetworkIdentity> spawnableObjects =
             new Dictionary<ulong, NetworkIdentity>();
 
+        static Unbatcher unbatcher = new Unbatcher();
+
+        // scene loading
+        public static bool isLoadingScene;
+
         // initialization //////////////////////////////////////////////////////
         static void AddTransportHandlers()
         {
-            Transport.activeTransport.OnClientConnected = OnConnected;
-            Transport.activeTransport.OnClientDataReceived = OnDataReceived;
-            Transport.activeTransport.OnClientDisconnected = OnDisconnected;
+            Transport.activeTransport.OnClientConnected = OnTransportConnected;
+            Transport.activeTransport.OnClientDataReceived = OnTransportData;
+            Transport.activeTransport.OnClientDisconnected = OnTransportDisconnected;
             Transport.activeTransport.OnClientError = OnError;
         }
 
@@ -109,7 +119,7 @@ namespace Mirror
                 // host mode doesn't need spawning
                 RegisterHandler<ObjectSpawnFinishedMessage>(msg => {});
                 // host mode doesn't need state updates
-                RegisterHandler<UpdateVarsMessage>(msg => {});
+                RegisterHandler<EntityStateMessage>(msg => {});
             }
             else
             {
@@ -119,7 +129,7 @@ namespace Mirror
                 RegisterHandler<SpawnMessage>(OnSpawn);
                 RegisterHandler<ObjectSpawnStartedMessage>(OnObjectSpawnStarted);
                 RegisterHandler<ObjectSpawnFinishedMessage>(OnObjectSpawnFinished);
-                RegisterHandler<UpdateVarsMessage>(OnUpdateVarsMessage);
+                RegisterHandler<EntityStateMessage>(OnEntityStateMessage);
             }
             RegisterHandler<RpcMessage>(OnRPCMessage);
         }
@@ -138,9 +148,7 @@ namespace Mirror
             connectState = ConnectState.Connecting;
             Transport.activeTransport.ClientConnect(address);
 
-            // setup all the handlers
             connection = new NetworkConnectionToServer();
-            connection.SetHandlers(handlers);
         }
 
         /// <summary>Connect client to a NetworkServer by Uri.</summary>
@@ -156,9 +164,7 @@ namespace Mirror
             connectState = ConnectState.Connecting;
             Transport.activeTransport.ClientConnect(uri);
 
-            // setup all the handlers
             connection = new NetworkConnectionToServer();
-            connection.SetHandlers(handlers);
         }
 
         // TODO why are there two connect host methods?
@@ -178,7 +184,6 @@ namespace Mirror
             connectionToClient.connectionToServer = connectionToServer;
 
             connection = connectionToServer;
-            connection.SetHandlers(handlers);
 
             // create server connection to local client
             NetworkServer.SetLocalConnection(connectionToClient);
@@ -207,38 +212,25 @@ namespace Mirror
         /// <summary>Disconnect from server.</summary>
         public static void Disconnect()
         {
+            // only if connected or connecting
+            if (connectState == ConnectState.Disconnected) return;
+
+            // TODO move to 'cleanup' code below if safe
             connectState = ConnectState.Disconnected;
             ready = false;
 
-            // local or remote connection?
-            if (isLocalClient)
-            {
-                if (isConnected)
-                {
-                    // call client OnDisconnected with connection to server
-                    // => previously we used to send a DisconnectMessage to
-                    //    NetworkServer.localConnection. this would queue the
-                    //    message until NetworkClient.Update processes it.
-                    // => invoking the client's OnDisconnected event directly
-                    //    here makes tests fail. so let's do it exactly the same
-                    //    order as before by queueing the event for next Update!
-                    //OnDisconnectedEvent?.Invoke(connection);
-                    ((LocalConnectionToServer)connection).QueueDisconnectedEvent();
-                }
-                NetworkServer.RemoveLocalConnection();
-            }
-            else
-            {
-                if (connection != null)
-                {
-                    connection.Disconnect();
-                    connection = null;
-                }
-            }
+            // call Disconnect on the NetworkConnection
+            connection?.Disconnect();
+
+            // clean up
+            // (previously only for remote connection, not for local)
+            connection = null;
         }
 
         /// <summary>Disconnect host mode.</summary>
         // this is needed to call DisconnectMessage for the host client too.
+        // Deprecated 2021-05-11
+        [Obsolete("Call NetworkClient.Disconnect() instead. Nobody should use DisconnectLocalServer.")]
         public static void DisconnectLocalServer()
         {
             // only if host connection is running
@@ -248,17 +240,21 @@ namespace Mirror
                 // local connection. should we send a DisconnectMessage here too?
                 // (if we do then we get an Unknown Message ID log)
                 //NetworkServer.localConnection.Send(new DisconnectMessage());
-                NetworkServer.OnDisconnected(NetworkServer.localConnection.connectionId);
+                NetworkServer.OnTransportDisconnected(NetworkServer.localConnection.connectionId);
             }
         }
 
         // transport events ////////////////////////////////////////////////////
-        static void OnConnected()
+        // called by Transport
+        static void OnTransportConnected()
         {
             if (connection != null)
             {
                 // reset network time stats
                 NetworkTime.Reset();
+
+                // reset unbatcher in case any batches from last session remain.
+                unbatcher = new Unbatcher();
 
                 // the handler may want to send messages to the client
                 // thus we should set the connected state before calling the handler
@@ -269,16 +265,95 @@ namespace Mirror
             else Debug.LogError("Skipped Connect message handling because connection is null.");
         }
 
-        internal static void OnDataReceived(ArraySegment<byte> data, int channelId)
+        // helper function
+        static bool UnpackAndInvoke(NetworkReader reader, int channelId)
+        {
+            if (MessagePacking.Unpack(reader, out ushort msgType))
+            {
+                // try to invoke the handler for that message
+                if (handlers.TryGetValue(msgType, out NetworkMessageDelegate handler))
+                {
+                    handler.Invoke(connection, reader, channelId);
+
+                    // message handler may disconnect client, making connection = null
+                    // therefore must check for null to avoid NRE.
+                    if (connection != null)
+                        connection.lastMessageTime = Time.time;
+
+                    return true;
+                }
+                else
+                {
+                    // Debug.Log("Unknown message ID " + msgType + " " + this + ". May be due to no existing RegisterHandler for this message.");
+                    return false;
+                }
+            }
+            else
+            {
+                Debug.LogError("Closed connection: " + connection + ". Invalid message header.");
+                connection.Disconnect();
+                return false;
+            }
+        }
+
+        // called by Transport
+        internal static void OnTransportData(ArraySegment<byte> data, int channelId)
         {
             if (connection != null)
             {
-                connection.TransportReceive(data, channelId);
+                // server might batch multiple messages into one packet.
+                // feed it to the Unbatcher.
+                // NOTE: we don't need to associate a channelId because we
+                //       always process all messages in the batch.
+                if (!unbatcher.AddBatch(data))
+                {
+                    Debug.LogWarning($"NetworkClient: failed to add batch, disconnecting.");
+                    connection.Disconnect();
+                    return;
+                }
+
+                // process all messages in the batch.
+                // only while NOT loading a scene.
+                // if we get a scene change message, then we need to stop
+                // processing. otherwise we might apply them to the old scene.
+                // => fixes https://github.com/vis2k/Mirror/issues/2651
+                //
+                // NOTE: is scene starts loading, then the rest of the batch
+                //       would only be processed when OnTransportData is called
+                //       the next time.
+                //       => consider moving processing to NetworkEarlyUpdate.
+                while (!isLoadingScene &&
+                       unbatcher.GetNextMessage(out NetworkReader reader, out double remoteTimestamp))
+                {
+                    // enough to read at least header size?
+                    if (reader.Remaining >= MessagePacking.HeaderSize)
+                    {
+                        // make remoteTimeStamp available to the user
+                        connection.remoteTimeStamp = remoteTimestamp;
+
+                        // handle message
+                        if (!UnpackAndInvoke(reader, channelId))
+                            break;
+                    }
+                    // otherwise disconnect
+                    else
+                    {
+                        Debug.LogError($"NetworkClient: received Message was too short (messages should start with message id)");
+                        connection.Disconnect();
+                        return;
+                    }
+                }
             }
             else Debug.LogError("Skipped Data message handling because connection is null.");
         }
 
-        static void OnDisconnected()
+        // called by Transport
+        // IMPORTANT: often times when disconnecting, we call this from Mirror
+        //            too because we want to remove the connection and handle
+        //            the disconnect immediately.
+        //            => which is fine as long as we guarantee it only runs once
+        //            => which we do by setting the state to Disconnected!
+        static void OnTransportDisconnected()
         {
             // StopClient called from user code triggers Disconnected event
             // from transport which calls StopClient again, so check here
@@ -311,11 +386,12 @@ namespace Mirror
 
         // message handlers ////////////////////////////////////////////////////
         /// <summary>Register a handler for a message type T. Most should require authentication.</summary>
+        // Deprecated 2021-03-13
         [Obsolete("Use RegisterHandler<T> version without NetworkConnection parameter. It always points to NetworkClient.connection anyway.")]
         public static void RegisterHandler<T>(Action<NetworkConnection, T> handler, bool requireAuthentication = true)
             where T : struct, NetworkMessage
         {
-            int msgType = MessagePacking.GetId<T>();
+            ushort msgType = MessagePacking.GetId<T>();
             if (handlers.ContainsKey(msgType))
             {
                 Debug.LogWarning($"NetworkClient.RegisterHandler replacing handler for {typeof(T).FullName}, id={msgType}. If replacement is intentional, use ReplaceHandler instead to avoid this warning.");
@@ -327,7 +403,7 @@ namespace Mirror
         public static void RegisterHandler<T>(Action<T> handler, bool requireAuthentication = true)
             where T : struct, NetworkMessage
         {
-            int msgType = MessagePacking.GetId<T>();
+            ushort msgType = MessagePacking.GetId<T>();
             if (handlers.ContainsKey(msgType))
             {
                 Debug.LogWarning($"NetworkClient.RegisterHandler replacing handler for {typeof(T).FullName}, id={msgType}. If replacement is intentional, use ReplaceHandler instead to avoid this warning.");
@@ -335,8 +411,8 @@ namespace Mirror
             // we use the same WrapHandler function for server and client.
             // so let's wrap it to ignore the NetworkConnection parameter.
             // it's not needed on client. it's always NetworkClient.connection.
-            Action<NetworkConnection, T> handlerWrapped = (_, value) => { handler(value); };
-            handlers[msgType] = MessagePacking.WrapHandler(handlerWrapped, requireAuthentication);
+            void HandlerWrapped(NetworkConnection _, T value) => handler(value);
+            handlers[msgType] = MessagePacking.WrapHandler((Action<NetworkConnection, T>) HandlerWrapped, requireAuthentication);
         }
 
         /// <summary>Replace a handler for a particular message type. Should require authentication by default.</summary>
@@ -344,7 +420,7 @@ namespace Mirror
         public static void ReplaceHandler<T>(Action<NetworkConnection, T> handler, bool requireAuthentication = true)
             where T : struct, NetworkMessage
         {
-            int msgType = MessagePacking.GetId<T>();
+            ushort msgType = MessagePacking.GetId<T>();
             handlers[msgType] = MessagePacking.WrapHandler(handler, requireAuthentication);
         }
 
@@ -361,7 +437,7 @@ namespace Mirror
             where T : struct, NetworkMessage
         {
             // use int to minimize collisions
-            int msgType = MessagePacking.GetId<T>();
+            ushort msgType = MessagePacking.GetId<T>();
             return handlers.Remove(msgType);
         }
 
@@ -393,7 +469,7 @@ namespace Mirror
             NetworkIdentity[] identities = prefab.GetComponentsInChildren<NetworkIdentity>();
             if (identities.Length > 1)
             {
-                Debug.LogWarning($"Prefab '{prefab.name}' has multiple NetworkIdentity components. There should only be one NetworkIdentity on a prefab, and it must be on the root object.");
+                Debug.LogError($"Prefab '{prefab.name}' has multiple NetworkIdentity components. There should only be one NetworkIdentity on a prefab, and it must be on the root object.");
             }
 
             if (prefabs.ContainsKey(prefab.assetId))
@@ -592,7 +668,7 @@ namespace Mirror
             NetworkIdentity[] identities = prefab.GetComponentsInChildren<NetworkIdentity>();
             if (identities.Length > 1)
             {
-                Debug.LogWarning($"Prefab '{prefab.name}' has multiple NetworkIdentity components. There should only be one NetworkIdentity on a prefab, and it must be on the root object.");
+                Debug.LogError($"Prefab '{prefab.name}' has multiple NetworkIdentity components. There should only be one NetworkIdentity on a prefab, and it must be on the root object.");
             }
 
             // Debug.Log("Registering custom prefab '" + prefab.name + "' as asset:" + assetId + " " + spawnHandler.GetMethodName() + "/" + unspawnHandler.GetMethodName());
@@ -658,7 +734,7 @@ namespace Mirror
             NetworkIdentity[] identities = prefab.GetComponentsInChildren<NetworkIdentity>();
             if (identities.Length > 1)
             {
-                Debug.LogWarning($"Prefab '{prefab.name}' has multiple NetworkIdentity components. There should only be one NetworkIdentity on a prefab, and it must be on the root object.");
+                Debug.LogError($"Prefab '{prefab.name}' has multiple NetworkIdentity components. There should only be one NetworkIdentity on a prefab, and it must be on the root object.");
             }
 
             // Debug.Log("Registering custom prefab '" + prefab.name + "' as asset:" + assetId + " " + spawnHandler.GetMethodName() + "/" + unspawnHandler.GetMethodName());
@@ -810,6 +886,7 @@ namespace Mirror
             return true;
         }
 
+        // Deprecated 2021-03-13
         [Obsolete("NetworkClient.Ready doesn't need a NetworkConnection parameter anymore. It always uses NetworkClient.connection anyway.")]
         public static bool Ready(NetworkConnection conn) => Ready();
 
@@ -865,6 +942,7 @@ namespace Mirror
             return true;
         }
 
+        // Deprecated 2021-03-13
         [Obsolete("NetworkClient.AddPlayer doesn't need a NetworkConnection parameter anymore. It always uses NetworkClient.connection anyway.")]
         public static bool AddPlayer(NetworkConnection readyConn) => AddPlayer();
 
@@ -978,7 +1056,7 @@ namespace Mirror
             NetworkIdentity identity = GetAndRemoveSceneObject(message.sceneId);
             if (identity == null)
             {
-                Debug.LogError($"Spawn scene object not found for {message.sceneId:X} SpawnableObjects.Count={spawnableObjects.Count}");
+                Debug.LogError($"Spawn scene object not found for {message.sceneId:X}. Make sure that client and server use exactly the same project. This only happens if the hierarchy gets out of sync.");
 
                 // dump the whole spawnable objects dict for easier debugging
                 //foreach (KeyValuePair<ulong, NetworkIdentity> kvp in spawnableObjects)
@@ -1077,7 +1155,7 @@ namespace Mirror
         // host mode callbacks /////////////////////////////////////////////////
         static void OnHostClientObjectDestroy(ObjectDestroyMessage message)
         {
-            // Debug.Log("NetworkClient.OnLocalObjectObjDestroy netId:" + msg.netId);
+            //Debug.Log($"NetworkClient.OnLocalObjectObjDestroy netId:{message.netId}");
 
             // TODO why do we do this?
             // in host mode, .spawned is shared between server and client.
@@ -1088,7 +1166,7 @@ namespace Mirror
 
         static void OnHostClientObjectHide(ObjectHideMessage message)
         {
-            // Debug.Log("ClientScene::OnLocalObjectObjHide netId:" + msg.netId);
+            //Debug.Log($"ClientScene::OnLocalObjectObjHide netId:{message.netId}");
             if (NetworkIdentity.spawned.TryGetValue(message.netId, out NetworkIdentity localObject) &&
                 localObject != null)
             {
@@ -1098,8 +1176,7 @@ namespace Mirror
 
         internal static void OnHostClientSpawn(SpawnMessage message)
         {
-            if (NetworkIdentity.spawned.TryGetValue(message.netId, out NetworkIdentity localObject) &&
-                localObject != null)
+            if (NetworkIdentity.spawned.TryGetValue(message.netId, out NetworkIdentity localObject) && localObject != null)
             {
                 if (message.isLocalPlayer)
                     InternalAddPlayer(localObject);
@@ -1113,7 +1190,7 @@ namespace Mirror
         }
 
         // client-only mode callbacks //////////////////////////////////////////
-        static void OnUpdateVarsMessage(UpdateVarsMessage message)
+        static void OnEntityStateMessage(EntityStateMessage message)
         {
             // Debug.Log("NetworkClient.OnUpdateVarsMessage " + msg.netId);
             if (NetworkIdentity.spawned.TryGetValue(message.netId, out NetworkIdentity localObject) && localObject != null)
@@ -1214,21 +1291,26 @@ namespace Mirror
                 localConnection.Update();
             }
             // remote connection?
-            else
+            else if (connection is NetworkConnectionToServer remoteConnection)
             {
                 // only update things while connected
                 if (active && connectState == ConnectState.Connected)
                 {
+                    // update NetworkTime
                     NetworkTime.UpdateClient();
+
+                    // update connection to flush out batched messages
+                    remoteConnection.Update();
                 }
             }
 
-            // process all incoming messages after updating the world
+            // process all outgoing messages after updating the world
             if (Transport.activeTransport != null)
                 Transport.activeTransport.ClientLateUpdate();
         }
 
         // obsolete to not break people's projects. Update was public.
+        // Deprecated 2021-03-02
         [Obsolete("NetworkClient.Update is now called internally from our custom update loop. No need to call Update manually anymore.")]
         public static void Update() => NetworkLateUpdate();
 
@@ -1291,6 +1373,12 @@ namespace Mirror
             // supposed to be shut down too!
             if (Transport.activeTransport != null)
                 Transport.activeTransport.ClientDisconnect();
+            connection = null;
+
+            // clear events. someone might have hooked into them before, but
+            // we don't want to use those hooks after Shutdown anymore.
+            OnConnectedEvent = null;
+            OnDisconnectedEvent = null;
         }
     }
 }

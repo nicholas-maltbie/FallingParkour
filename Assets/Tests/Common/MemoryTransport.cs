@@ -122,7 +122,7 @@ namespace Mirror.Tests
             }
         }
 
-        public override bool ServerDisconnect(int connectionId)
+        public override void ServerDisconnect(int connectionId)
         {
             // clear all pending messages that we may have received.
             // over the wire, we wouldn't receive any more pending messages
@@ -137,8 +137,6 @@ namespace Mirror.Tests
 
             // not active anymore
             serverActive = false;
-
-            return false;
         }
 
         public override string ServerGetClientAddress(int connectionId) => string.Empty;
