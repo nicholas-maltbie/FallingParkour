@@ -13,17 +13,6 @@ namespace PropHunt.Environment.Hexagon
         public float deleteTime = 1.0f;
 
         /// <summary>
-        /// How many seconds after delete time will it actually be deleted
-        /// </summary>
-        public float extraTime = 0.1f;
-
-        /// <summary>
-        /// Percentage instant color change when this starts deleting 
-        /// </summary>
-        [Range(0, 1)]
-        public float extraStep = 0.1f;
-
-        /// <summary>
         /// is this cube being deleted
         /// </summary>
         [SyncVar]
@@ -67,11 +56,11 @@ namespace PropHunt.Environment.Hexagon
             MaterialUtils.RecursiveSetColorProperty(
                 gameObject,
                 "_Background1",
-                Color.Lerp(normalColor1, fadeColor1, deleteElapsed / deleteTime + extraStep));
+                Color.Lerp(normalColor1, fadeColor1, deleting ? Mathf.Pow(deleteElapsed / deleteTime, 2) : 0));
             MaterialUtils.RecursiveSetColorProperty(
                 gameObject,
                 "_Background2",
-                Color.Lerp(normalColor2, fadeColor2, deleteElapsed / deleteTime + extraStep));
+                Color.Lerp(normalColor2, fadeColor2, deleting ? Mathf.Pow(deleteElapsed / deleteTime, 2) : 0));
         }
 
         public void Start()
@@ -86,7 +75,7 @@ namespace PropHunt.Environment.Hexagon
                 deleteElapsed += Time.deltaTime;
                 UpdateColor();
             }
-            if (isServer && deleteElapsed >= (deleteTime + extraTime))
+            if (isServer && deleteElapsed >= deleteTime)
             {
                 NetworkServer.Destroy(gameObject);
             }

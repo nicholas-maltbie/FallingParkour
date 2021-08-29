@@ -466,8 +466,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   hexagonPrefab: {fileID: 6340813144003598840, guid: 4f8063a8ec0b177489f97ac492d7cb67, type: 3}
-  hexagonRadius: 1
-  tileRadius: 8
+  hexagonRadius: 1.5
+  tileRadius: 5
   timeAnimationDelay: 0
   recolor1: {r: 1, g: 0.6202398, b: 0.11792451, a: 0}
   recolor2: {r: 0.9433962, g: 0.79025406, b: 0.013349922, a: 0}
@@ -695,8 +695,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   hexagonPrefab: {fileID: 6340813144003598840, guid: 4f8063a8ec0b177489f97ac492d7cb67, type: 3}
-  hexagonRadius: 1
-  tileRadius: 10
+  hexagonRadius: 1.5
+  tileRadius: 6
   timeAnimationDelay: 0
   recolor1: {r: 0.087086126, g: 0.9716981, b: 0.90348625, a: 0}
   recolor2: {r: 0.08690815, g: 0.55065626, b: 0.5943396, a: 0}
@@ -764,8 +764,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   hexagonPrefab: {fileID: 6340813144003598840, guid: 4f8063a8ec0b177489f97ac492d7cb67, type: 3}
-  hexagonRadius: 1
-  tileRadius: 8
+  hexagonRadius: 1.5
+  tileRadius: 5
   timeAnimationDelay: 0
   recolor1: {r: 0.11764705, g: 1, b: 0.2618466, a: 0}
   recolor2: {r: 0.8396226, g: 0.54467416, b: 0.18614274, a: 0}
@@ -954,8 +954,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   hexagonPrefab: {fileID: 6340813144003598840, guid: 4f8063a8ec0b177489f97ac492d7cb67, type: 3}
-  hexagonRadius: 1
-  tileRadius: 12
+  hexagonRadius: 1.5
+  tileRadius: 8
   timeAnimationDelay: 0
   recolor1: {r: 1, g: 0.11764705, b: 0.75164425, a: 0}
   recolor2: {r: 0.9056604, g: 0.08333705, b: 0.012815925, a: 0}
@@ -1023,8 +1023,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   hexagonPrefab: {fileID: 6340813144003598840, guid: 4f8063a8ec0b177489f97ac492d7cb67, type: 3}
-  hexagonRadius: 1
-  tileRadius: 12
+  hexagonRadius: 1.5
+  tileRadius: 8
   timeAnimationDelay: 0
   recolor1: {r: 0.25759062, g: 1, b: 0.11764705, a: 0}
   recolor2: {r: 0.046991818, g: 0.9056604, b: 0.6556684, a: 0}
@@ -1270,8 +1270,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   hexagonPrefab: {fileID: 6340813144003598840, guid: 4f8063a8ec0b177489f97ac492d7cb67, type: 3}
-  hexagonRadius: 1
-  tileRadius: 10
+  hexagonRadius: 1.5
+  tileRadius: 6
   timeAnimationDelay: 0
   recolor1: {r: 0.9811321, g: 0.06016379, b: 0.46710303, a: 0}
   recolor2: {r: 1, g: 0.495283, b: 0.567, a: 0}

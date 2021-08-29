@@ -32,7 +32,7 @@ Transform:
   m_GameObject: {fileID: 6340813144003598840}
   m_LocalRotation: {x: 0, y: 0.2588191, z: 0, w: 0.9659258}
   m_LocalPosition: {x: -4, y: 0.5, z: -2}
-  m_LocalScale: {x: 2, y: 1, z: 2}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -866,8 +866,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  deleteTime: 0.4
-  extraTime: 0.1
+  deleteTime: 0.75
   deleting: 0
   normalColor1: {r: 1, g: 0.6396222, b: 0, a: 0}
   normalColor2: {r: 0.9339623, g: 0.90660065, b: 0.22467959, a: 0}

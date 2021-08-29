@@ -114,6 +114,7 @@ Material:
     m_Colors:
     - _Backgroun2: {r: 1, g: 0.85567373, b: 0.362, a: 1}
     - _Background1: {r: 1, g: 0.537543, b: 0, a: 0}
+    - _Background2: {r: 1, g: 0.78079355, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
