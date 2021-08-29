@@ -600,7 +600,7 @@ namespace PropHunt.Character
             }
             // Check if we were standing on moving ground the previous frame
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
-            if (movingGround == null || FallingAngle(maxJumpAngle))
+            if (movingGround == null || !onGround || distanceToGround > groundedDistance)
             {
                 // We aren't standing on something, don't do anything
                 feetFollowObj.transform.parent = transform;
@@ -680,7 +680,7 @@ namespace PropHunt.Character
             this.onGround = didHit;
             this.surfaceNormal = hit.normal;
             this.groundHitPosition = hit.distance > 0 ? hit.point : transform.position;
-            this.floor = hit.collider != null && StandingOnGround ? hit.collider.gameObject : null;
+            this.floor = hit.collider != null ? hit.collider.gameObject : null;
         }
 
         /// <summary>
