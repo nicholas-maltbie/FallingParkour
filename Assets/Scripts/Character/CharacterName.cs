@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Mirror;
@@ -176,6 +177,15 @@ namespace PropHunt.Character
             networkService = new NetworkService(this);
         }
 
+        public IEnumerator SendNameWhenReady()
+        {
+            while (!NetworkClient.ready)
+            {
+                yield return null;
+            }
+            CmdUpdatePlayerName(CharacterNameManagement.playerName);
+        }
+
         public void Start()
         {
             if (networkService.isServer && connectionToClient != null)
@@ -185,7 +195,7 @@ namespace PropHunt.Character
             // Synchronize state to server if local player
             if (networkService.isLocalPlayer)
             {
-                CmdUpdatePlayerName(CharacterNameManagement.playerName);
+                StartCoroutine(SendNameWhenReady());
             }
         }
     }
