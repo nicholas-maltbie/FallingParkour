@@ -1,4 +1,5 @@
-﻿using Steamworks;
+﻿#if !DISABLESTEAMWORKS
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -90,18 +91,16 @@ namespace Mirror.FizzySteam
       }
     }
 
-    public bool Disconnect(int connectionId)
+    public void Disconnect(int connectionId)
     {
       if (steamToMirrorIds.TryGetValue(connectionId, out CSteamID steamID))
       {
         SendInternal(steamID, InternalMessages.DISCONNECT);
         steamToMirrorIds.Remove(connectionId);
-        return true;
       }
       else
       {
         Debug.LogWarning("Trying to disconnect unknown connection id: " + connectionId);
-        return false;
       }
     }
 
@@ -153,3 +152,4 @@ namespace Mirror.FizzySteam
     public void FlushData() { }
   }
 }
+#endif // !DISABLESTEAMWORKS

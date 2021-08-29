@@ -1,4 +1,5 @@
-﻿using Steamworks;
+﻿#if !DISABLESTEAMWORKS
+using Steamworks;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -167,3 +168,4 @@ namespace Mirror.FizzySteam
     public void FlushData() { }
   }
 }
+#endif // !DISABLESTEAMWORKS

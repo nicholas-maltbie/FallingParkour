@@ -1,3 +1,4 @@
+#if !DISABLESTEAMWORKS
 using Mirror;
 using Steamworks;
 using System;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 public abstract class NextCommon
 {
-  protected const int MAX_MESSAGES = 1024;
+  protected const int MAX_MESSAGES = 256;
 
   protected EResult SendSocket(HSteamNetConnection conn, byte[] data, int channelId)
   {
@@ -39,3 +40,4 @@ public abstract class NextCommon
     return (managedArray, channel);
   }
 }
+#endif // !DISABLESTEAMWORKS
