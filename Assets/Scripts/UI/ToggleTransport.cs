@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using kcp2k;
 using Mirror;
 using Mirror.FizzySteam;
-using PropHunt.Game.Flow;
 using PropHunt.Utils;
 using UnityEngine;
 
@@ -17,7 +16,8 @@ namespace PropHunt.UI
     {
         None = 0,
         KcpTransport = 1,
-        FizzySteamworks = 2
+        FizzySteamworks = 2,
+        TelepathyTransport = 3,
     }
 
     /// <summary>
@@ -39,6 +39,11 @@ namespace PropHunt.UI
         /// Prefab of settings for KcpTransport
         /// </summary>
         public GameObject kcpTransportPrefab;
+
+        /// <summary>
+        /// Prefab of settings for TelepathyTransport
+        /// </summary>
+        public GameObject telepathyTransport;
 
         /// <summary>
         /// Prefab of settings for FizzySteamworks
@@ -72,14 +77,17 @@ namespace PropHunt.UI
             this.transportSettingsLookup = new Dictionary<MultiplayerMode, Transport>();
             this.transportSettingsLookup[MultiplayerMode.FizzySteamworks] = GameObject.Instantiate(this.fizzySteamworksPrefab).GetComponent<FizzySteamworks>();
             this.transportSettingsLookup[MultiplayerMode.KcpTransport] = GameObject.Instantiate(this.kcpTransportPrefab).GetComponent<KcpTransport>();
+            this.transportSettingsLookup[MultiplayerMode.TelepathyTransport] = GameObject.Instantiate(this.telepathyTransport).GetComponent<TelepathyTransport>();
 
             // Un-parent fizzy steamworks because it leads to warning if not
             this.transportSettingsLookup[MultiplayerMode.KcpTransport].transform.parent = transform;
             this.transportSettingsLookup[MultiplayerMode.FizzySteamworks].transform.parent = transform;
+            this.transportSettingsLookup[MultiplayerMode.TelepathyTransport].transform.parent = transform;
 
             // Set active state to false
             this.transportSettingsLookup[MultiplayerMode.KcpTransport].gameObject.SetActive(false);
             this.transportSettingsLookup[MultiplayerMode.FizzySteamworks].gameObject.SetActive(false);
+            this.transportSettingsLookup[MultiplayerMode.TelepathyTransport].gameObject.SetActive(false);
 
             // Setup initial mode
             SetMultiplayerMode(this.currentMode, forceUpdate: true);

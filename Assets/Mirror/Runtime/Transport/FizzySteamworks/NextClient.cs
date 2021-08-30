@@ -1,3 +1,4 @@
+#if !DISABLESTEAMWORKS
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -131,13 +132,14 @@ namespace Mirror.FizzySteam
           }
         }
       }
-      else if (param.m_info.m_eState == ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_ClosedByPeer)
+      else if (param.m_info.m_eState == ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_ClosedByPeer || param.m_info.m_eState == ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_ProblemDetectedLocally)
       {
+        Debug.Log($"Connection was closed by peer, {param.m_info.m_szEndDebug}");
         Disconnect();
       }
       else
       {
-        Debug.Log($"Connection state changed: {param.m_info.m_eState.ToString()}");
+        Debug.Log($"Connection state changed: {param.m_info.m_eState.ToString()} - {param.m_info.m_szEndDebug}");
       }
     }
 
@@ -216,3 +218,4 @@ namespace Mirror.FizzySteam
     }
   }
 }
+#endif // !DISABLESTEAMWORKS

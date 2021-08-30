@@ -13,18 +13,3 @@ _Steamworks.NET_ currently fully supports Windows, OSX, and Linux in both 32 and
 * [Discussion Thread](http://steamcommunity.com/groups/steamworks/discussions/0/666827974770212954/)
 * [Reporting Issues](https://github.com/rlabrecque/Steamworks.NET/issues)
   Note that only Steamworks.NET specific issues should be reported, general API questions/issues should be asked on the [Steamworks discussion board](http://steamcommunity.com/groups/steamworks/discussions).
-
-[![Support via Paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFZZER8VNXKRC)
-
-## Installation
-
-You can find the installation instructions [here](http://steamworks.github.io/installation/).
-
-## Samples
-
-Check out these sample projects to get started:
-
-* [Steamworks.NET Example](https://github.com/rlabrecque/Steamworks.NET-Example)
-* [Steamworks.NET Test](https://github.com/rlabrecque/Steamworks.NET-Test)
-* [Steamworks.NET ChatClient](https://github.com/rlabrecque/Steamworks.NET-ChatClient)
-* [Steamworks.NET GameServerTest](https://github.com/rlabrecque/Steamworks.NET-GameServerTest)
