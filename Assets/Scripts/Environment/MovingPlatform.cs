@@ -30,7 +30,7 @@ namespace PropHunt.Environment
 
         }
 
-        void FixedUpdate()
+        void Update()
         {
             moved = Vector3.zero;
             if (!isServer)
@@ -42,9 +42,9 @@ namespace PropHunt.Environment
             {
                 return;
             }
-            float fixedDeltaTime = Time.fixedDeltaTime;
+            float deltaTime = Time.deltaTime;
             var direction = (CurrentTarget.position - transform.position).normalized;
-            var displacement = direction * fixedDeltaTime * this.linearSpeed;
+            var displacement = direction * deltaTime * this.linearSpeed;
             var distanceToTarget = Vector3.Distance(transform.position, CurrentTarget.position);
 
             if (direction == Vector3.zero || distanceToTarget < displacement.magnitude)

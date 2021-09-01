@@ -440,7 +440,12 @@ namespace PropHunt.Character
             // This allows them to walk up gradual slopes without facing a hit in movement speed
             if (!Falling)
             {
-                movement = Vector3.ProjectOnPlane(movement, surfaceNormal).normalized * movement.magnitude;
+                Vector3 projectedMovement = Vector3.ProjectOnPlane(movement, surfaceNormal).normalized *
+                    movement.magnitude;
+                if (projectedMovement.magnitude + Epsilon >= movement.magnitude)
+                {
+                    movement = projectedMovement;
+                }
             }
 
             // If the player was standing on the ground and is not now, increment velocity by ground
@@ -620,8 +625,8 @@ namespace PropHunt.Character
                 transform.position += displacement;
             }
 
-            // Ensure player doesn't get stuck in floor
-            PushOutOverlapping(displacement.magnitude * 2);
+            transform.position += (verticalSnapDown * 0.5f) * surfaceNormal;
+            SnapPlayerDown(-surfaceNormal, verticalSnapDown);
         }
 
         /// <summary>
@@ -629,11 +634,19 @@ namespace PropHunt.Character
         /// </summary>
         public void SnapPlayerDown()
         {
-            bool didHit = CastSelf(Down, verticalSnapDown, out var hit);
+            SnapPlayerDown(Down, verticalSnapDown);
+        }
+
+        /// <summary>
+        /// Snap the player down onto the ground
+        /// </summary>
+        public void SnapPlayerDown(Vector3 dir, float dist)
+        {
+            bool didHit = CastSelf(dir, dist, out var hit);
 
             if (didHit && hit.distance > Epsilon)
             {
-                transform.position += Down * (hit.distance - Epsilon * 2);
+                transform.position += dir * (hit.distance - Epsilon * 2);
             }
         }
 
@@ -642,14 +655,15 @@ namespace PropHunt.Character
         /// pushing the player at maxPushSpeed out of overlapping objects as to not violently teleport
         /// the player when they overlap with another object.
         /// </summary>
-        public void PushOutOverlapping()
+        public float PushOutOverlapping()
         {
             float deltaTime = unityService.deltaTime;
-            PushOutOverlapping(maxPushSpeed * deltaTime);
+            return PushOutOverlapping(maxPushSpeed * deltaTime);
         }
 
-        public void PushOutOverlapping(float maxDistance)
+        public float PushOutOverlapping(float maxDistance)
         {
+            float pushed = 0.0f;
             foreach (Collider overlap in this.GetOverlapping())
             {
                 Physics.ComputePenetration(
@@ -657,8 +671,11 @@ namespace PropHunt.Character
                     overlap, overlap.gameObject.transform.position, overlap.gameObject.transform.rotation,
                     out Vector3 direction, out float distance
                 );
-                transform.position += direction.normalized * Mathf.Min(maxDistance, distance + Epsilon);
+                float distPush = Mathf.Min(maxDistance, distance);
+                transform.position += direction.normalized * distPush;
+                pushed += distPush;
             }
+            return pushed;
         }
 
         public IEnumerable<Collider> GetOverlapping()
@@ -748,7 +765,9 @@ namespace PropHunt.Character
                 }
 
                 // Apply some force to the object hit if it is moveable, Apply force on entity hit
-                if (push != null && hit.collider.attachedRigidbody != null && !hit.collider.attachedRigidbody.isKinematic)
+                if (push != null &&
+                    hit.collider.attachedRigidbody != null &&
+                    !hit.collider.attachedRigidbody.isKinematic)
                 {
                     push.PushObject(new KinematicCharacterControllerHit(
                         hit.collider, hit.collider.attachedRigidbody, hit.collider.gameObject,
@@ -793,10 +812,18 @@ namespace PropHunt.Character
                     angleBetween = Mathf.Min(MaxAngleShoveRadians, Mathf.Abs(angleBetween));
                     float normalizedAngle = angleBetween / MaxAngleShoveRadians;
                     // Reduce the momentum by the remaining movement that ocurred
-                    momentum *= Mathf.Pow(1 - normalizedAngle, anglePower);
+                    momentum *= Mathf.Pow(1 - normalizedAngle, anglePower) * 0.9f + 0.1f;
                     // Rotate the remaining remaining movement to be projected along the plane 
                     // of the surface hit (emulate pushing against the object)
-                    momentum = Vector3.ProjectOnPlane(momentum, planeNormal).normalized * momentum.magnitude;
+                    Vector3 projectedMomentum = Vector3.ProjectOnPlane(momentum, planeNormal).normalized * momentum.magnitude;
+                    if (projectedMomentum.magnitude + Epsilon < momentum.magnitude)
+                    {
+                        momentum = Vector3.ProjectOnPlane(momentum, Up).normalized * momentum.magnitude;
+                    }
+                    else
+                    {
+                        momentum = projectedMomentum;
+                    }
                 }
 
                 // Track number of times the character has bounced

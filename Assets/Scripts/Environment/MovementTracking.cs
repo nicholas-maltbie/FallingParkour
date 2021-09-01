@@ -38,12 +38,12 @@ namespace PropHunt.Environment
 
         /// <summary>
         /// Finds the change in attitude (expressed as a quaternion) between
-        /// the current and previous fixed update. QFinal * Inv(QInitial)
+        /// the current and previous update. QFinal * Inv(QInitial)
         /// </summary>
         public Quaternion ChangeAttitude { get; private set; }
 
         /// <summary>
-        /// Displacement between current and previous fixed update
+        /// Displacement between current and previous update
         /// </summary>
         public Vector3 Displacement { get; private set; }
 
