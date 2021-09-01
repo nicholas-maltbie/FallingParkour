@@ -38,7 +38,7 @@ namespace PropHunt.Environment
         /// <inheritdoc/>
         public Vector3 GetDisplacementAtPoint(Vector3 point)
         {
-            return attachedRigidbody.GetPointVelocity(point) * unityService.fixedDeltaTime;
+            return attachedRigidbody.GetPointVelocity(point) * unityService.deltaTime;
         }
     }
 }
