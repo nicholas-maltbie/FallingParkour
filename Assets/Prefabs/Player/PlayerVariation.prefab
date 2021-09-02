@@ -299,7 +299,6 @@ MonoBehaviour:
   rotationRate: 90
   frameRotation: 0
   cameraTransform: {fileID: 8719921445191087745}
-  pitchBody: 0
   baseCameraOffset: {x: 0, y: 0, z: 0}
   minCameraDistance: 2
   maxCameraDistance: 2
@@ -346,16 +345,7 @@ MonoBehaviour:
   stepUpDepth: 0.05
   verticalSnapUp: 0.35
   snapBufferTime: 0.05
-  inputMovement: {x: 0, y: 0, z: 0}
-  attemptingJump: 0
-  elapsedFalling: 0
-  velocity: {x: 0, y: 0, z: 0}
-  distanceToGround: 0
-  onGround: 0
-  angle: 0
-  surfaceNormal: {x: 0, y: 0, z: 0}
-  groundHitPosition: {x: 0, y: 0, z: 0}
-  floor: {fileID: 0}
+  remainingProneTime: 0
 --- !u!114 &6378087374586662482
 MonoBehaviour:
   m_ObjectHideFlags: 0

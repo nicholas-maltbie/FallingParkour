@@ -119,7 +119,7 @@ namespace PropHunt.Character.Footstep
 
             if (elapsedWalkingSilent >= maxFootstepSoundDelay)
             {
-                MakeFootstepAtPoint(transform.position, kcc.floor);
+                MakeFootstepAtPoint(transform.position, kcc.Floor);
             }
         }
 

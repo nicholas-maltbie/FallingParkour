@@ -13,6 +13,8 @@ namespace PropHunt.Character
     /// as a kinematic object
     /// </summary>
     [RequireComponent(typeof(CapsuleCollider))]
+    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(CameraController))]
     public class KinematicCharacterController : NetworkBehaviour
     {
         /// <summary>
@@ -48,21 +50,21 @@ namespace PropHunt.Character
         /// </summary>
         [Tooltip("Distance from ground at which a player is considered standing on the ground")]
         [SerializeField]
-        public float groundedDistance = 0.01f;
+        private float groundedDistance = 0.01f;
 
         /// <summary>
         /// Distance to ground at which player is considered standing on something
         /// </summary>
         [Tooltip("Distance to ground at which player is considered standing on something")]
         [SerializeField]
-        public float standingDistance = 0.1f;
+        private float standingDistance = 0.1f;
 
         /// <summary>
         /// Distance to check player distance to ground
         /// </summary>
         [Tooltip("Distance to draw rays down when checking if player is grounded")]
         [SerializeField]
-        public float groundCheckDistance = 5f;
+        private float groundCheckDistance = 5f;
 
         /// <summary>
         /// Maximum angle at which the player can walk (in degrees)
@@ -70,14 +72,14 @@ namespace PropHunt.Character
         [Tooltip("Maximum angle at which the player can walk")]
         [SerializeField]
         [Range(0, 90)]
-        public float maxWalkAngle = 60f;
+        private float maxWalkAngle = 60f;
 
         /// <summary>
         /// Direction and strength of gravity
         /// </summary>
         [Tooltip("Direction and strength of gravity in units per second squared")]
         [SerializeField]
-        public Vector3 gravity = new Vector3(0, -9.807f, 0);
+        private Vector3 gravity = new Vector3(0, -9.807f, 0);
 
         /// <summary>
         /// Direction of down relative to gravity with a unit length of 1
@@ -96,14 +98,14 @@ namespace PropHunt.Character
         /// </summary>
         [Tooltip("Speed of player when walking")]
         [SerializeField]
-        public float movementSpeed = 7.5f;
+        private float movementSpeed = 7.5f;
 
         /// <summary>
         /// Velocity of player jump in units per second
         /// </summary>
         [Tooltip("Vertical velocity of player jump")]
         [SerializeField]
-        public float jumpVelocity = 5.0f;
+        private float jumpVelocity = 5.0f;
 
         /// <summary>
         /// Maximum angle at which the player can jump (in degrees)
@@ -111,7 +113,7 @@ namespace PropHunt.Character
         [Tooltip("Maximum angle at which the player can jump (in degrees)")]
         [SerializeField]
         [Range(0, 90)]
-        public float maxJumpAngle = 85f;
+        private float maxJumpAngle = 85f;
 
         /// <summary>
         /// Weight to which the player's jump is weighted towards the direction
@@ -120,21 +122,21 @@ namespace PropHunt.Character
         [Tooltip("Weight to which the player's jump is weighted towards the angle of their surface")]
         [SerializeField]
         [Range(0, 1)]
-        public float jumpAngleWeightFactor = 0.2f;
+        private float jumpAngleWeightFactor = 0.2f;
 
         /// <summary>
         /// Minimum time in seconds between player jumps
         /// </summary>
         [Tooltip("Minimum time in seconds between player jumps")]
         [SerializeField]
-        public float jumpCooldown = 0.5f;
+        private float jumpCooldown = 0.5f;
 
         /// <summary>
         /// Time in seconds that a player can jump after their feet leave the ground
         /// </summary>
         [Tooltip("Time in seconds that a player can jump after their feet leave the ground")]
         [SerializeField]
-        public float coyoteTime = 0.25f;
+        private float coyoteTime = 0.25f;
 
         /// <summary>
         /// Maximum number of time player can bounce of walls/floors/objects during an update
@@ -142,7 +144,7 @@ namespace PropHunt.Character
         [Tooltip("Maximum number of bounces when a player is moving")]
         [SerializeField]
         [Range(1, 10)]
-        public int maxBounces = 5;
+        private int maxBounces = 5;
 
         /// <summary>
         /// Decay value of momentum when hitting another object.
@@ -151,7 +153,7 @@ namespace PropHunt.Character
         [Tooltip("Decay in momentum when hitting another object")]
         [SerializeField]
         [Range(0, 1)]
-        public float pushDecay = 0.9f;
+        private float pushDecay = 0.9f;
 
         /// <summary>
         /// Decrease in momentum factor due to angle change when walking.
@@ -162,21 +164,21 @@ namespace PropHunt.Character
         [Tooltip("Decrease in momentum when walking into objects (such as walls) at an angle as an exponential." +
         "Values between [0, 1] so values smaller than 1 create a positive curve and grater than 1 for a negative curve")]
         [SerializeField]
-        public float anglePower = 0.5f;
+        private float anglePower = 0.5f;
 
         /// <summary>
         /// Maximum distance the player can be pushed out of overlapping objects in units per second
         /// </summary>
         [Tooltip("Maximum distance a player can be pushed when overlapping other objects in units per second")]
         [SerializeField]
-        public float maxPushSpeed = 1.0f;
+        private float maxPushSpeed = 1.0f;
 
         /// <summary>
         /// Distance that the character can "snap down" vertical steps
         /// </summary>
         [Tooltip("Snap down distance when snapping onto the floor")]
         [SerializeField]
-        public float verticalSnapDown = 0.2f;
+        private float verticalSnapDown = 0.2f;
 
         [Header("Stair and Step")]
 
@@ -186,14 +188,14 @@ namespace PropHunt.Character
         /// </summary>
         [Tooltip("Minimum depth of stairs when climbing up steps")]
         [SerializeField]
-        public float stepUpDepth = 0.1f;
+        private float stepUpDepth = 0.1f;
 
         /// <summary>
         /// Distance that the player can snap up when moving up stairs or vertical steps in terrain
         /// </summary>
         [Tooltip("Maximum height of step the player can step up")]
         [SerializeField]
-        public float verticalSnapUp = 0.3f;
+        private float verticalSnapUp = 0.3f;
 
         /// <summary>
         /// Time in which the player can snap up or down steps even after starting to fall.
@@ -202,103 +204,113 @@ namespace PropHunt.Character
         /// </summary>
         [Tooltip("Time in which the player can snap up or down steps even after starting to fall")]
         [SerializeField]
-        public float snapBufferTime = 0.05f;
-
-        [Header("Player Input")]
+        private float snapBufferTime = 0.05f;
 
         /// <summary>
-        /// Player's given input movement for this frame
+        /// The rate at which the player rotates towards their intended direction in degrees per second.
         /// </summary>
-        [Tooltip("Current input movement provided by the player")]
-        [SerializeField]
-        public Vector3 inputMovement;
+        private float maxTurnSpeed = 360;
 
         /// <summary>
-        /// Is the player attempting to jump
+        /// Player's given input movement for this frame.
         /// </summary>
-        [Tooltip("Current jump input from the player")]
-        [SerializeField]
-        public bool attemptingJump;
-
-        [Header("Current Status")]
+        private Vector3 inputMovement;
 
         /// <summary>
-        /// How long has the player been falling
+        /// Is the player attempting to jump.
         /// </summary>
-        [Tooltip("How long has the player been falling")]
-        [SerializeField]
+        private bool attemptingJump;
+
+        /// <summary>
+        /// How long has the player been falling.
+        /// </summary>
         private float elapsedFalling;
 
         /// <summary>
         /// Current player velocity
         /// </summary>
-        [Tooltip("Current speed and direction of player motion")]
-        [SerializeField]
         private Vector3 velocity;
 
-        [Header("Current Grounded State")]
-
         /// <summary>
-        /// Current distance the player is from the ground
+        /// Current distance the player is from the ground.
         /// </summary>
-        [Tooltip("Current distance the player is from the ground")]
-        [SerializeField]
-        public float distanceToGround;
+        private float distanceToGround;
 
         /// <summary>
         /// Was the player grounded this frame
         /// </summary>
-        [Tooltip("Is the player grounded this frame")]
-        [SerializeField]
-        public bool onGround;
+        private bool onGround;
 
         /// <summary>
-        /// Angle between the ground and the player
+        /// Angle between the ground and the player.
         /// </summary>
-        [Tooltip("Current angle between the ground and the player")]
-        [SerializeField]
-        public float angle;
+        private float angle;
 
         /// <summary>
-        /// The surface normal vector of the ground the player is standing on
+        /// The surface normal vector of the ground the player is standing on.
         /// </summary>
-        [Tooltip("Normal vector between player and ground")]
-        [SerializeField]
-        public Vector3 surfaceNormal;
+        private Vector3 surfaceNormal;
 
         /// <summary>
-        /// The point in which the player is hitting the ground
+        /// The point in which the player is hitting the ground.
         /// </summary>
-        [Tooltip("The point in which the player is hitting the ground")]
-        [SerializeField]
-        public Vector3 groundHitPosition;
+        private Vector3 groundHitPosition;
 
         /// <summary>
-        /// What is the player standing on
+        /// What is the player standing on.
         /// </summary>
-        [Tooltip("Current object the player is standing on")]
-        [SerializeField]
-        public GameObject floor;
+        private GameObject floor;
 
         /// <summary>
-        /// Amount of time that has elapsed since the player's last jump action
+        /// Amount of time that has elapsed since the player's last jump action.
         /// </summary>
         private float elapsedSinceJump;
 
         /// <summary>
-        /// Get the current player velocity
+        /// How much longer will the player be prone.
+        /// </summary>
+        [SerializeField]
+        private float remainingProneTime;
+
+        /// <summary>
+        /// Is the player attempting to jump this frame.
+        /// </summary>
+        public bool AttemptingJump => attemptingJump;
+
+        /// <summary>
+        /// Get the current player velocity.
         /// </summary>
         public Vector3 Velocity => velocity;
 
         /// <summary>
-        /// How long has the player been falling
+        /// How long has the player been falling.
         /// </summary>
         public float FallingTime => elapsedFalling;
 
         /// <summary>
-        /// Intended direction of movement provided by
+        /// Rigidbody attached to this character.
         /// </summary>
-        public Vector3 InputMovement => inputMovement;
+        private Rigidbody characterRigidbody;
+
+        /// <summary>
+        /// Camera controller for controlling player view.
+        /// </summary>
+        private CameraController cameraController;
+
+        /// <summary>
+        /// Intended direction of movement provided by.
+        /// </summary>
+        public Vector3 InputMovement => this.inputMovement;
+
+        /// <summary>
+        /// Get the current object this player is standing on.
+        /// </summary>
+        public GameObject Floor => this.floor;
+
+        /// <summary>
+        /// Is the player currently prone?
+        /// </summary>
+        public bool IsProne => remainingProneTime >= 0;
 
         /// <summary>
         /// Is the player currently standing on the ground?
@@ -384,6 +396,8 @@ namespace PropHunt.Character
 
         public void Start()
         {
+            this.cameraController = GetComponent<CameraController>();
+            this.characterRigidbody = GetComponent<Rigidbody>();
             this.networkService = new NetworkService(this);
             this.capsuleCollider = GetComponent<CapsuleCollider>();
             feetFollowObj = new GameObject();
@@ -400,6 +414,20 @@ namespace PropHunt.Character
             }
 
             float deltaTime = unityService.deltaTime;
+
+            if (IsProne)
+            {
+                this.remainingProneTime -= deltaTime;
+                this.characterRigidbody.isKinematic = false;
+                this.characterRigidbody.velocity += this.gravity * deltaTime;
+                this.floor = null;
+                this.onGround = false;
+                this.angle = 0;
+                return;
+            }
+            this.characterRigidbody.isKinematic = true;
+            this.characterRigidbody.velocity = Vector3.zero;
+            this.characterRigidbody.angularVelocity = Vector3.zero;
 
             // If player is not allowed to move, stop player movement
             if (PlayerInputManager.playerMovementState == PlayerInputState.Deny)
@@ -431,7 +459,7 @@ namespace PropHunt.Character
             bool jumped = PlayerJump(deltaTime);
 
             // Rotate movement vector by player yaw (rotation about vertical axis)
-            Quaternion horizPlaneView = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+            Quaternion horizPlaneView = Quaternion.Euler(0, cameraController.Yaw, 0);
             Vector3 playerMovementDirection = horizPlaneView * inputMovement;
 
             Vector3 movement = playerMovementDirection * movementSpeed;
@@ -501,14 +529,6 @@ namespace PropHunt.Character
             previousGrounded = StandingOnGround;
             previousGroundVelocity = GetGroundVelocity();
             previousStanding = GetHits(Down, groundedDistance).Select(hit => hit.collider.gameObject).ToList();
-
-            // make sure the rigidbody doesn't move according to velocity or angular velocity
-            Rigidbody rigidbody = GetComponent<Rigidbody>();
-            if (rigidbody != null)
-            {
-                rigidbody.velocity = Vector3.zero;
-                rigidbody.angularVelocity = Vector3.zero;
-            }
         }
 
         /// <summary>

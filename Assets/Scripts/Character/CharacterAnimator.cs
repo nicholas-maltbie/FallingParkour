@@ -71,7 +71,7 @@ namespace PropHunt.Character
                 return;
             }
 
-            bool jumping = kcc.CanJump && kcc.attemptingJump;
+            bool jumping = kcc.CanJump && kcc.AttemptingJump;
             bool falling = kcc.FallingTime >= fallingThreshold;
             bool jumpingOrFalling = falling || jumping;
             bool moving = !jumpingOrFalling && kcc.InputMovement.magnitude > this.movementDeadZone;
