@@ -298,9 +298,20 @@ namespace PropHunt.Character
         private CameraController cameraController;
 
         /// <summary>
+        /// Rotation of the plane the player is viewing
+        /// </summary>
+        private Quaternion HorizPlaneView =>
+            cameraController != null ? Quaternion.Euler(0, cameraController.Yaw, 0) : Quaternion.identity;
+
+        /// <summary>
         /// Intended direction of movement provided by.
         /// </summary>
         public Vector3 InputMovement => this.inputMovement;
+
+        /// <summary>
+        /// Player rotated movement that they intend to move.
+        /// </summary>
+        public Vector3 RotatedMovement => HorizPlaneView * InputMovement;
 
         /// <summary>
         /// Get the current object this player is standing on.
@@ -423,8 +434,13 @@ namespace PropHunt.Character
                 this.floor = null;
                 this.onGround = false;
                 this.angle = 0;
+                this.feetFollowObj.transform.parent = transform;
+                this.feetFollowObj.transform.localPosition = Vector3.zero;
+                this.feetFollowObj.transform.localRotation = Quaternion.identity;
+                this.distanceToGround = Mathf.Infinity;
                 return;
             }
+            this.transform.rotation = Quaternion.identity;
             this.characterRigidbody.isKinematic = true;
             this.characterRigidbody.velocity = Vector3.zero;
             this.characterRigidbody.angularVelocity = Vector3.zero;
@@ -458,11 +474,7 @@ namespace PropHunt.Character
             // Compute player jump if they are attempting to jump
             bool jumped = PlayerJump(deltaTime);
 
-            // Rotate movement vector by player yaw (rotation about vertical axis)
-            Quaternion horizPlaneView = Quaternion.Euler(0, cameraController.Yaw, 0);
-            Vector3 playerMovementDirection = horizPlaneView * inputMovement;
-
-            Vector3 movement = playerMovementDirection * movementSpeed;
+            Vector3 movement = RotatedMovement * movementSpeed;
 
             // If the player is standing on the ground, project their movement onto the ground plane
             // This allows them to walk up gradual slopes without facing a hit in movement speed
