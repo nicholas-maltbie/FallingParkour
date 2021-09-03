@@ -23,9 +23,9 @@ namespace PropHunt.Environment
             PushPlayer(collision);
         }
 
-        public void PushPlayer(Collision collision)
+        public void PushPlayer(Collision collision, float forceMod = 1.2f)
         {
-            
+
             if (collision.gameObject == null)
             {
                 return;
@@ -39,7 +39,7 @@ namespace PropHunt.Environment
             // Knock the player prone for prone time seconds
             kcc.KnockPlayerProne(proneTime);
             Vector3 point = collision.contacts[0].point;
-            collision.rigidbody.AddForceAtPosition(GetComponent<Rigidbody>().GetPointVelocity(point), point);
+            collision.rigidbody.AddForceAtPosition(GetComponent<Rigidbody>().GetPointVelocity(point) * forceMod, point);
         }
     }
 }
