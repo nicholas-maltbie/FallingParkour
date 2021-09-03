@@ -18,3 +18,5 @@ MonoBehaviour:
     displayName: Hex-A-Gone
   - levelName: Assets/Scenes/BigFans.unity
     displayName: Big Fans
+  - levelName: Assets/Scenes/Wipeout.unity
+    displayName: Wipeout

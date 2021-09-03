@@ -167,13 +167,13 @@ Rigidbody:
   m_GameObject: {fileID: 774360562829986131}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 0.5
+  m_AngularDrag: 5
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
 --- !u!136 &6979124853958227103
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -345,7 +345,9 @@ MonoBehaviour:
   stepUpDepth: 0.05
   verticalSnapUp: 0.35
   snapBufferTime: 0.05
-  remainingProneTime: 0
+  earlyStopProneThreshold: 0.2
+  thresholdAngularVelocity: 15
+  thresholdVelocity: 1
 --- !u!114 &6378087374586662482
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -206,6 +206,29 @@ namespace PropHunt.Character
         [SerializeField]
         private float snapBufferTime = 0.05f;
 
+        [Header("Player Prone Settings")]
+
+        /// <summary>
+        /// Threshold time in which player is not moving to exit prone state.
+        /// </summary>
+        [Tooltip("Threshold time (in seconds) in which player is not moving to exit prone state")]
+        [SerializeField]
+        private float earlyStopProneThreshold = 0.2f;
+
+        /// <summary>
+        /// Threshold angular velocity in degrees per second for existing prone early
+        /// </summary>
+        [Tooltip("Threshold angular velocity in degrees per second for existing prone early")]
+        [SerializeField]
+        private float thresholdAngularVelocity = 15;
+
+        /// <summary>
+        /// Threshold linear velocity in units per seconds for exiting prone early.
+        /// </summary>
+        [Tooltip("Threshold linear velocity in units per seconds for exiting prone early.")]
+        [SerializeField]
+        private float thresholdVelocity = 0.1f;
+
         /// <summary>
         /// The rate at which the player rotates towards their intended direction in degrees per second.
         /// </summary>
@@ -269,8 +292,12 @@ namespace PropHunt.Character
         /// <summary>
         /// How much longer will the player be prone.
         /// </summary>
-        [SerializeField]
         private float remainingProneTime;
+
+        /// <summary>
+        /// Elapsed time player has been standing/lying still under threshold velocity.
+        /// </summary>
+        private float elapsedUnderThreshold;
 
         /// <summary>
         /// Is the player attempting to jump this frame.
@@ -321,7 +348,7 @@ namespace PropHunt.Character
         /// <summary>
         /// Is the player currently prone?
         /// </summary>
-        public bool IsProne => remainingProneTime >= 0;
+        public bool IsProne => remainingProneTime > 0;
 
         /// <summary>
         /// Is the player currently standing on the ground?
@@ -431,13 +458,31 @@ namespace PropHunt.Character
                 this.remainingProneTime -= deltaTime;
                 this.characterRigidbody.isKinematic = false;
                 this.characterRigidbody.velocity += this.gravity * deltaTime;
-                this.floor = null;
-                this.onGround = false;
-                this.angle = 0;
+                
+                CheckGrounded();
+
                 this.feetFollowObj.transform.parent = transform;
                 this.feetFollowObj.transform.localPosition = Vector3.zero;
                 this.feetFollowObj.transform.localRotation = Quaternion.identity;
                 this.distanceToGround = Mathf.Infinity;
+                
+                UnityEngine.Debug.Log($"vel:{characterRigidbody.velocity.magnitude}, ang:{characterRigidbody.angularVelocity.magnitude}, elapsed:{elapsedUnderThreshold}");
+
+                // If player's velocity is less than threshold for threshold time, exit prone early
+                if (characterRigidbody.velocity.magnitude <= thresholdVelocity &&
+                    Mathf.Rad2Deg * characterRigidbody.angularVelocity.magnitude <= thresholdAngularVelocity)
+                {
+                    elapsedUnderThreshold += deltaTime;
+                    if (elapsedUnderThreshold >= earlyStopProneThreshold)
+                    {
+                        elapsedUnderThreshold = 0;
+                        remainingProneTime = 0;
+                    }
+                }
+                else
+                {
+                    elapsedUnderThreshold = 0;
+                }
                 return;
             }
             this.transform.rotation = Quaternion.identity;
@@ -879,6 +924,19 @@ namespace PropHunt.Character
         public void OnSprint(InputAction.CallbackContext context)
         {
             // isSprinting = context.ReadValueAsButton();
+        }
+
+        public void KnockPlayerProne(float time)
+        {
+            KnockPlayerProne(time, Vector3.zero, Vector3.zero);
+        }
+
+        public void KnockPlayerProne(float time, Vector3 linearVelocity, Vector3 angularVelocity)
+        {
+            characterRigidbody.isKinematic = false;
+            remainingProneTime = time;
+            characterRigidbody.velocity = linearVelocity;
+            characterRigidbody.angularVelocity = angularVelocity;
         }
     }
 }
