@@ -458,15 +458,13 @@ namespace PropHunt.Character
                 this.remainingProneTime -= deltaTime;
                 this.characterRigidbody.isKinematic = false;
                 this.characterRigidbody.velocity += this.gravity * deltaTime;
-                
+
                 CheckGrounded();
 
                 this.feetFollowObj.transform.parent = transform;
                 this.feetFollowObj.transform.localPosition = Vector3.zero;
                 this.feetFollowObj.transform.localRotation = Quaternion.identity;
                 this.distanceToGround = Mathf.Infinity;
-                
-                UnityEngine.Debug.Log($"vel:{characterRigidbody.velocity.magnitude}, ang:{characterRigidbody.angularVelocity.magnitude}, elapsed:{elapsedUnderThreshold}");
 
                 // If player's velocity is less than threshold for threshold time, exit prone early
                 if (characterRigidbody.velocity.magnitude <= thresholdVelocity &&
