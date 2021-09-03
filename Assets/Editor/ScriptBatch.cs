@@ -18,7 +18,8 @@ public class ScriptBatch : IPostprocessBuildWithReport
             "Assets/Scenes/MainMenu.unity",
             "Assets/Scenes/LobbyScene.unity",
             "Assets/Scenes/BigFans.unity",
-            "Assets/Scenes/BrokenFloor.unity"
+            "Assets/Scenes/BrokenFloor.unity",
+            "Assets/Scenes/Wipeout.unity"
         };
     }
 

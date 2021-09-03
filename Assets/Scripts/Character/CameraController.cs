@@ -47,11 +47,6 @@ namespace PropHunt.Character
         public Transform cameraTransform;
 
         /// <summary>
-        /// Should body change it's pitch (rotation about tye horizontal axis) with camera movement
-        /// </summary>
-        public bool pitchBody = false;
-
-        /// <summary>
         /// Camera offset from character center
         /// </summary>        
         public Vector3 baseCameraOffset;
@@ -130,7 +125,7 @@ namespace PropHunt.Character
         /// Source camera position in real world space, this is where the head of 
         /// the player would be, where the camera zooms out from
         /// </summary>
-        public Vector3 CameraSource => transform.TransformDirection(this.baseCameraOffset) + transform.position;
+        public Vector3 CameraSource => this.baseCameraOffset + transform.position;
 
         /// <summary>
         /// Add an object to the ignore list when raycasting camera position
@@ -175,7 +170,13 @@ namespace PropHunt.Character
             pitchChange = look.y;
         }
 
-        public void LateUpdate()
+        private float yaw;
+
+        private float pitch;
+
+        public float Yaw => yaw;
+
+        public void Update()
         {
             if (!networkService.isLocalPlayer)
             {
@@ -184,10 +185,9 @@ namespace PropHunt.Character
             }
             float deltaTime = unityService.deltaTime;
 
-            float yaw = transform.rotation.eulerAngles.y;
             float zoomChange = 0;
             // bound pitch between -180 and 180
-            float pitch = (cameraTransform.rotation.eulerAngles.x % 360 + 180) % 360 - 180;
+            pitch = (pitch % 360 + 180) % 360 - 180;
             // Only allow rotation if player is allowed to move
             if (PlayerInputManager.playerMovementState == PlayerInputState.Allow)
             {
@@ -204,9 +204,9 @@ namespace PropHunt.Character
             this.currentDistance = Mathf.Clamp(this.currentDistance + zoomChange, this.minCameraDistance, this.maxCameraDistance);
 
             // Set the player's rotation to be that of the camera's yaw
-            transform.rotation = Quaternion.Euler(pitchBody ? pitch : 0, yaw, 0);
+            // transform.rotation = Quaternion.Euler(0, yaw, 0);
             // Set pitch to be camera's rotation
-            cameraTransform.localRotation = Quaternion.Euler(pitchBody ? 0 : pitch, 0, 0);
+            cameraTransform.rotation = Quaternion.Euler(pitch, yaw, 0);
 
             // Set the local position of the camera to be the current rotation projected
             //   backwards by the current distance of the camera from the player
@@ -234,6 +234,7 @@ namespace PropHunt.Character
 
             if (thirdPersonCharacterBase != null)
             {
+                thirdPersonCharacterBase.transform.localRotation = Quaternion.Euler(0, yaw, 0);
                 if (actualDistance < shadowOnlyDistance)
                 {
                     MaterialUtils.RecursiveSetShadowCasingMode(thirdPersonCharacterBase, UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly);
@@ -258,6 +259,8 @@ namespace PropHunt.Character
                     previousOpacity = actualDistance > shadowOnlyDistance ? 1 : 0;
                 }
             }
+
+            yaw %= 360;
         }
     }
 }

@@ -111,20 +111,20 @@ namespace Tests.EditMode.Character.Footstep
         public void TestUpdateMaximumTimeFootstepSounds()
         {
             GameObject floor = new GameObject();
-            playerKcc.floor = floor;
+            // playerKcc.floor = floor;
             // Test making a footstep sound
             this.unityServiceMock.Setup(e => e.deltaTime).Returns(1.0f);
             this.unityServiceMock.Setup(e => e.fixedDeltaTime).Returns(1.0f);
-            this.playerKcc.inputMovement = new Vector3(0, 0, 1.0f);
+            // this.playerKcc.inputMovement = new Vector3(0, 0, 1.0f);
             this.footstepSounds.unityService = this.unityServiceMock.Object;
             this.footstepSounds.networkService = this.networkServiceMock.Object;
             this.playerKcc.networkService = this.networkServiceMock.Object;
             this.playerKcc.unityService = this.unityServiceMock.Object;
             this.footstepSounds.Update();
             this.footstepSounds.maxFootstepSoundDelay = 1.5f;
-            playerKcc.onGround = true;
-            playerKcc.angle = 0.0f;
-            playerKcc.distanceToGround = KinematicCharacterController.Epsilon;
+            // playerKcc.onGround = true;
+            // playerKcc.angle = 0.0f;
+            // playerKcc.distanceToGround = KinematicCharacterController.Epsilon;
             Assert.IsFalse(playerKcc.Falling);
             Assert.IsTrue(playerKcc.StandingOnGround);
 
@@ -161,12 +161,12 @@ namespace Tests.EditMode.Character.Footstep
         public void TestHitGroundMiniumTimeFootstepSounds()
         {
             GameObject floor = new GameObject();
-            playerKcc.floor = floor;
+            // playerKcc.floor = floor;
             // Test making a footstep sound
             this.footstepSounds.Update();
             unityServiceMock.Setup(e => e.deltaTime).Returns(1.0f);
             this.footstepSounds.maxFootstepSoundDelay = 1.5f;
-            playerKcc.onGround = false;
+            // playerKcc.onGround = false;
 
             // Test making a footstep sound
             this.footstepSounds.HandleFootstepEvent(footGrounded, new FootstepEvent(
