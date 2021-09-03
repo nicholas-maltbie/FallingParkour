@@ -431,15 +431,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7742637735198277325, guid: de8522a1e9d09354e975135408a22560, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7742637735198277325, guid: de8522a1e9d09354e975135408a22560, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9042753951755216660, guid: de8522a1e9d09354e975135408a22560, type: 3}
       propertyPath: m_Name
       value: Debug Chat
+      objectReference: {fileID: 0}
+    - target: {fileID: 9042753951755216660, guid: de8522a1e9d09354e975135408a22560, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de8522a1e9d09354e975135408a22560, type: 3}
