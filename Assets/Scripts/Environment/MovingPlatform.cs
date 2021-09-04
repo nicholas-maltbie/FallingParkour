@@ -5,6 +5,10 @@ using Mirror;
 
 namespace PropHunt.Environment
 {
+    /// <summary>
+    /// Script to translate a rigidbody object between two positions.
+    /// </summary>
+    [RequireComponent(typeof(Rigidbody))]
     public class MovingPlatform : NetworkBehaviour
     {
         /// <summary>
@@ -12,6 +16,9 @@ namespace PropHunt.Environment
         /// </summary>
         public float linearSpeed = 3;
 
+        /// <summary>
+        /// Current target the platform is heading for
+        /// </summary>
         private int currentTargetIndex = 0;
 
         /// <summary>
@@ -19,20 +26,14 @@ namespace PropHunt.Environment
         /// </summary>
         public Transform CurrentTarget => targetsList[currentTargetIndex];
 
+        /// <summary>
+        /// List of targets to move between
+        /// </summary>
         [SerializeField]
         public List<Transform> targetsList;
 
-        public Vector3 moved;
-
-        // Start is called before the first frame update
-        void Start()
+        public void FixedUpdate()
         {
-
-        }
-
-        void Update()
-        {
-            moved = Vector3.zero;
             if (!isServer)
             {
                 return;
@@ -42,7 +43,7 @@ namespace PropHunt.Environment
             {
                 return;
             }
-            float deltaTime = Time.deltaTime;
+            float deltaTime = Time.fixedDeltaTime;
             var direction = (CurrentTarget.position - transform.position).normalized;
             var displacement = direction * deltaTime * this.linearSpeed;
             var distanceToTarget = Vector3.Distance(transform.position, CurrentTarget.position);
@@ -53,9 +54,7 @@ namespace PropHunt.Environment
                 currentTargetIndex = (currentTargetIndex + 1) % targetsList.Count;
             }
 
-            transform.position += displacement;
-            moved += displacement;
-
+            GetComponent<Rigidbody>().MovePosition(transform.position + displacement);
         }
     }
 }

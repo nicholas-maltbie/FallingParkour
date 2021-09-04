@@ -1697,14 +1697,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 859282306}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a0c1a27c2ecb664c81a87e1a3061216, type: 3}
+  m_Script: {fileID: 11500000, guid: 0feafef9f50b3a14db1503c652ed8190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  angularVelocity: {x: 0, y: 5, z: 0}
-  angularAcceleration: {x: 0, y: 1.5, z: 0}
-  maxAngularVelocity: {x: 0, y: 80, z: 0}
+  angularVelocity: {x: 0, y: 45, z: 0}
+  localRotation: 0
+  linearVelocity: {x: 0, y: 0, z: 0}
+  localTranslation: 0
 --- !u!114 &859282309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1752,17 +1753,17 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 1
-  m_Constraints: 94
-  m_CollisionDetection: 1
+  m_Constraints: 0
+  m_CollisionDetection: 3
 --- !u!43 &879152525
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh143326
+  m_Name: pb_Mesh48546
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2025,7 +2026,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh143284
+  m_Name: pb_Mesh48510
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -9824,11 +9825,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: aacc100e74e46f04b8154bed054b11a8, type: 3}
       propertyPath: m_LocalScale.x
-      value: 60
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: aacc100e74e46f04b8154bed054b11a8, type: 3}
       propertyPath: m_LocalScale.y
-      value: 60
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: aacc100e74e46f04b8154bed054b11a8, type: 3}
       propertyPath: m_LocalScale.z
@@ -9840,7 +9841,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: aacc100e74e46f04b8154bed054b11a8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.58
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: aacc100e74e46f04b8154bed054b11a8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9940,10 +9941,10 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 1
-  m_Constraints: 94
-  m_CollisionDetection: 1
+  m_Constraints: 0
+  m_CollisionDetection: 3
 --- !u!114 &1904622112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9953,14 +9954,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1904622108}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a0c1a27c2ecb664c81a87e1a3061216, type: 3}
+  m_Script: {fileID: 11500000, guid: 0feafef9f50b3a14db1503c652ed8190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  angularVelocity: {x: 0, y: 15, z: 0}
-  angularAcceleration: {x: 0, y: 2, z: 0}
-  maxAngularVelocity: {x: 0, y: 120, z: 0}
+  angularVelocity: {x: 0, y: 60, z: 0}
+  localRotation: 0
+  linearVelocity: {x: 0, y: 0, z: 0}
+  localTranslation: 0
 --- !u!114 &1904622113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9989,8 +9991,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.02, y: 0.009281626, z: 0.11999999}
-  m_Center: {x: 0, y: -0.005359204, z: -0.049999993}
+  m_Size: {x: 0.02, y: 0.03706491, z: 0.11999999}
+  m_Center: {x: 0, y: -0.01925083, z: -0.049999993}
 --- !u!1 &2137034192
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PropHunt.Environment
 {
     /// <summary>
-    /// Set parameters for a kinematic rigidbody
+    /// Set parameters for a kinematic rigidbody to rotate about a given point
     /// </summary>
     public class RotateAboutPoint : NetworkBehaviour
     {
@@ -34,6 +34,14 @@ namespace PropHunt.Environment
         protected Vector3 maxAngularVelocity;
 
         /// <summary>
+        /// Point this object is rotating about
+        /// </summary>
+        [SerializeField]
+        [SyncVar]
+        [Tooltip("Point which this object is rotating about")]
+        protected Transform pointOfRotation;
+
+        /// <summary>
         /// Position of the object.
         /// </summary>
         protected Vector3 pos;
@@ -47,6 +55,12 @@ namespace PropHunt.Environment
         {
             pos = transform.position;
             objRigidbody = GetComponent<Rigidbody>();
+            Vector3 centerOfMass = Vector3.zero;
+            if (pointOfRotation != null)
+            {
+                centerOfMass = pointOfRotation.transform.position - transform.position;
+            }
+            objRigidbody.centerOfMass = centerOfMass;
         }
 
         public void Update()
@@ -56,8 +70,6 @@ namespace PropHunt.Environment
                 Mathf.Min(angularVelocity.x, maxAngularVelocity.x),
                 Mathf.Min(angularVelocity.y, maxAngularVelocity.y),
                 Mathf.Min(angularVelocity.z, maxAngularVelocity.z));
-            transform.position = pos;
-            objRigidbody.centerOfMass = Vector3.zero;
             objRigidbody.velocity = Vector3.zero;
             objRigidbody.angularVelocity = Mathf.Deg2Rad * angularVelocity;
         }

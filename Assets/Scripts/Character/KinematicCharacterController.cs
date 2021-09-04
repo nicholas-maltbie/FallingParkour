@@ -388,14 +388,24 @@ namespace PropHunt.Character
         private List<GameObject> previousStanding = new List<GameObject>();
 
         /// <summary>
-        /// Object for feet to follow
+        /// Object for feet to follow.
         /// </summary>
         private GameObject feetFollowObj;
 
         /// <summary>
-        /// Offset of feet from character image
+        /// Offset of feet from the center of the character.
         /// </summary>
         private Vector3 footOffset;
+
+        /// <summary>
+        /// Previous position of the player in world space.
+        /// </summary>
+        private Vector3 previousPosition;
+
+        /// <summary>
+        /// Previous rotation of the character.
+        /// </summary>
+        private Quaternion previousRotation;
 
         /// <summary>
         /// Can the player jump right now.
@@ -453,6 +463,15 @@ namespace PropHunt.Character
 
             float deltaTime = unityService.deltaTime;
 
+            float deltaPos = (transform.position - this.previousPosition).magnitude;
+            float deltaAngle = Mathf.Rad2Deg * Quaternion.Angle(transform.rotation, this.previousRotation);
+
+            float linVel = deltaPos / deltaTime;
+            float angVel = deltaAngle / deltaTime;
+
+            this.previousPosition = transform.position;
+            this.previousRotation = transform.rotation;
+
             if (IsProne)
             {
                 this.remainingProneTime -= deltaTime;
@@ -467,8 +486,8 @@ namespace PropHunt.Character
                 this.distanceToGround = Mathf.Infinity;
 
                 // If player's velocity is less than threshold for threshold time, exit prone early
-                if (characterRigidbody.velocity.magnitude <= thresholdVelocity &&
-                    Mathf.Rad2Deg * characterRigidbody.angularVelocity.magnitude <= thresholdAngularVelocity)
+                if (linVel <= thresholdVelocity &&
+                    angVel <= thresholdAngularVelocity)
                 {
                     elapsedUnderThreshold += deltaTime;
                     if (elapsedUnderThreshold >= earlyStopProneThreshold)
@@ -481,109 +500,111 @@ namespace PropHunt.Character
                 {
                     elapsedUnderThreshold = 0;
                 }
-                return;
             }
-            this.transform.rotation = Quaternion.identity;
-            this.characterRigidbody.isKinematic = true;
-            this.characterRigidbody.velocity = Vector3.zero;
-            this.characterRigidbody.angularVelocity = Vector3.zero;
-
-            // If player is not allowed to move, stop player movement
-            if (PlayerInputManager.playerMovementState == PlayerInputState.Deny)
+            else
             {
-                inputMovement = Vector3.zero;
-            }
+                this.transform.rotation = Quaternion.identity;
+                this.characterRigidbody.isKinematic = true;
+                this.characterRigidbody.velocity = Vector3.zero;
+                this.characterRigidbody.angularVelocity = Vector3.zero;
 
-            // If we are standing on an object marked as a moving platform, move the player
-            // with the moving ground object.
-            MoveWithGround();
-
-            CheckGrounded();
-
-            PushOutOverlapping();
-
-            // Update player velocity based on grounded state
-            if (!Falling)
-            {
-                velocity = Vector3.zero;
-                this.elapsedFalling = 0.0f;
-            }
-            else if (Falling)
-            {
-                velocity += gravity * deltaTime;
-                this.elapsedFalling += deltaTime;
-            }
-
-            // Compute player jump if they are attempting to jump
-            bool jumped = PlayerJump(deltaTime);
-
-            Vector3 movement = RotatedMovement * movementSpeed;
-
-            // If the player is standing on the ground, project their movement onto the ground plane
-            // This allows them to walk up gradual slopes without facing a hit in movement speed
-            if (!Falling)
-            {
-                Vector3 projectedMovement = Vector3.ProjectOnPlane(movement, surfaceNormal).normalized *
-                    movement.magnitude;
-                if (projectedMovement.magnitude + Epsilon >= movement.magnitude)
+                // If player is not allowed to move, stop player movement
+                if (PlayerInputManager.playerMovementState == PlayerInputState.Deny)
                 {
-                    movement = projectedMovement;
+                    inputMovement = Vector3.zero;
                 }
+
+                // If we are standing on an object marked as a moving platform, move the player
+                // with the moving ground object.
+                MoveWithGround();
+
+                CheckGrounded();
+
+                PushOutOverlapping();
+
+                // Update player velocity based on grounded state
+                if (!Falling)
+                {
+                    velocity = Vector3.zero;
+                    this.elapsedFalling = 0.0f;
+                }
+                else if (Falling)
+                {
+                    velocity += gravity * deltaTime;
+                    this.elapsedFalling += deltaTime;
+                }
+
+                // Compute player jump if they are attempting to jump
+                bool jumped = PlayerJump(deltaTime);
+
+                Vector3 movement = RotatedMovement * movementSpeed;
+
+                // If the player is standing on the ground, project their movement onto the ground plane
+                // This allows them to walk up gradual slopes without facing a hit in movement speed
+                if (!Falling)
+                {
+                    Vector3 projectedMovement = Vector3.ProjectOnPlane(movement, surfaceNormal).normalized *
+                        movement.magnitude;
+                    if (projectedMovement.magnitude + Epsilon >= movement.magnitude)
+                    {
+                        movement = projectedMovement;
+                    }
+                }
+
+                // If the player was standing on the ground and is not now, increment velocity by ground
+                // velocity if the player did nto jump this frame
+                if (!StandingOnGround && previousGrounded && !jumped)
+                {
+                    velocity = previousGroundVelocity;
+                }
+                else if (!StandingOnGround && previousGrounded && jumped)
+                {
+                    velocity += previousGroundVelocity;
+                }
+
+                // These are broken into two steps so the player's world velocity (usually due to falling)
+                //    does not interfere with their ability to walk around according to inputs
+                // Move the player according to their movement
+                MovePlayer(movement * deltaTime);
+                // Move the player according to their world velocity
+                MovePlayer(velocity * deltaTime);
+
+                // if the player was standing on the ground at the start of the frame and is not 
+                //    trying to jump right now, snap them down to the ground
+                if (CanSnapDown)
+                {
+                    SnapPlayerDown();
+                }
+
+                CheckGrounded();
+                feetFollowObj.transform.position = groundHitPosition;
+                footOffset = transform.position - groundHitPosition;
+
+                var currentStanding = GetHits(Down, standingDistance).Select(hit => hit.collider.gameObject).ToList();
+
+                // Detect if the floor the player is standing on has changed
+                // For each object that we are currently standing on that we were not standing on the previous update
+                currentStanding.Where(floor => !previousStanding.Contains(floor))
+                    .Where(floor => floor != null)
+                    .Select(floor => floor.GetComponent<DetectPlayerStand>())
+                    .Where(detectStand => detectStand != null)
+                    .ToList()
+                    .ForEach(detectStand => detectStand.CmdStepOn());
+
+                // For each object that were standing on previously that we are not standing on now
+                previousStanding.Where(floor => !currentStanding.Contains(floor))
+                    .Where(floor => floor != null)
+                    .Select(floor => floor.GetComponent<DetectPlayerStand>())
+                    .Where(detectStand => detectStand != null)
+                    .ToList()
+                    .ForEach(detectStand => detectStand.CmdStepOff());
+
+                // Save state of player
+                previousFalling = Falling;
+                previousGrounded = StandingOnGround;
+                previousGroundVelocity = GetGroundVelocity();
+                previousStanding = GetHits(Down, groundedDistance).Select(hit => hit.collider.gameObject).ToList();
             }
-
-            // If the player was standing on the ground and is not now, increment velocity by ground
-            // velocity if the player did nto jump this frame
-            if (!StandingOnGround && previousGrounded && !jumped)
-            {
-                velocity = previousGroundVelocity;
-            }
-            else if (!StandingOnGround && previousGrounded && jumped)
-            {
-                velocity += previousGroundVelocity;
-            }
-
-            // These are broken into two steps so the player's world velocity (usually due to falling)
-            //    does not interfere with their ability to walk around according to inputs
-            // Move the player according to their movement
-            MovePlayer(movement * deltaTime);
-            // Move the player according to their world velocity
-            MovePlayer(velocity * deltaTime);
-
-            // if the player was standing on the ground at the start of the frame and is not 
-            //    trying to jump right now, snap them down to the ground
-            if (CanSnapDown)
-            {
-                SnapPlayerDown();
-            }
-
-            CheckGrounded();
-            feetFollowObj.transform.position = groundHitPosition;
-            footOffset = transform.position - groundHitPosition;
-
-            var currentStanding = GetHits(Down, standingDistance).Select(hit => hit.collider.gameObject).ToList();
-
-            // Detect if the floor the player is standing on has changed
-            // For each object that we are currently standing on that we were not standing on the previous update
-            currentStanding.Where(floor => !previousStanding.Contains(floor))
-                .Where(floor => floor != null)
-                .Select(floor => floor.GetComponent<DetectPlayerStand>())
-                .Where(detectStand => detectStand != null)
-                .ToList()
-                .ForEach(detectStand => detectStand.CmdStepOn());
-
-            // For each object that were standing on previously that we are not standing on now
-            previousStanding.Where(floor => !currentStanding.Contains(floor))
-                .Where(floor => floor != null)
-                .Select(floor => floor.GetComponent<DetectPlayerStand>())
-                .Where(detectStand => detectStand != null)
-                .ToList()
-                .ForEach(detectStand => detectStand.CmdStepOff());
-
-            // Save state of player
-            previousFalling = Falling;
-            previousGrounded = StandingOnGround;
-            previousGroundVelocity = GetGroundVelocity();
-            previousStanding = GetHits(Down, groundedDistance).Select(hit => hit.collider.gameObject).ToList();
         }
 
         /// <summary>
