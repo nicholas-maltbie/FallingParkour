@@ -6,10 +6,10 @@ namespace PropHunt.Environment
     /// <summary>
     /// Moving ground defined by a rigidbody
     /// </summary>
-    [RequireComponent(typeof(Rigidbody))]
     public class RigidbodyMovingGround : MonoBehaviour, IMovingGround
     {
         public IUnityService unityService = new UnityService();
+        [SerializeField]
         private Rigidbody attachedRigidbody;
 
         /// <summary>
@@ -22,11 +22,14 @@ namespace PropHunt.Environment
         public bool AvoidTransferMomentum() => avoidTransferMomentum;
 
         /// <inheritdoc/>
-        public bool ShouldAttach() => false;
+        public bool ShouldAttach() => true;
 
         public void Start()
         {
-            attachedRigidbody = GetComponent<Rigidbody>();
+            if (attachedRigidbody == null)
+            {
+                attachedRigidbody = GetComponent<Rigidbody>();
+            }
         }
 
         /// <inheritdoc/>
