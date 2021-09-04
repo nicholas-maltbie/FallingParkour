@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 249697813445521289}
   - component: {fileID: 249697813445521291}
-  - component: {fileID: 249697813445521288}
   - component: {fileID: -3784827364768863918}
+  - component: {fileID: 8719960034665903215}
   m_Layer: 0
   m_Name: Curved Fan Container
   m_TagString: Untagged
@@ -51,24 +51,6 @@ MonoBehaviour:
   visible: 0
   m_AssetId: afa0896c30a36284b96f815ca6f4feb7
   hasSpawned: 0
---- !u!114 &249697813445521288
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 249697813445521294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0feafef9f50b3a14db1503c652ed8190, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  angularVelocity: {x: 0, y: 30, z: 0}
-  localRotation: 1
-  attitude: {x: 0, y: 0, z: 0}
-  linearVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &-3784827364768863918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,6 +80,24 @@ MonoBehaviour:
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+--- !u!114 &8719960034665903215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249697813445521294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6fe1bbdec364e14498e0e5bd31329de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  angularVelocity: {x: 0, y: 30, z: 0}
+  localRotation: 0
+  attitude: {x: 0, y: 0, z: 0}
+  linearVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &125905316268879158
 MonoBehaviour:
   m_ObjectHideFlags: 0
