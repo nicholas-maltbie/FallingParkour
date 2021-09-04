@@ -69,6 +69,7 @@ GameObject:
   - component: {fileID: 8431909921260752296}
   - component: {fileID: -4015626056735795926}
   - component: {fileID: 5275110212496715535}
+  - component: {fileID: 2036550617649752212}
   m_Layer: 0
   m_Name: Fan Container
   m_TagString: Untagged
@@ -125,6 +126,7 @@ MonoBehaviour:
   angularVelocity: {x: 0, y: 30, z: 0}
   localRotation: 0
   linearVelocity: {x: 0, y: 0, z: 0}
+  localTranslation: 0
 --- !u!114 &-4015626056735795926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,6 +172,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2036550617649752212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8431909921260752302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83392ae5c1b731446909f252fd494ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  target: {fileID: 5275110212496715535}
+  clientAuthority: 0
+  syncVelocity: 1
+  clearVelocity: 0
+  velocitySensitivity: 0.1
+  syncAngularVelocity: 1
+  clearAngularVelocity: 0
+  angularVelocitySensitivity: 0.1
 --- !u!1001 &7423017664410426192
 PrefabInstance:
   m_ObjectHideFlags: 0
