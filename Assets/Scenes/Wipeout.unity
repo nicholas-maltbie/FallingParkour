@@ -1705,6 +1705,7 @@ MonoBehaviour:
   angularVelocity: {x: 0, y: 5, z: 0}
   angularAcceleration: {x: 0, y: 1.5, z: 0}
   maxAngularVelocity: {x: 0, y: 80, z: 0}
+  pointOfRotation: {fileID: 0}
 --- !u!114 &859282309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9824,11 +9825,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: aacc100e74e46f04b8154bed054b11a8, type: 3}
       propertyPath: m_LocalScale.x
-      value: 60
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: aacc100e74e46f04b8154bed054b11a8, type: 3}
       propertyPath: m_LocalScale.y
-      value: 60
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: aacc100e74e46f04b8154bed054b11a8, type: 3}
       propertyPath: m_LocalScale.z
@@ -9840,7 +9841,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: aacc100e74e46f04b8154bed054b11a8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.58
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: aacc100e74e46f04b8154bed054b11a8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9961,6 +9962,7 @@ MonoBehaviour:
   angularVelocity: {x: 0, y: 15, z: 0}
   angularAcceleration: {x: 0, y: 2, z: 0}
   maxAngularVelocity: {x: 0, y: 120, z: 0}
+  pointOfRotation: {fileID: 0}
 --- !u!114 &1904622113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9989,8 +9991,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.02, y: 0.009281626, z: 0.11999999}
-  m_Center: {x: 0, y: -0.005359204, z: -0.049999993}
+  m_Size: {x: 0.02, y: 0.016218722, z: 0.11999999}
+  m_Center: {x: 0, y: -0.008827751, z: -0.049999993}
 --- !u!1 &2137034192
 GameObject:
   m_ObjectHideFlags: 0
