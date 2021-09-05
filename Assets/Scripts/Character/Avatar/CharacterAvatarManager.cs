@@ -32,7 +32,7 @@ namespace PropHunt.Character.Avatar
         /// <summary>
         /// Current avatar selected by this player
         /// </summary>
-        public NetworkVariableString avatarSelected = new NetworkVariableString("");
+        public NetworkVariableString avatarSelected = new NetworkVariableString(new NetworkVariableSettings {WritePermission = NetworkVariablePermission.Everyone}, "");
 
         public void Start()
         {

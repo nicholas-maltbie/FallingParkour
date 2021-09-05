@@ -1,6 +1,5 @@
 using System.Collections;
 using MLAPI;
-using MLAPI.Connection;
 using UnityEngine;
 
 namespace PropHunt.Environment.Hexagon
@@ -8,7 +7,8 @@ namespace PropHunt.Environment.Hexagon
     /// <summary>
     /// Create a radial grid of hexagons starting from a single point
     /// </summary>
-    public class RadialHexagonGrid : NetworkBehaviour
+    [ExecuteInEditMode]
+    public class RadialHexagonGrid : MonoBehaviour
     {
         /// <summary>
         /// Hexagon prefab to spawn in areas
@@ -64,6 +64,7 @@ namespace PropHunt.Environment.Hexagon
         /// <param name="step">Which step along the arm is the hexagon (away from the radial line)</param>
         public void SpawnHex(int arm, int distance, int step)
         {
+            UnityEngine.Debug.Log("Helloworld - {arm} - {distance} - {step}");
             // Get direction of this arm
             Vector2 dir = new Vector2(
                 Mathf.Cos(rad60deg * arm),
@@ -91,23 +92,17 @@ namespace PropHunt.Environment.Hexagon
             Vector3 hexPos = new Vector3(newPos.x, 0, newPos.y);
             hex.transform.position = transform.position + hexPos;
             hex.transform.parent = hexBase.transform;
-
-            hex.GetComponent<NetworkObject>().Spawn(destroyWithScene: true);
         }
 
         /// <summary>
         /// Create the hexagon grid
         /// </summary>
-        public IEnumerator CreateGrid()
+        private void CreateGrid()
         {
-            yield return new WaitForSeconds(0.5f);
             // Spawn central hex
             SpawnHex(0, 0, 0);
 
-            if (timeAnimationDelay > 0)
-            {
-                yield return new WaitForSeconds(timeAnimationDelay);
-            }
+            UnityEngine.Debug.Log("Helloworld");
 
             // Construct hexagons out from starting position
             for (int distance = 1; distance < tileRadius; distance++)
@@ -124,29 +119,23 @@ namespace PropHunt.Environment.Hexagon
                         }
 
                         SpawnHex(arm, distance, step);
-                        if (timeAnimationDelay > 0)
-                        {
-                            yield return new WaitForSeconds(timeAnimationDelay);
-                        }
                     }
                 }
                 // Spawn the hex we skipped earlier
                 SpawnHex(5, distance, 0);
-                if (timeAnimationDelay > 0)
-                {
-                    yield return new WaitForSeconds(timeAnimationDelay);
-                }
             }
         }
 
-        public void Start()
+        public void InitializeGrid()
         {
-            if (NetworkManager.Singleton.IsServer)
+            if (hexBase != null)
             {
-                hexBase = new GameObject();
-                hexBase.name = "Hexagon Base";
-                StartCoroutine(CreateGrid());
+                GameObject.DestroyImmediate(hexBase);
             }
+            hexBase = new GameObject();
+            hexBase.transform.parent = transform;
+            hexBase.name = "Hexagon Base";
+            CreateGrid();
         }
     }
 }
