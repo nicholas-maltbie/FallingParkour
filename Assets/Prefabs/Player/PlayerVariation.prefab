@@ -39,15 +39,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3210544379120321374}
-  - component: {fileID: 157574147643115147}
-  - component: {fileID: 3407040232578660576}
-  - component: {fileID: 4030304076195849990}
   - component: {fileID: 6660980944122881893}
   - component: {fileID: 6979124853958227103}
   - component: {fileID: 8953201972942749938}
   - component: {fileID: 7579679661674813356}
   - component: {fileID: 8171741753156500418}
-  - component: {fileID: 7386665037539840189}
   - component: {fileID: 618657021808012579}
   - component: {fileID: 6735585361067305556}
   - component: {fileID: 8963333518367223407}
@@ -57,6 +53,8 @@ GameObject:
   - component: {fileID: 7132874320890653670}
   - component: {fileID: 2723596458813897958}
   - component: {fileID: -3663087370360975145}
+  - component: {fileID: 6906861509374862920}
+  - component: {fileID: 4726560124087261143}
   m_Layer: 0
   m_Name: PlayerVariation
   m_TagString: Player
@@ -82,82 +80,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &157574147643115147
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 774360562829986131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  serverOnly: 0
-  visible: 0
-  m_AssetId: 94c1f054bcd31be429fd1ae1185e7267
-  hasSpawned: 0
---- !u!114 &3407040232578660576
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 774360562829986131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.05
-  clientAuthority: 1
-  sendInterval: 0.05
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 1
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 1
-  bufferTimeMultiplier: 3
-  bufferSizeLimit: 64
-  catchupThreshold: 6
-  catchupMultiplier: 0.1
-  showGizmos: 0
-  showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
---- !u!114 &4030304076195849990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 774360562829986131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 734b48bea0b204338958ee3d885e11f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0
-  clientAuthority: 1
-  sendInterval: 0.05
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 0
-  bufferTimeMultiplier: 3
-  bufferSizeLimit: 64
-  catchupThreshold: 6
-  catchupMultiplier: 0.1
-  showGizmos: 0
-  showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
-  target: {fileID: 8719921445191087745}
 --- !u!54 &6660980944122881893
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -200,8 +122,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c2dfef40ed05324f842ce2eb43e4d48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   cameraController: {fileID: 0}
   audioListener: {fileID: 0}
 --- !u!114 &7579679661674813356
@@ -216,8 +136,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b301a6bc1a0227847b8629c05ae166ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   pushPower: 50
   weight: 20
 --- !u!114 &8171741753156500418
@@ -232,8 +150,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c1b1902a8c533a4e8f55a1a77e19d40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   sphereRadius: 0.1
   viewDistance: 5
   focus: {fileID: 0}
@@ -243,22 +159,6 @@ MonoBehaviour:
     m_Bits: 4294967295
   focusTriggerInteraction: 0
   interacting: 0
---- !u!114 &7386665037539840189
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 774360562829986131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  clientAuthority: 1
-  animator: {fileID: 3257078712940819048}
 --- !u!114 &618657021808012579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -271,8 +171,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e9df24ce5f5fef458a9318e55bc6932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   movementDeadZone: 0.001
   turningDeadZone: 15
   fallingThreshold: 0.05
@@ -292,8 +190,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88dccdbb9c3c8ed48ac11483313f02d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   maxPitch: 90
   minPitch: -90
   rotationRate: 90
@@ -323,8 +219,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73555907382235c47a34fbf6dbc0d484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   capsuleCollider: {fileID: 0}
   groundedDistance: 0.01
   standingDistance: 0.1
@@ -360,9 +254,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9832560dc55dac84484e162163ada677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  groundFeet: 1
+  groundFeet:
+    m_InternalValue: 0
   playerFootGrounded: {fileID: 4129409122029440841}
 --- !u!114 &4064673780513737925
 MonoBehaviour:
@@ -376,10 +269,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb864185cc1837e40a8b45affc6a65f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  playerId: 0
-  characterName: Player
+  playerId:
+    m_InternalValue: 0
+  characterName:
+    m_InternalValue: Player
 --- !u!114 &708651594984797752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -392,8 +285,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe567c0785e30cf4c902b0fc7fa8504b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   sprintVolume: 0.95
   walkVolume: 0.45
   minPitchRange: 0.95
@@ -574,11 +465,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75eaea14c21c0f0419d2ba6fc7b977b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   avatarLibrary: {fileID: 11400000, guid: cde5bbdb324fc9a4cb0ab4d8d3164ff2, type: 2}
   modelBase: {fileID: 8113388304753193640}
-  avatarSelected: 
+  avatarSelected:
+    m_InternalValue: 
 --- !u!114 &-3663087370360975145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -591,8 +481,71 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b68e81ab14830944aa24087bf8feb23e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
+--- !u!114 &6906861509374862920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774360562829986131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkInstanceId: 0
+  PrefabHash: 15203730886250534285
+  PrefabHashGenerator: PlayerVariation
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+--- !u!114 &4726560124087261143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774360562829986131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FixedSendsPerSecond: 20
+  AssumeSyncedSends: 1
+  InterpolatePosition: 1
+  SnapDistance: 10
+  InterpolateServer: 1
+  MinMeters: 0.15
+  MinDegrees: 1.5
+  ExtrapolatePosition: 0
+  MaxSendsToExtrapolate: 5
+  Channel: 
+  EnableRange: 0
+  EnableNonProvokedResendChecks: 0
+  DistanceSendrate:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 20
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 500
+      value: 20
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1159461200177953735
 GameObject:
   m_ObjectHideFlags: 0

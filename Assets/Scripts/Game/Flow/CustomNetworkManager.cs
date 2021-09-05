@@ -5,18 +5,20 @@ using MLAPI;
 
 namespace PropHunt.Game.Flow
 {
-    public class GameSetup : NetworkManager
+    public class CustomNetworkManager : NetworkManager
     {
         private Dictionary<ulong, string> playerNameLookup = new Dictionary<ulong, string>();
-
-        public static GameSetup Instance;
 
         [Header("Game Prefabs")]
         public GameTimer timerPrefab;
 
-        public void OnDestory()
+        public void OnEnable()
         {
-            Instance = null;
+            CharacterName.OnPlayerNameChange += SetPlayerName;
+        }
+
+        public void OnDisable()
+        {
             CharacterName.OnPlayerNameChange -= SetPlayerName;
         }
 

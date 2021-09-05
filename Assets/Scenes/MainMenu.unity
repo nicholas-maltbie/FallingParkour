@@ -123,71 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &117323062
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_RootOrder
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -261092084840383615, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 8e792dde1c7311e4bbd1df2bc7e9146d, type: 2}
-    - target: {fileID: 919132149155446097, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_Name
-      value: fan
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
 --- !u!1 &315642923
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,9 +223,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 493852692511661025, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
-      propertyPath: sceneId
-      value: 1976774151
+    - target: {fileID: 2318210381346111627, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
+      propertyPath: NetworkConfig.RegisteredScenes.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2318210381346111627, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
+      propertyPath: NetworkConfig.RegisteredScenes.Array.data[2]
+      value: BigFans
+      objectReference: {fileID: 0}
+    - target: {fileID: 2318210381346111627, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
+      propertyPath: NetworkConfig.RegisteredScenes.Array.data[3]
+      value: BrokenFloor
+      objectReference: {fileID: 0}
+    - target: {fileID: 2318210381346111627, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
+      propertyPath: NetworkConfig.RegisteredScenes.Array.data[4]
+      value: Wipeout
       objectReference: {fileID: 0}
     - target: {fileID: 8542409671753137158, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
       propertyPath: m_Name
@@ -597,7 +544,6 @@ GameObject:
   - component: {fileID: 1518817022}
   - component: {fileID: 1518817026}
   - component: {fileID: 1518817027}
-  - component: {fileID: 1518817028}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -711,40 +657,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angularVelocity:
-    m_InternalValue: {x: 0, y: 0, z: 0}
+    m_InternalValue: {x: 0, y: 30, z: 0}
   localRotation:
     m_InternalValue: 0
   linearVelocity:
     m_InternalValue: {x: 0, y: 0, z: 0}
   localTranslation:
     m_InternalValue: 0
---- !u!114 &1518817028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1518817021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <isClient>k__BackingField: 0
-  <isServer>k__BackingField: 0
-  <isLocalPlayer>k__BackingField: 0
-  <hasAuthority>k__BackingField: 0
-  <netId>k__BackingField: 0
-  serverOnly: 0
-  destroyCalled: 0
-  <NetworkBehaviours>k__BackingField: []
-  <visibility>k__BackingField: {fileID: 0}
-  visible: 0
-  m_AssetId: 
-  hasSpawned: 0
-  <SpawnedFromInstantiate>k__BackingField: 0
-  clientStarted: 0
-  hadAuthority: 0
 --- !u!1001 &176122825704206889
 PrefabInstance:
   m_ObjectHideFlags: 0

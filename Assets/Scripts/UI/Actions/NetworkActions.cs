@@ -18,6 +18,7 @@ namespace PropHunt.UI.Actions
 
         public void StartHost()
         {
+            UnityEngine.Debug.Log("Starting host");
             // Check if player has valid username
             if (!CharacterNameManagement.HasValidPlayerName())
             {
@@ -26,11 +27,8 @@ namespace PropHunt.UI.Actions
             }
 
             // Server + Client
-            if (Application.platform != RuntimePlatform.WebGLPlayer)
-            {
-                NetworkManager.Singleton.StartHost();
-                DebugChatLog.AddInfoMessage("Starting host");
-            }
+            NetworkManager.Singleton.StartHost();
+            DebugChatLog.AddInfoMessage("Starting host");
         }
 
         public void StartClient()

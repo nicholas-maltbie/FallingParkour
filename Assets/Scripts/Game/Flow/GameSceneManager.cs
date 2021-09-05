@@ -3,6 +3,7 @@ using PropHunt.Game.Level;
 using MLAPI;
 using MLAPI.SceneManagement;
 using MLAPI.Connection;
+using static PropHunt.Game.Level.GameLevelLibrary;
 
 namespace PropHunt.Game.Flow
 {
@@ -36,6 +37,7 @@ namespace PropHunt.Game.Flow
             {
                 gameScene = levelLibrary.DefaultLevel.levelName;
             }
+            GameManager.OnGamePhaseChange += HandleGamePhaseChange;
         }
 
         public void ChangeScene(string newScene)
@@ -43,16 +45,9 @@ namespace PropHunt.Game.Flow
             gameScene = newScene;
         }
 
-        public void OnEnable()
+        public void OnStartServer()
         {
-            GameManager.OnGamePhaseChange += HandleGamePhaseChange;
             GameManager.ChangePhase(GamePhase.Reset);
-        }
-
-        public void OnDisable()
-        {
-            GameManager.OnGamePhaseChange -= HandleGamePhaseChange;
-            GameManager.ChangePhase(GamePhase.Disabled);
         }
 
         /// <summary>
@@ -80,7 +75,8 @@ namespace PropHunt.Game.Flow
 
         public void HandleGamePhaseChange(object sender, GamePhaseChange change)
         {
-            // Cleanpu from previous game state
+            UnityEngine.Debug.Log("loadingScene: " + change.next.ToString());
+            // Cleanup from previous game state
             switch (change.previous)
             {
                 // Do things differently based on the new phase
@@ -127,6 +123,7 @@ namespace PropHunt.Game.Flow
                     break;
                 case GamePhase.Reset:
                     // Start loading the lobby scene
+                    UnityEngine.Debug.Log("Loading scene: " + lobbyScene);
                     NetworkSceneManager.SwitchScene(lobbyScene);
                     // Once laoding is complete, go to lobby
                     break;
@@ -140,8 +137,16 @@ namespace PropHunt.Game.Flow
             {
                 return;
             }
+            UnityEngine.Debug.Log(GameManager.gamePhase + " " + NetworkManager.Singleton.IsServer + " " + NetworkManager.Singleton.IsHost);
             switch (GameManager.gamePhase)
             {
+                case GamePhase.Disabled:
+                    UnityEngine.Debug.Log("Game In Disabled State");
+                    if (IsHost)
+                    {
+                        GameManager.ChangePhase(GamePhase.Reset);
+                    }
+                    break;
                 case GamePhase.Setup:
                     bool allReady = true;
                     foreach (NetworkClient client in NetworkManager.ConnectedClientsList)
@@ -168,7 +173,7 @@ namespace PropHunt.Game.Flow
                     // As soon as scene is loaded, move to in game
                     // if (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone)
                     // {
-                        GameManager.ChangePhase(GamePhase.Lobby);
+                    GameManager.ChangePhase(GamePhase.Lobby);
                     // }
                     break;
             }
