@@ -11,20 +11,20 @@ namespace PropHunt.Game.Communication
     /// Events for logging to chat information
     /// </summary>
     [Serializable]
-    public readonly struct ChatMessage : IEquatable<ChatMessage>
+    public struct ChatMessage : IEquatable<ChatMessage>, INetworkSerializable
     {
         /// <summary>
         /// Label of source for event as a string
         /// </summary>
-        public readonly string source;
+        public string source;
         /// <summary>
         /// Time that the event ocurred
         /// </summary>
-        public readonly long time;
+        public long time;
         /// <summary>
         /// Content int he message
         /// </summary>
-        public readonly string content;
+        public string content;
 
         public bool Equals(ChatMessage other)
         {
@@ -50,6 +50,13 @@ namespace PropHunt.Game.Communication
             {
                 return $"[{DateTime.FromBinary(time).ToShortTimeString()}] {content}";
             }
+        }
+
+        public void NetworkSerialize(NetworkSerializer serializer)
+        {
+            serializer.Serialize(ref source);
+            serializer.Serialize(ref time);
+            serializer.Serialize(ref content);
         }
     }
 

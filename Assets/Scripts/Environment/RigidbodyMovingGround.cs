@@ -40,7 +40,6 @@ namespace PropHunt.Environment
                 Vector3 vel = attachedRigidbody.GetPointVelocity(point);
                 attachedRigidbody.velocity = nrb.netVelocity.Value;
                 attachedRigidbody.angularVelocity = nrb.netAngularVelocity.Value;
-                UnityEngine.Debug.Log($"raw:{vel} better?:{attachedRigidbody.GetPointVelocity(point)}");
             }
             return attachedRigidbody.GetPointVelocity(point);
         }
