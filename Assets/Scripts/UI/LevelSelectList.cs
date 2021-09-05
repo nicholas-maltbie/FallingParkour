@@ -97,8 +97,7 @@ namespace PropHunt.UI
                     {
                         this.selectedScene = level.levelName;
                         GameObject.FindObjectOfType<GameSceneManager>().ChangeScene(this.selectedScene);
-                        // GameObject.FindObjectOfType<CurrentlySelectedLevel>().UpdateLevel(level);
-                        // .SendToAll<LevelSelectEvent>(new LevelSelectEvent { level = level });
+                        GameObject.FindObjectOfType<CurrentlySelectedLevel>().UpdateLevel(level);
                     });
                 });
             LevelSelectChange += (_, args) => LevelSelected(args.level.displayName);

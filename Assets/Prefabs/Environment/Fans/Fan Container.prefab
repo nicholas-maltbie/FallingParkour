@@ -99,9 +99,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angularVelocity:
-    m_InternalValue: {x: 0, y: 0, z: 0}
+    m_InternalValue: {x: 0, y: 30, z: 0}
   localRotation:
-    m_InternalValue: 0
+    m_InternalValue: 1
   attitude:
     m_InternalValue: {x: 0, y: 0, z: 0}
   linearVelocity:

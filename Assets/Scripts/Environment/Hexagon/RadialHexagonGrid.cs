@@ -100,6 +100,7 @@ namespace PropHunt.Environment.Hexagon
         /// </summary>
         public IEnumerator CreateGrid()
         {
+            yield return new WaitForSeconds(0.5f);
             // Spawn central hex
             SpawnHex(0, 0, 0);
 

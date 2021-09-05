@@ -577,11 +577,7 @@ namespace PropHunt.Character
                     .Select(floor => floor.GetComponent<DetectPlayerStand>())
                     .Where(detectStand => detectStand != null)
                     .ToList()
-                    .ForEach(detectStand => 
-                    {
-                        detectStand.StepOnServerRpc();
-                        UnityEngine.Debug.Log($"Standing on something - {detectStand.gameObject.name}");
-                    });
+                    .ForEach(detectStand => detectStand.StepOnServerRpc());
 
                 // For each object that were standing on previously that we are not standing on now
                 previousStanding.Where(floor => !currentStanding.Contains(floor))

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3612603010206716569}
   - component: {fileID: 3612603010206716568}
+  - component: {fileID: 7095434654063930566}
   m_Layer: 0
   m_Name: SoundEffectManager
   m_TagString: Untagged
@@ -47,3 +48,20 @@ MonoBehaviour:
   soundEffectPrefab: {fileID: 1268714253140809689, guid: 2f7a7edc6502fd241b43262a6a996867, type: 3}
   audioMixer: {fileID: 24100000, guid: 447bcbade0387f642bb6a6663dd979ce, type: 2}
   maxSFXSources: 32
+--- !u!114 &7095434654063930566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3612603010206716570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkInstanceId: 0
+  PrefabHash: 12775953313452192062
+  PrefabHashGenerator: SoundEffectManager
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0

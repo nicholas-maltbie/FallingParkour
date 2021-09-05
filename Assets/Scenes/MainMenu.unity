@@ -328,17 +328,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: SoundEffectManager
       objectReference: {fileID: 0}
-    - target: {fileID: 3612603010206716575, guid: c198513fb8db39d408ec6a282a3019e6, type: 3}
-      propertyPath: sceneId
-      value: 792393212
-      objectReference: {fileID: 0}
-    - target: {fileID: 3612603010206716575, guid: c198513fb8db39d408ec6a282a3019e6, type: 3}
-      propertyPath: m_AssetId
-      value: c198513fb8db39d408ec6a282a3019e6
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3612603010206716575, guid: c198513fb8db39d408ec6a282a3019e6, type: 3}
-    - {fileID: 351090567, guid: c198513fb8db39d408ec6a282a3019e6, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c198513fb8db39d408ec6a282a3019e6, type: 3}
 --- !u!1001 &388999652
 PrefabInstance:

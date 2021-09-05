@@ -25,13 +25,6 @@ namespace PropHunt.Environment
         protected NetworkVariable<bool> localRotation = new NetworkVariable<bool>();
 
         /// <summary>
-        /// Current rotation of the object as a euclidian degrees
-        /// </summary>
-        [SerializeField]
-        [Tooltip("Current rotation of the object as a euclidian degrees")]
-        protected NetworkVariable<Vector3> attitude = new NetworkVariable<Vector3>();
-
-        /// <summary>
         /// Linear velocity of object in units per second for each axis
         /// </summary>
         [SerializeField]
@@ -44,33 +37,26 @@ namespace PropHunt.Environment
             {
                 return;
             }
-            if (localRotation.Value)
-            {
-                attitude.Value = transform.localEulerAngles;
-            }
-            else
-            {
-                attitude.Value = transform.eulerAngles;
-            }
         }
 
         public void Update()
         {
+            if (!NetworkManager.Singleton.IsServer)
+            {
+                return;
+            }
             float deltaTime = Time.deltaTime;
 
             // move object by velocity
             transform.position += deltaTime * linearVelocity.Value;
             // rotate object by rotation
-            attitude.Value += deltaTime * angularVelocity.Value;
-            // Bound all angles between 0 and 360
-            attitude.Value = new Vector3(attitude.Value.x % 360, attitude.Value.y % 360, attitude.Value.z % 360);
             if (localRotation.Value)
             {
-                transform.localEulerAngles = attitude.Value;
+                transform.localRotation = transform.localRotation * Quaternion.Euler(deltaTime * angularVelocity.Value);
             }
             else
             {
-                transform.eulerAngles = attitude.Value;
+                transform.rotation = transform.rotation * Quaternion.Euler(deltaTime * angularVelocity.Value);
             }
         }
     }

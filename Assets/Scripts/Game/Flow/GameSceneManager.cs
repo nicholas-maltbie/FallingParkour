@@ -140,7 +140,6 @@ namespace PropHunt.Game.Flow
             {
                 return;
             }
-            UnityEngine.Debug.Log(GameManager.gamePhase + " " + NetworkManager.Singleton.IsServer + " " + NetworkManager.Singleton.IsHost);
             switch (GameManager.gamePhase)
             {
                 case GamePhase.Disabled:

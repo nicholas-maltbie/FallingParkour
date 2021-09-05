@@ -1,4 +1,5 @@
 using MLAPI;
+using MLAPI.Transports.UNET;
 using PropHunt.Character;
 using PropHunt.Game.Communication;
 using UnityEngine;
@@ -40,7 +41,7 @@ namespace PropHunt.UI.Actions
                 return;
             }
 
-            string networkAddress = connectAddress.text.Trim();
+            NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = connectAddress.text.Trim();
             NetworkManager.Singleton.StartClient();
             DebugChatLog.AddInfoMessage("Starting client");
         }

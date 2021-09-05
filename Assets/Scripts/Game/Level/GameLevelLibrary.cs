@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MLAPI.Serialization;
 using UnityEngine;
 
 namespace PropHunt.Game.Level
@@ -103,7 +104,7 @@ namespace PropHunt.Game.Level
         /// Game level lookup information
         /// </summary>
         [Serializable]
-        public class GameLevel
+        public struct GameLevel : INetworkSerializable
         {
             /// <summary>
             /// Name of scene for loading the level
@@ -116,6 +117,12 @@ namespace PropHunt.Game.Level
             /// </summary>
             [SerializeField]
             public string displayName;
+
+            public void NetworkSerialize(NetworkSerializer serializer)
+            {
+                serializer.Serialize(ref levelName);
+                serializer.Serialize(ref displayName);
+            }
         }
     }
 }
