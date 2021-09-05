@@ -4,7 +4,7 @@ on:
   push: { branches: [main] }
 
 env:
-  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE_2020_3 }}
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE_2021_1 }}
 
 jobs:
   testAllModes:
@@ -16,7 +16,7 @@ jobs:
         projectPath:
           - ""
         unityVersion:
-          - 2020.3.14f1
+          - 2021.1.19f1
         testMode:
           - editmode
           - playmode
