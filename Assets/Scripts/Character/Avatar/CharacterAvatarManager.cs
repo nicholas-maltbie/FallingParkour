@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Linq;
-using Mirror;
+using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.NetworkVariable;
 using UnityEngine;
 
 namespace PropHunt.Character.Avatar
@@ -8,7 +10,6 @@ namespace PropHunt.Character.Avatar
     /// <summary>
     /// Have a character controller push any dynamic rigidbody it hits
     /// </summary>
-    [RequireComponent(typeof(NetworkAnimator))]
     public class CharacterAvatarManager : NetworkBehaviour
     {
         /// <summary>
@@ -31,16 +32,26 @@ namespace PropHunt.Character.Avatar
         /// <summary>
         /// Current avatar selected by this player
         /// </summary>
-        [SyncVar(hook = nameof(OnAvatarChange))]
-        public string avatarSelected;
+        public NetworkVariableString avatarSelected = new NetworkVariableString("");
 
         public void Start()
         {
-            if (isLocalPlayer)
+            if (IsLocalPlayer)
             {
-                CmdSetAvatar(string.IsNullOrEmpty(defaultAvatar) ? avatarLibrary.DefaultAvater.Name : defaultAvatar);
+                SetAvatarServerRpc(string.IsNullOrEmpty(defaultAvatar) ? avatarLibrary.DefaultAvater.Name : defaultAvatar);
             }
         }
+
+        public void OnEnable()
+        {
+            avatarSelected.OnValueChanged += OnAvatarChange;
+        }
+
+        public void OnDisable()
+        {
+            avatarSelected.OnValueChanged -= OnAvatarChange;
+        }
+
 
         private IEnumerator SetupAvatar(string avatarName)
         {
@@ -84,10 +95,10 @@ namespace PropHunt.Character.Avatar
             loading = false;
         }
 
-        [Command]
-        public void CmdSetAvatar(string newlySelectedAvatar)
+        [ServerRpc]
+        public void SetAvatarServerRpc(string newlySelectedAvatar)
         {
-            avatarSelected = newlySelectedAvatar;
+            avatarSelected.Value = newlySelectedAvatar;
             LoadNewAvatar(newlySelectedAvatar);
         }
 

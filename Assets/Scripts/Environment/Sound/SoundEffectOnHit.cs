@@ -1,4 +1,4 @@
-using Mirror;
+using MLAPI;
 using PropHunt.Utils;
 using UnityEngine;
 
@@ -30,11 +30,6 @@ namespace PropHunt.Environment.Sound
         private float lastSound = Mathf.NegativeInfinity;
 
         /// <summary>
-        /// Unity service for managing time
-        /// </summary>
-        public IUnityService unityService = new UnityService();
-
-        /// <summary>
         /// Minimum pitch varaition
         /// </summary>
         [Range(-3, 3)]
@@ -57,13 +52,6 @@ namespace PropHunt.Environment.Sound
         /// </summary>
         public float maximumSpeed = 10.0f;
 
-        public INetworkService networkService;
-
-        public void Awake()
-        {
-            networkService = new NetworkService(this);
-        }
-
         /// <summary>
         /// Process a collision event and make a sound effect if permissible
         /// </summary>
@@ -77,9 +65,9 @@ namespace PropHunt.Environment.Sound
                 return;
             }
 
-            if ((unityService.time - lastSound) >= minimumDelay)
+            if ((Time.time - lastSound) >= minimumDelay)
             {
-                lastSound = unityService.time;
+                lastSound = Time.time;
             }
             else
             {
@@ -97,7 +85,7 @@ namespace PropHunt.Environment.Sound
 
         public void OnCollisionEnter(Collision other)
         {
-            if (!networkService.isServer)
+            if (!NetworkManager.Singleton.IsServer)
             {
                 return;
             }

@@ -1,5 +1,4 @@
-using Mirror;
-using PropHunt.Utils;
+using MLAPI;
 using UnityEngine;
 
 namespace PropHunt.Character
@@ -10,11 +9,6 @@ namespace PropHunt.Character
     [RequireComponent(typeof(CameraController))]
     public class CameraFollow : NetworkBehaviour
     {
-        /// <summary>
-        /// Network service for managing network calls
-        /// </summary>
-        public INetworkService networkService;
-
         /// <summary>
         /// Position and rotation to control camera position and movement
         /// </summary>
@@ -27,14 +21,13 @@ namespace PropHunt.Character
 
         public void Start()
         {
-            this.networkService = new NetworkService(this);
             this.cameraController = GetComponent<CameraController>();
             audioListener = GameObject.FindObjectOfType<AudioListener>();
         }
 
         public void LateUpdate()
         {
-            if (!this.networkService.isLocalPlayer)
+            if (!base.IsLocalPlayer)
             {
                 // exit from update if this is not the local player
                 return;

@@ -1,8 +1,7 @@
-using System;
-using Mirror;
+using MLAPI;
+using MLAPI.NetworkVariable;
 using PropHunt.Game.Level;
 using PropHunt.UI;
-using PropHunt.Utils;
 using UnityEngine;
 using static PropHunt.Game.Level.GameLevelLibrary;
 
@@ -16,9 +15,8 @@ namespace PropHunt.Game.Flow
         /// <summary>
         /// Currently selected level for the game
         /// </summary>
-        [SyncVar(hook = nameof(UpdateSelectedLevel))]
         [SerializeField]
-        private GameLevel currentLevel;
+        private NetworkVariable<GameLevel> currentLevel = new NetworkVariable<GameLevel>();
 
         /// <summary>
         /// Library of all the levels in the game
@@ -31,18 +29,27 @@ namespace PropHunt.Game.Flow
             var manager = GameObject.FindObjectOfType<GameSceneManager>();
             if (manager != null)
             {
-                currentLevel = library.GetLevel(manager.gameScene);
+                currentLevel.Value = library.GetLevel(manager.gameScene);
             }
+        }
+
+        public void OnEnable()
+        {
+            currentLevel.OnValueChanged += UpdateSelectedLevel;
+        }
+
+        public void OnDisable()
+        {
+            currentLevel.OnValueChanged -= UpdateSelectedLevel;
         }
 
         /// <summary>
         /// Update the currently selected level
         /// </summary>
         /// <param name="newLevel">New level that is selected</param>
-        [Server]
         public void UpdateLevel(GameLevel newLevel)
         {
-            currentLevel = newLevel;
+            currentLevel.Value = newLevel;
         }
 
         public void UpdateSelectedLevel(GameLevel _, GameLevel selected)

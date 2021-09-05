@@ -405,7 +405,9 @@ PrefabInstance:
       propertyPath: m_AssetId
       value: c198513fb8db39d408ec6a282a3019e6
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3612603010206716575, guid: c198513fb8db39d408ec6a282a3019e6, type: 3}
+    - {fileID: 351090567, guid: c198513fb8db39d408ec6a282a3019e6, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c198513fb8db39d408ec6a282a3019e6, type: 3}
 --- !u!1001 &388999652
 PrefabInstance:
@@ -627,6 +629,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -707,12 +710,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0feafef9f50b3a14db1503c652ed8190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  angularVelocity: {x: 0, y: 0, z: 30}
-  localRotation: 0
-  attitude: {x: 0, y: 0, z: 0}
-  linearVelocity: {x: 0, y: 0, z: 0}
+  angularVelocity:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  localRotation:
+    m_InternalValue: 0
+  linearVelocity:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  localTranslation:
+    m_InternalValue: 0
 --- !u!114 &1518817028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -725,11 +730,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 2730696202
+  <isClient>k__BackingField: 0
+  <isServer>k__BackingField: 0
+  <isLocalPlayer>k__BackingField: 0
+  <hasAuthority>k__BackingField: 0
+  <netId>k__BackingField: 0
   serverOnly: 0
+  destroyCalled: 0
+  <NetworkBehaviours>k__BackingField: []
+  <visibility>k__BackingField: {fileID: 0}
   visible: 0
   m_AssetId: 
   hasSpawned: 0
+  <SpawnedFromInstantiate>k__BackingField: 0
+  clientStarted: 0
+  hadAuthority: 0
 --- !u!1001 &176122825704206889
 PrefabInstance:
   m_ObjectHideFlags: 0

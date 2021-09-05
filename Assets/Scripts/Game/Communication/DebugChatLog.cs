@@ -1,15 +1,17 @@
-using Mirror;
-using PropHunt.Utils;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Runtime.Serialization.Formatters.Binary;
+using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.Serialization;
 
 namespace PropHunt.Game.Communication
 {
     /// <summary>
     /// Events for logging to chat information
     /// </summary>
-    public readonly struct ChatMessage : IEquatable<ChatMessage>, NetworkMessage
+    [Serializable]
+    public readonly struct ChatMessage : IEquatable<ChatMessage>
     {
         /// <summary>
         /// Label of source for event as a string
@@ -91,7 +93,11 @@ namespace PropHunt.Game.Communication
         private static void AdjustMessageLogServer(ChatMessage chatMessage)
         {
             // OnMessage(chatMessage);
-            NetworkServer.SendToAll(chatMessage);
+            NetworkBuffer buffer = new NetworkBuffer();
+            var binaryFormatter = new BinaryFormatter();
+            binaryFormatter.Serialize(buffer, chatMessage);
+            CustomMessagingManager.SendUnnamedMessage(
+                new List<ulong>(NetworkManager.Singleton.ConnectedClients.Keys), buffer);
         }
 
         public static void AddInfoMessage(string message)

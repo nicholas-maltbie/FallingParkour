@@ -67,9 +67,9 @@ namespace PropHunt.UI
 
             // Find all character avatars and update their avatar id
             GameObject.FindObjectsOfType<CharacterAvatarManager>()
-                .Where(avatar => avatar.isLocalPlayer)
+                .Where(avatar => avatar.IsLocalPlayer)
                 .ToList()
-                .ForEach(avatar => avatar.CmdSetAvatar(avatarId));
+                .ForEach(avatar => avatar.SetAvatarServerRpc(avatarId));
 
             NewCharacterSelected?.Invoke(this, EventArgs.Empty);
 

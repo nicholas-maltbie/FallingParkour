@@ -1,6 +1,6 @@
 using System;
-using Mirror;
-using PropHunt.Utils;
+using MLAPI;
+using MLAPI.NetworkVariable;
 using UnityEngine;
 
 namespace PropHunt.Game.Flow
@@ -16,23 +16,16 @@ namespace PropHunt.Game.Flow
         public event EventHandler OnFinish;
 
         /// <summary>
-        /// Unity service for managing unity static operations
-        /// </summary>
-        public IUnityService unityService = new UnityService();
-
-        /// <summary>
         /// Amount of time in seconds that has passed since the timer started
         /// </summary>
-        [SyncVar]
         [SerializeField]
-        private float elapsed;
+        private NetworkVariableFloat elapsed = new NetworkVariableFloat();
 
         /// <summary>
         /// Amount of time that the timer will run for (in seconds)
         /// </summary>
-        [SyncVar]
         [SerializeField]
-        private float length;
+        private NetworkVariableFloat length = new NetworkVariableFloat();
 
         /// <summary>
         /// Is this timer currently running
@@ -42,12 +35,12 @@ namespace PropHunt.Game.Flow
         /// <summary>
         /// Has this given timer completed
         /// </summary>
-        public bool Finished => elapsed >= length;
+        public bool Finished => elapsed.Value >= length.Value;
 
         /// <summary>
         /// What is the time remaining in this timer
         /// </summary>
-        public TimeSpan Remaining => Finished ? TimeSpan.Zero : TimeSpan.FromSeconds(length - elapsed);
+        public TimeSpan Remaining => Finished ? TimeSpan.Zero : TimeSpan.FromSeconds(length.Value - elapsed.Value);
 
         /// <summary>
         /// Get a human readable version of the time remaining time in the timer
@@ -64,27 +57,25 @@ namespace PropHunt.Game.Flow
         /// <param name="length">Length of timer to start</param>
         public void StartTimer(float length)
         {
-            this.length = length;
+            this.length.Value = length;
             StartTimer();
         }
 
         /// <summary>
         /// Start this given timer on the server and resets the elapsed time to zero
         /// </summary>
-        [Server]
         public void StartTimer()
         {
-            this.elapsed = 0.0f;
-            Running = true;
+            this.elapsed.Value = 0.0f;
+            this.Running = true;
         }
 
         /// <summary>
         /// Pauses but saves the current elapsed time of a timer
         /// </summary>
-        [Server]
         public void PauseTimer()
         {
-            Running = false;
+            this.Running = false;
         }
 
         /// <summary>
@@ -92,25 +83,24 @@ namespace PropHunt.Game.Flow
         /// </summary>
         public void ResumeTimer()
         {
-            Running = true;
+            this.Running = true;
         }
 
         /// <summary>
         /// Stop the given timer from running
         /// </summary>
-        [Server]
         public void StopTimer()
         {
-            this.elapsed = 0.0f;
-            Running = false;
+            this.elapsed.Value = 0.0f;
+            this.Running = false;
         }
 
         public void Update()
         {
-            if (Running && !Finished)
+            if (this.Running && !this.Finished)
             {
-                this.elapsed += unityService.deltaTime;
-                if (Finished)
+                this.elapsed.Value += Time.deltaTime;
+                if (this.Finished)
                 {
                     // Notify listeners of completed timer
                     OnFinish?.Invoke(this, EventArgs.Empty);

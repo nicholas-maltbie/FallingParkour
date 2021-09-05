@@ -1,12 +1,8 @@
 using UnityEngine;
-using Mirror;
-using PropHunt.Game.Communication;
-using System;
-using PropHunt.Environment.Sound;
-using UnityEngine.SceneManagement;
-using System.Collections;
-using PropHunt.Utils;
 using PropHunt.Game.Level;
+using MLAPI;
+using MLAPI.SceneManagement;
+using MLAPI.Connection;
 
 namespace PropHunt.Game.Flow
 {
@@ -14,14 +10,11 @@ namespace PropHunt.Game.Flow
     {
         [Header("Scene Management")]
 
-        [Scene]
         public string lobbyScene;
 
         public string gameScene { get; private set; }
 
         public GameLevelLibrary levelLibrary;
-
-        public INetworkService newtworkService;
 
         private GameTimer gamePhaseTimer;
 
@@ -39,7 +32,6 @@ namespace PropHunt.Game.Flow
 
         public void Start()
         {
-            newtworkService = new NetworkService(this);
             if (string.IsNullOrEmpty(gameScene))
             {
                 gameScene = levelLibrary.DefaultLevel.levelName;
@@ -51,13 +43,13 @@ namespace PropHunt.Game.Flow
             gameScene = newScene;
         }
 
-        public override void OnStartServer()
+        public void OnEnable()
         {
             GameManager.OnGamePhaseChange += HandleGamePhaseChange;
             GameManager.ChangePhase(GamePhase.Reset);
         }
 
-        public override void OnStopServer()
+        public void OnDisable()
         {
             GameManager.OnGamePhaseChange -= HandleGamePhaseChange;
             GameManager.ChangePhase(GamePhase.Disabled);
@@ -71,7 +63,7 @@ namespace PropHunt.Game.Flow
             if (this.gamePhaseTimer != null)
             {
                 this.gamePhaseTimer.StopTimer();
-                NetworkServer.Destroy(this.gamePhaseTimer.gameObject);
+                this.gamePhaseTimer.GetComponent<NetworkObject>().Despawn(true);
                 this.gamePhaseTimer = null;
             }
         }
@@ -82,8 +74,8 @@ namespace PropHunt.Game.Flow
         public void SetupTimer()
         {
             ClearTimer();
-            this.gamePhaseTimer = GameObject.Instantiate(CustomNetworkManager.Instance.timerPrefab);
-            NetworkServer.Spawn(this.gamePhaseTimer.gameObject);
+            // this.gamePhaseTimer = GameObject.Instantiate(CustomNetworkManager.Instance.timerPrefab);
+            // this.gamePhaseTimer.GetComponent<NetworkObject>().Spawn();
         }
 
         public void HandleGamePhaseChange(object sender, GamePhaseChange change)
@@ -113,8 +105,8 @@ namespace PropHunt.Game.Flow
                     break;
                 case GamePhase.Setup:
                     bufferElapsed = 0.0f;
-                    NetworkServer.SetAllClientsNotReady();
-                    CustomNetworkManager.Instance.ServerChangeScene(gameScene);
+                    // NetworkServer.SetAllClientsNotReady();
+                    NetworkSceneManager.SwitchScene(gameScene);
                     // Once loading is complete, go to InGame
                     break;
                 case GamePhase.InGame:
@@ -135,7 +127,7 @@ namespace PropHunt.Game.Flow
                     break;
                 case GamePhase.Reset:
                     // Start loading the lobby scene
-                    CustomNetworkManager.Instance.ServerChangeScene(lobbyScene);
+                    NetworkSceneManager.SwitchScene(lobbyScene);
                     // Once laoding is complete, go to lobby
                     break;
             }
@@ -144,7 +136,7 @@ namespace PropHunt.Game.Flow
         public void Update()
         {
             // Only run this on server
-            if (!newtworkService.activeNetworkServer)
+            if (!NetworkManager.Singleton.IsServer)
             {
                 return;
             }
@@ -152,12 +144,12 @@ namespace PropHunt.Game.Flow
             {
                 case GamePhase.Setup:
                     bool allReady = true;
-                    foreach (NetworkConnection client in NetworkServer.connections.Values)
+                    foreach (NetworkClient client in NetworkManager.ConnectedClientsList)
                     {
-                        if (!client.isReady)
-                        {
-                            allReady = false;
-                        }
+                        // if (!client.isReady)
+                        // {
+                        //     allReady = false;
+                        // }
                     }
                     if (allReady)
                     {
@@ -165,18 +157,19 @@ namespace PropHunt.Game.Flow
                     }
                     // As soon as scene is loaded, move to in game
                     if (bufferElapsed >= bufferTime &&
-                        allReady &&
-                        (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone))
+                        allReady
+                        // (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone)
+                        )
                     {
                         GameManager.ChangePhase(GamePhase.InGame);
                     }
                     break;
                 case GamePhase.Reset:
                     // As soon as scene is loaded, move to in game
-                    if (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone)
-                    {
+                    // if (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone)
+                    // {
                         GameManager.ChangePhase(GamePhase.Lobby);
-                    }
+                    // }
                     break;
             }
         }

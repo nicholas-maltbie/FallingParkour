@@ -1,3 +1,4 @@
+using MLAPI;
 using PropHunt.Utils;
 using UnityEngine;
 
@@ -41,11 +42,6 @@ namespace PropHunt.UI
         public GameObject serverScreen;
 
         /// <summary>
-        /// Network service to detect changes in network state
-        /// </summary>
-        public INetworkService networkService = new NetworkService(null);
-
-        /// <summary>
         /// Previous network state for detecting changes in network infomation
         /// </summary>
         private NetworkState previousNetworkState = NetworkState.Unloaded;
@@ -56,15 +52,15 @@ namespace PropHunt.UI
         /// <returns>Network state based on the network client information</returns>
         public NetworkState GetCurrentNetworkState()
         {
-            if (!networkService.activeNetworkClient && !networkService.activeNetworkServer)
+            if (!NetworkManager.Singleton.IsConnectedClient && !NetworkManager.Singleton.IsServer)
             {
                 return NetworkState.Offline;
             }
-            else if (networkService.activeNetworkClient && !networkService.isConnectedNetworkClient)
+            else if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsConnectedClient)
             {
                 return NetworkState.Connecting;
             }
-            else if (networkService.activeNetworkClient && networkService.isConnectedNetworkClient)
+            else if (NetworkManager.Singleton.IsConnectedClient)
             {
                 return NetworkState.Online;
             }

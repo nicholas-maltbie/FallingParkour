@@ -1,6 +1,4 @@
-﻿using Mirror;
-using PropHunt.Character.Avatar;
-using PropHunt.Utils;
+﻿using MLAPI;
 using UnityEngine;
 
 namespace PropHunt.Character
@@ -28,11 +26,6 @@ namespace PropHunt.Character
         public float longFallingThreshold = 1.5f;
 
         /// <summary>
-        /// Network service for managing network calls
-        /// </summary>
-        public INetworkService networkService;
-
-        /// <summary>
         /// Character controller for getting character motion information
         /// </summary>
         public KinematicCharacterController kcc;
@@ -54,14 +47,13 @@ namespace PropHunt.Character
 
         public void Start()
         {
-            this.networkService = new NetworkService(this);
             this.characterController = this.GetComponent<CharacterController>();
         }
 
         public void LateUpdate()
         {
             // If local player
-            if (!networkService.isLocalPlayer)
+            if (!IsLocalPlayer)
             {
                 return;
             }

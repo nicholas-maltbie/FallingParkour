@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Mirror;
-using PropHunt.Utils;
+using System.Runtime.Serialization.Formatters.Binary;
+using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.Serialization;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -10,7 +13,8 @@ namespace PropHunt.Environment.Sound
     /// <summary>
     /// Event describing a sound effect for sharing over the network
     /// </summary>
-    public struct SoundEffectEvent : NetworkMessage
+    [Serializable]
+    public class SoundEffectEvent : INetworkSerializable
     {
         /// <summary>
         /// identifier for sound effect event
@@ -33,6 +37,10 @@ namespace PropHunt.Environment.Sound
         /// Mixer group to play this sound effect in
         /// </summary>
         public string mixerGroup;
+
+        public void NetworkSerialize(NetworkSerializer serializer)
+        {
+        }
     }
 
     /// <summary>
@@ -145,12 +153,11 @@ namespace PropHunt.Environment.Sound
         /// <param name="pitch">Pitch value of sound effect</param>
         /// <param name="volume">Volume value of sound effect</param>
         /// <param name="audioMixerGroup">Audio mixer group to play this sound effect in</param>
-        [Server]
         public static void CreateNetworkedSoundEffectAtPoint(
             Vector3 point, SoundMaterial material, SoundType type, float pitch = 1.0f, float volume = 1.0f,
             string audioMixerGroup = defaultAudioMixerGroup)
         {
-            if (SoundEffectManager.Instance == null || !NetworkServer.active)
+            if (SoundEffectManager.Instance == null)
             {
                 return;
             }
@@ -172,14 +179,17 @@ namespace PropHunt.Environment.Sound
         /// Create a sound effect event on the server and send this event to all clients
         /// </summary>
         /// <param name="sfxEvent">Sound effect event to create</param>
-        [Server]
         public static void CreateNetworkedSoundEffectAtPoint(SoundEffectEvent sfxEvent)
         {
-            if (SoundEffectManager.Instance == null || !NetworkServer.active)
+            if (SoundEffectManager.Instance == null)
             {
                 return;
             }
-            NetworkServer.SendToAll<SoundEffectEvent>(sfxEvent);
+            NetworkBuffer buffer = new NetworkBuffer();
+            var binaryFormatter = new BinaryFormatter();
+            binaryFormatter.Serialize(buffer, sfxEvent);
+            CustomMessagingManager.SendUnnamedMessage(
+                new List<ulong>(NetworkManager.Singleton.ConnectedClients.Keys), buffer);
         }
 
         /// <summary>

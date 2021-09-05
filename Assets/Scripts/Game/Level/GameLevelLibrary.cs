@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mirror;
 using UnityEngine;
 
 namespace PropHunt.Game.Level
@@ -109,7 +108,6 @@ namespace PropHunt.Game.Level
             /// <summary>
             /// Name of scene for loading the level
             /// </summary>
-            [Scene]
             [SerializeField]
             public string levelName;
 

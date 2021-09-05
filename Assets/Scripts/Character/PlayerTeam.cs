@@ -1,5 +1,5 @@
-
-using Mirror;
+using MLAPI;
+using MLAPI.NetworkVariable;
 
 namespace PropHunt.Character
 {
@@ -12,7 +12,6 @@ namespace PropHunt.Character
 
     public class PlayerTeam : NetworkBehaviour
     {
-        [SyncVar]
-        public Team playerTeam;
+        public NetworkVariable<Team> playerTeam = new NetworkVariable<Team>();
     }
 }

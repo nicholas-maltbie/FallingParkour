@@ -1,7 +1,5 @@
-
-using System.Collections;
 using System.Collections.Generic;
-using Mirror;
+using MLAPI;
 using PropHunt.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,17 +8,6 @@ namespace PropHunt.Character
 {
     public class CameraController : NetworkBehaviour
     {
-        /// <summary>
-        /// Network service for managing network calls
-        /// </summary>
-        public INetworkService networkService;
-
-        /// <summary>
-        /// Mocked unity service for accessing inputs, delta time, and
-        /// various other static unity inputs in a testable manner.
-        /// </summary>
-        public IUnityService unityService = new UnityService();
-
         /// <summary>
         /// Maximum pitch for rotating character camera in degrees
         /// </summary>
@@ -141,7 +128,6 @@ namespace PropHunt.Character
 
         public void Start()
         {
-            this.networkService = new NetworkService(this);
             this.baseCameraOffset = this.cameraTransform.localPosition;
             this.currentDistance = minCameraDistance;
             this.ignoreObjects.Add(gameObject);
@@ -178,12 +164,12 @@ namespace PropHunt.Character
 
         public void Update()
         {
-            if (!networkService.isLocalPlayer)
+            if (!base.IsLocalPlayer)
             {
                 // exit from update if this is not the local player
                 return;
             }
-            float deltaTime = unityService.deltaTime;
+            float deltaTime = Time.deltaTime;
 
             float zoomChange = 0;
             // bound pitch between -180 and 180

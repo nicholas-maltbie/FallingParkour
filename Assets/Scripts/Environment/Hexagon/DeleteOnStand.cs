@@ -1,5 +1,6 @@
-
-using Mirror;
+using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.NetworkVariable;
 using PropHunt.Utils;
 using UnityEngine;
 
@@ -15,38 +16,32 @@ namespace PropHunt.Environment.Hexagon
         /// <summary>
         /// is this cube being deleted
         /// </summary>
-        [SyncVar]
-        public bool deleting = false;
+        public NetworkVariableBool deleting = new NetworkVariableBool(false);
 
         /// <summary>
         /// How long has this cube been fading
         /// </summary>
-        [SyncVar]
-        private float deleteElapsed = 0.0f;
+        private NetworkVariableFloat deleteElapsed = new NetworkVariableFloat(0.0f);
 
         /// <summary>
         /// Normal color 1 of hex when it's not being deleted
         /// </summary>
-        [SyncVar]
-        public Color normalColor1;
+        public NetworkVariableColor normalColor1 = new NetworkVariableColor();
 
         /// <summary>
         /// Normal color 2 of hex when it's not being deleted
         /// </summary>
-        [SyncVar]
-        public Color normalColor2;
+        public NetworkVariableColor normalColor2 = new NetworkVariableColor();
 
         /// <summary>
         /// COlor to fade color 1 towards when being deleted
         /// </summary>
-        [SyncVar]
-        public Color fadeColor1;
+        public NetworkVariableColor fadeColor1 = new NetworkVariableColor();
 
         /// <summary>
         /// COlor to fade color 2 towards when being deleted
         /// </summary>
-        [SyncVar]
-        public Color fadeColor2;
+        public NetworkVariableColor fadeColor2 = new NetworkVariableColor();
 
         /// <summary>
         /// Update current colors of the hex
@@ -56,11 +51,13 @@ namespace PropHunt.Environment.Hexagon
             MaterialUtils.RecursiveSetColorProperty(
                 gameObject,
                 "_Background1",
-                Color.Lerp(normalColor1, fadeColor1, deleting ? Mathf.Pow(deleteElapsed / deleteTime, 2) : 0));
+                Color.Lerp(normalColor1.Value, fadeColor1.Value, deleting.Value ?
+                    Mathf.Pow(deleteElapsed.Value / deleteTime, 2) : 0));
             MaterialUtils.RecursiveSetColorProperty(
                 gameObject,
                 "_Background2",
-                Color.Lerp(normalColor2, fadeColor2, deleting ? Mathf.Pow(deleteElapsed / deleteTime, 2) : 0));
+                Color.Lerp(normalColor2.Value, fadeColor2.Value, deleting.Value ?
+                    Mathf.Pow(deleteElapsed.Value / deleteTime, 2) : 0));
         }
 
         public void Start()
@@ -70,14 +67,14 @@ namespace PropHunt.Environment.Hexagon
 
         public void Update()
         {
-            if (deleting)
+            if (deleting.Value)
             {
-                deleteElapsed += Time.deltaTime;
+                deleteElapsed.Value += Time.deltaTime;
                 UpdateColor();
             }
-            if (isServer && deleteElapsed >= deleteTime)
+            if (NetworkManager.Singleton.IsServer && deleteElapsed.Value >= deleteTime)
             {
-                NetworkServer.Destroy(gameObject);
+                NetworkManager.Destroy(GetComponent<NetworkObject>());
             }
         }
 
@@ -85,18 +82,18 @@ namespace PropHunt.Environment.Hexagon
         /// When a player steps onto this tile
         /// </summary>
         /// <param name="sender">Who stepped on this object</param>
-        [Command(requiresAuthority = false)]
-        public override void CmdStepOn(NetworkConnectionToClient sender = null)
+        [ServerRpc]
+        public override void StepOnServerRpc()
         {
-            deleting = true;
+            deleting.Value = true;
         }
 
         /// <summary>
         /// When a player steps off of this tile
         /// </summary>
         /// <param name="sender">Who stepped on this object</param>
-        [Command(requiresAuthority = false)]
-        public override void CmdStepOff(NetworkConnectionToClient sender = null)
+        [ServerRpc]
+        public override void StepOffServerRpc()
         {
 
         }

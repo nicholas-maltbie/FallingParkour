@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Mirror;
+using MLAPI;
 using PropHunt.Environment;
 using PropHunt.Utils;
 using UnityEngine;
@@ -26,17 +26,6 @@ namespace PropHunt.Character
         /// Maximum angle between two colliding objects
         /// </summary>
         public const float MaxAngleShoveRadians = 90.0f;
-
-        /// <summary>
-        /// Mocked unity service for accessing inputs, delta time, and
-        /// various other static unity inputs in a testable manner.
-        /// </summary>
-        public IUnityService unityService = new UnityService();
-
-        /// <summary>
-        /// Network service for managing network calls
-        /// </summary>
-        public INetworkService networkService;
 
         /// <summary>
         /// Player collider for checking things
@@ -446,7 +435,6 @@ namespace PropHunt.Character
         {
             this.cameraController = GetComponent<CameraController>();
             this.characterRigidbody = GetComponent<Rigidbody>();
-            this.networkService = new NetworkService(this);
             this.capsuleCollider = GetComponent<CapsuleCollider>();
             feetFollowObj = new GameObject();
             feetFollowObj.name = "feetFollowObj";
@@ -455,13 +443,13 @@ namespace PropHunt.Character
 
         public void Update()
         {
-            if (!networkService.isLocalPlayer)
+            if (!base.IsLocalPlayer)
             {
                 // exit from update if this is not the local player
                 return;
             }
 
-            float deltaTime = unityService.deltaTime;
+            float deltaTime = Time.deltaTime;
 
             float deltaPos = (transform.position - this.previousPosition).magnitude;
             float deltaAngle = Mathf.Rad2Deg * Quaternion.Angle(transform.rotation, this.previousRotation);
@@ -589,7 +577,7 @@ namespace PropHunt.Character
                     .Select(floor => floor.GetComponent<DetectPlayerStand>())
                     .Where(detectStand => detectStand != null)
                     .ToList()
-                    .ForEach(detectStand => detectStand.CmdStepOn());
+                    .ForEach(detectStand => detectStand.StepOnServerRpc());
 
                 // For each object that were standing on previously that we are not standing on now
                 previousStanding.Where(floor => !currentStanding.Contains(floor))
@@ -597,7 +585,7 @@ namespace PropHunt.Character
                     .Select(floor => floor.GetComponent<DetectPlayerStand>())
                     .Where(detectStand => detectStand != null)
                     .ToList()
-                    .ForEach(detectStand => detectStand.CmdStepOff());
+                    .ForEach(detectStand => detectStand.StepOffServerRpc());
 
                 // Save state of player
                 previousFalling = Falling;
@@ -753,7 +741,7 @@ namespace PropHunt.Character
         /// </summary>
         public float PushOutOverlapping()
         {
-            float deltaTime = unityService.deltaTime;
+            float deltaTime = Time.deltaTime;
             return PushOutOverlapping(maxPushSpeed * deltaTime);
         }
 
