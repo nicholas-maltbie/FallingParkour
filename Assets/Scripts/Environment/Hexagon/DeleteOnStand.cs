@@ -16,7 +16,7 @@ namespace PropHunt.Environment.Hexagon
         /// <summary>
         /// is this cube being deleted
         /// </summary>
-        public NetworkVariableBool deleting = new NetworkVariableBool(false);
+        public NetworkVariable<bool> deleting = new NetworkVariable<bool>(false);
 
         /// <summary>
         /// How long has this cube been fading
@@ -26,22 +26,22 @@ namespace PropHunt.Environment.Hexagon
         /// <summary>
         /// Normal color 1 of hex when it's not being deleted
         /// </summary>
-        public NetworkVariableColor normalColor1 = new NetworkVariableColor();
+        public NetworkVariable<Color> normalColor1 = new NetworkVariable<Color>();
 
         /// <summary>
         /// Normal color 2 of hex when it's not being deleted
         /// </summary>
-        public NetworkVariableColor normalColor2 = new NetworkVariableColor();
+        public NetworkVariable<Color> normalColor2 = new NetworkVariable<Color>();
 
         /// <summary>
         /// COlor to fade color 1 towards when being deleted
         /// </summary>
-        public NetworkVariableColor fadeColor1 = new NetworkVariableColor();
+        public NetworkVariable<Color> fadeColor1 = new NetworkVariable<Color>();
 
         /// <summary>
         /// COlor to fade color 2 towards when being deleted
         /// </summary>
-        public NetworkVariableColor fadeColor2 = new NetworkVariableColor();
+        public NetworkVariable<Color> fadeColor2 = new NetworkVariable<Color>();
 
         /// <summary>
         /// Update current colors of the hex

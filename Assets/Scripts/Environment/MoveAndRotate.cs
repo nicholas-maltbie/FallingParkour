@@ -14,7 +14,7 @@ namespace PropHunt.Environment
         /// </summary>
         [SerializeField]
         [Tooltip("Angular velocity of object in degrees per second for each euclidian axis")]
-        protected NetworkVariableVector3 angularVelocity = new NetworkVariableVector3();
+        protected NetworkVariable<Vector3> angularVelocity = new NetworkVariable<Vector3>();
 
         /// <summary>
         /// Does this rotation work in local or world space. If true, will rotate in local space.
@@ -22,21 +22,21 @@ namespace PropHunt.Environment
         /// </summary>
         [SerializeField]
         [Tooltip("Does this rotation work in local or world space")]
-        protected NetworkVariableBool localRotation = new NetworkVariableBool();
+        protected NetworkVariable<bool> localRotation = new NetworkVariable<bool>();
 
         /// <summary>
         /// Current rotation of the object as a euclidian degrees
         /// </summary>
         [SerializeField]
         [Tooltip("Current rotation of the object as a euclidian degrees")]
-        protected NetworkVariableVector3 attitude = new NetworkVariableVector3();
+        protected NetworkVariable<Vector3> attitude = new NetworkVariable<Vector3>();
 
         /// <summary>
         /// Linear velocity of object in units per second for each axis
         /// </summary>
         [SerializeField]
         [Tooltip("Linear velocity of object in units per second for each axis")]
-        protected NetworkVariableVector3 linearVelocity = new NetworkVariableVector3();
+        protected NetworkVariable<Vector3> linearVelocity = new NetworkVariable<Vector3>();
 
         public void Start()
         {

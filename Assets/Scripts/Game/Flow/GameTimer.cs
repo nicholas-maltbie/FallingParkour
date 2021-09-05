@@ -19,13 +19,13 @@ namespace PropHunt.Game.Flow
         /// Amount of time in seconds that has passed since the timer started
         /// </summary>
         [SerializeField]
-        private NetworkVariableFloat elapsed = new NetworkVariableFloat();
+        private NetworkVariable<float> elapsed = new NetworkVariable<float>();
 
         /// <summary>
         /// Amount of time that the timer will run for (in seconds)
         /// </summary>
         [SerializeField]
-        private NetworkVariableFloat length = new NetworkVariableFloat();
+        private NetworkVariable<float> length = new NetworkVariable<float>();
 
         /// <summary>
         /// Is this timer currently running
