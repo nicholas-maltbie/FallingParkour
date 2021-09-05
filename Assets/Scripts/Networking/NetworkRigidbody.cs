@@ -113,14 +113,14 @@ public class NetworkRigidbody : NetworkBehaviour
 
                 if (m_SyncPosition)
                 {
-                    m_Rigidbody.MovePosition(m_Rigidbody.position + 
-                        m_InterpolationState.PositionDelta * deltaTime);
+                    m_Rigidbody.position +=
+                        m_InterpolationState.PositionDelta * deltaTime;
                 }
 
                 if (m_SyncRotation)
                 {
-                    m_Rigidbody.MoveRotation(
-                        m_Rigidbody.rotation * Quaternion.Slerp(Quaternion.identity, m_InterpolationState.RotationDelta, deltaTime));
+                    m_Rigidbody.rotation =
+                        m_Rigidbody.rotation * Quaternion.Slerp(Quaternion.identity, m_InterpolationState.RotationDelta, deltaTime);
                 }
 
                 if (m_SyncVelocity)

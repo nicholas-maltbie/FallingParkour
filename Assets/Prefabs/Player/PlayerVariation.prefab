@@ -54,7 +54,7 @@ GameObject:
   - component: {fileID: 2723596458813897958}
   - component: {fileID: -3663087370360975145}
   - component: {fileID: 6906861509374862920}
-  - component: {fileID: 4726560124087261143}
+  - component: {fileID: 5424822302902560381}
   m_Layer: 0
   m_Name: PlayerVariation
   m_TagString: Player
@@ -498,7 +498,7 @@ MonoBehaviour:
   PrefabHashGenerator: PlayerVariation
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
---- !u!114 &4726560124087261143
+--- !u!114 &5424822302902560381
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -510,7 +510,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FixedSendsPerSecond: 20
+  FixedSendsPerSecond: 30
   AssumeSyncedSends: 1
   InterpolatePosition: 1
   SnapDistance: 10
