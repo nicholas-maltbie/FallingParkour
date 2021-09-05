@@ -216,6 +216,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1438153606}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -40
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -829,6 +833,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1057536765}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -270
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -260
@@ -1320,6 +1328,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Curved Fan Container
       objectReference: {fileID: 0}
+    - target: {fileID: 1649063935939829710, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -30
+      objectReference: {fileID: 0}
     - target: {fileID: 4028059115363820791, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
       propertyPath: m_LocalScale.x
       value: -100
@@ -1598,6 +1610,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1438153606}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -40
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -2109,6 +2125,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1438153606}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -40
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -2195,6 +2215,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 464740574}
     m_Modifications:
+    - target: {fileID: 763383608637304312, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -30
+      objectReference: {fileID: 0}
     - target: {fileID: 909467002374587693, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Name
       value: Reversed Fan Rotation Parent (2)
@@ -2715,6 +2739,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1438153606}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -40
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -3058,6 +3086,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1438153606}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -40
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -3343,6 +3375,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 372356489}
     m_Modifications:
+    - target: {fileID: 763383608637304312, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: 45
+      objectReference: {fileID: 0}
     - target: {fileID: 909467002374587693, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Name
       value: Reversed Fan Rotation Parent (2)
@@ -3445,6 +3481,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 372356489}
     m_Modifications:
+    - target: {fileID: 763383608637304312, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: 60
+      objectReference: {fileID: 0}
     - target: {fileID: 909467002374587693, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Name
       value: Fan Rotation Parent (2)
@@ -3736,6 +3776,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 277034048}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -30
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -4056,6 +4100,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 464740574}
     m_Modifications:
+    - target: {fileID: 763383608637304312, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -45
+      objectReference: {fileID: 0}
     - target: {fileID: 909467002374587693, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Name
       value: Reversed Fan Rotation Parent (3)
@@ -4271,6 +4319,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1763611723}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -45
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -4497,6 +4549,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 464740574}
     m_Modifications:
+    - target: {fileID: 763383608637304312, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: 45
+      objectReference: {fileID: 0}
     - target: {fileID: 909467002374587693, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Name
       value: Fan Rotation Parent (2)
@@ -4727,6 +4783,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1438153606}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -40
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -5479,6 +5539,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1707871403}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -45
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -5627,6 +5691,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 878899128}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: 270
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: 260
