@@ -75,7 +75,7 @@ namespace PropHunt.Environment.Hexagon
             // Compute the starting offset for this distance
             Vector2 distanceOffset = dir * distance;
             // Each tile will be spawned at the base offset + an arm rotated 60 more degrees
-            GameObject hex = NetworkManager.Instantiate(hexagonPrefab);
+            GameObject hex = GameObject.Instantiate(hexagonPrefab);
             DeleteOnStand hexDelete = hex.GetComponent<DeleteOnStand>();
             if (hexDelete != null)
             {
@@ -91,6 +91,8 @@ namespace PropHunt.Environment.Hexagon
             Vector3 hexPos = new Vector3(newPos.x, 0, newPos.y);
             hex.transform.position = transform.position + hexPos;
             hex.transform.parent = hexBase.transform;
+
+            hex.GetComponent<NetworkObject>().Spawn(destroyWithScene: true);
         }
 
         /// <summary>

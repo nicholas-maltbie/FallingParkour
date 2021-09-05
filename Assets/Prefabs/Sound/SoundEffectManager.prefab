@@ -46,4 +46,4 @@ MonoBehaviour:
   soundEffectLibrary: {fileID: 11400000, guid: 6160c822f896c8b48a0984426a3d9bf2, type: 2}
   soundEffectPrefab: {fileID: 1268714253140809689, guid: 2f7a7edc6502fd241b43262a6a996867, type: 3}
   audioMixer: {fileID: 24100000, guid: 447bcbade0387f642bb6a6663dd979ce, type: 2}
-  maxSFXSources: 64
+  maxSFXSources: 32

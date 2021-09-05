@@ -21,7 +21,7 @@ namespace PropHunt.Environment.Hexagon
         /// <summary>
         /// How long has this cube been fading
         /// </summary>
-        private NetworkVariableFloat deleteElapsed = new NetworkVariableFloat(0.0f);
+        private float deleteElapsed;
 
         /// <summary>
         /// Normal color 1 of hex when it's not being deleted
@@ -52,12 +52,12 @@ namespace PropHunt.Environment.Hexagon
                 gameObject,
                 "_Background1",
                 Color.Lerp(normalColor1.Value, fadeColor1.Value, deleting.Value ?
-                    Mathf.Pow(deleteElapsed.Value / deleteTime, 2) : 0));
+                    Mathf.Pow(deleteElapsed / deleteTime, 2) : 0));
             MaterialUtils.RecursiveSetColorProperty(
                 gameObject,
                 "_Background2",
                 Color.Lerp(normalColor2.Value, fadeColor2.Value, deleting.Value ?
-                    Mathf.Pow(deleteElapsed.Value / deleteTime, 2) : 0));
+                    Mathf.Pow(deleteElapsed / deleteTime, 2) : 0));
         }
 
         public void Start()
@@ -69,12 +69,12 @@ namespace PropHunt.Environment.Hexagon
         {
             if (deleting.Value)
             {
-                deleteElapsed.Value += Time.deltaTime;
+                deleteElapsed += Time.deltaTime;
                 UpdateColor();
             }
-            if (NetworkManager.Singleton.IsServer && deleteElapsed.Value >= deleteTime)
+            if (NetworkManager.Singleton.IsServer && deleteElapsed >= deleteTime)
             {
-                NetworkManager.Destroy(GetComponent<NetworkObject>());
+                GetComponent<NetworkObject>().Despawn(true);
             }
         }
 
@@ -82,7 +82,7 @@ namespace PropHunt.Environment.Hexagon
         /// When a player steps onto this tile
         /// </summary>
         /// <param name="sender">Who stepped on this object</param>
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public override void StepOnServerRpc()
         {
             deleting.Value = true;
@@ -92,7 +92,7 @@ namespace PropHunt.Environment.Hexagon
         /// When a player steps off of this tile
         /// </summary>
         /// <param name="sender">Who stepped on this object</param>
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public override void StepOffServerRpc()
         {
 

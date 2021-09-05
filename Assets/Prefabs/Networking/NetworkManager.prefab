@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2512251553448652891}
   - component: {fileID: 6305578990699708057}
   - component: {fileID: 2318210381346111627}
-  - component: {fileID: 4446269626586778234}
   - component: {fileID: 8340213348597254818}
   m_Layer: 0
   m_Name: NetworkManager
@@ -49,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lobbyScene: LobbyScene
   levelLibrary: {fileID: 11400000, guid: 4ed5fac5c4fbdb54eac040549d921916, type: 2}
+  timerPrefab: {fileID: 3423447297187209531, guid: 0d379e827af7e944095b2c2ee6ffa675, type: 3}
   bufferTime: 1
 --- !u!114 &6305578990699708057
 MonoBehaviour:
@@ -82,23 +82,30 @@ MonoBehaviour:
   LogLevel: 1
   NetworkConfig:
     ProtocolVersion: 0
-    NetworkTransport: {fileID: 4446269626586778234}
+    NetworkTransport: {fileID: 8340213348597254818}
     RegisteredScenes:
     - MainMenu
     - LobbyScene
+    - BigFans
+    - BrokenFloor
+    - Wipeout
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 1250752114043530695, guid: d3c7992bedb32c547a65b63a8702b3d8, type: 3}
-      PlayerPrefab: 1
+      PlayerPrefab: 0
     - Prefab: {fileID: 774360562829986131, guid: 94c1f054bcd31be429fd1ae1185e7267, type: 3}
       PlayerPrefab: 0
     - Prefab: {fileID: 1250752114043530695, guid: 2eeed3e45e5247b4a91826a6b0eb0f20, type: 3}
       PlayerPrefab: 0
     - Prefab: {fileID: 6340813144003598840, guid: 4f8063a8ec0b177489f97ac492d7cb67, type: 3}
       PlayerPrefab: 0
+    - Prefab: {fileID: 2633186425149541619, guid: 0eb951bac8bd4ab40b48a4a3997b3566, type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 3423447297187209531, guid: 0d379e827af7e944095b2c2ee6ffa675, type: 3}
+      PlayerPrefab: 0
     PlayerPrefabHash:
       id: 0
-    CreatePlayerPrefab: 1
+    CreatePlayerPrefab: 0
     ReceiveTickrate: 64
     NetworkTickIntervalSec: 0.05
     MaxReceiveEventsPerTickRate: 500
@@ -123,24 +130,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: NullableBoolSerializable, ns: MLAPI.Configuration, asm: Unity.Multiplayer.MLAPI.Runtime}
-      data:
-        Value: 1478812749927055592
---- !u!114 &4446269626586778234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8542409671753137158}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adf0b801ebdee8c4b838e20292b36ac4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SpreadMethod: 0
-  Transports:
-  - {fileID: 8340213348597254818}
+      type: {class: , ns: , asm: }
 --- !u!114 &8340213348597254818
 MonoBehaviour:
   m_ObjectHideFlags: 0

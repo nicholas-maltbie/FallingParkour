@@ -3,11 +3,10 @@ using PropHunt.Game.Level;
 using MLAPI;
 using MLAPI.SceneManagement;
 using MLAPI.Connection;
-using static PropHunt.Game.Level.GameLevelLibrary;
 
 namespace PropHunt.Game.Flow
 {
-    public class GameSceneManager : NetworkBehaviour
+    public class GameSceneManager : MonoBehaviour
     {
         [Header("Scene Management")]
 
@@ -16,6 +15,10 @@ namespace PropHunt.Game.Flow
         public string gameScene { get; private set; }
 
         public GameLevelLibrary levelLibrary;
+
+        [SerializeField]
+        private GameObject timerPrefab;
+
 
         private GameTimer gamePhaseTimer;
 
@@ -69,8 +72,8 @@ namespace PropHunt.Game.Flow
         public void SetupTimer()
         {
             ClearTimer();
-            // this.gamePhaseTimer = GameObject.Instantiate(CustomNetworkManager.Instance.timerPrefab);
-            // this.gamePhaseTimer.GetComponent<NetworkObject>().Spawn();
+            this.gamePhaseTimer = GameObject.Instantiate(timerPrefab).GetComponent<GameTimer>();
+            this.gamePhaseTimer.GetComponent<NetworkObject>().Spawn();
         }
 
         public void HandleGamePhaseChange(object sender, GamePhaseChange change)
@@ -142,14 +145,14 @@ namespace PropHunt.Game.Flow
             {
                 case GamePhase.Disabled:
                     UnityEngine.Debug.Log("Game In Disabled State");
-                    if (IsHost)
+                    if (NetworkManager.Singleton.IsHost)
                     {
                         GameManager.ChangePhase(GamePhase.Reset);
                     }
                     break;
                 case GamePhase.Setup:
                     bool allReady = true;
-                    foreach (NetworkClient client in NetworkManager.ConnectedClientsList)
+                    foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
                     {
                         // if (!client.isReady)
                         // {
@@ -170,9 +173,6 @@ namespace PropHunt.Game.Flow
                     }
                     break;
                 case GamePhase.Reset:
-                    // As soon as scene is loaded, move to in game
-                    // if (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone)
-                    // {
                     GameManager.ChangePhase(GamePhase.Lobby);
                     // }
                     break;
