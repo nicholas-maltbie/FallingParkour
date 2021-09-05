@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class NetworkRigidbody : NetworkBehaviour
 {
-    public NetworkVariableVector3 netVelocity = new NetworkVariableVector3(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly});
-    public NetworkVariableVector3 netAngularVelocity = new NetworkVariableVector3(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly});
-    public NetworkVariableVector3 netPosition = new NetworkVariableVector3(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly});
-    public NetworkVariableQuaternion netRotation = new NetworkVariableQuaternion(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly});
+    public NetworkVariableVector3 netVelocity;
+    public NetworkVariableVector3 netAngularVelocity;
+    public NetworkVariableVector3 netPosition;
+    public NetworkVariableQuaternion netRotation;
     public NetworkVariableUInt netUpdateId = new NetworkVariableUInt(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly});
 
     [SerializeField]
@@ -25,6 +25,9 @@ public class NetworkRigidbody : NetworkBehaviour
     
     [SerializeField]
     float m_InterpolationTime;
+    
+    [SerializeField]
+    float m_SyncRate = 20;
 
     [Serializable]
     struct InterpolationState
@@ -44,6 +47,10 @@ public class NetworkRigidbody : NetworkBehaviour
     void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
+        netVelocity = new NetworkVariableVector3(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate});
+        netAngularVelocity = new NetworkVariableVector3(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate});
+        netPosition = new NetworkVariableVector3(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate});
+        netRotation = new NetworkVariableQuaternion(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate});
     }
 
     void BeginInterpolation()
@@ -120,7 +127,7 @@ public class NetworkRigidbody : NetworkBehaviour
                 if (m_SyncRotation)
                 {
                     m_Rigidbody.rotation =
-                        m_Rigidbody.rotation * Quaternion.Slerp(Quaternion.identity, m_InterpolationState.RotationDelta, deltaTime);
+                        m_Rigidbody.rotation * Quaternion.Slerp(Quaternion.identity, m_InterpolationState.RotationDelta, deltaTime).normalized;
                 }
 
                 if (m_SyncVelocity)

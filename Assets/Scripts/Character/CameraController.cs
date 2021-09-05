@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MLAPI;
+using MLAPI.NetworkVariable;
 using PropHunt.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -156,16 +157,58 @@ namespace PropHunt.Character
             pitchChange = look.y;
         }
 
-        private float yaw;
+        private NetworkVariableFloat yaw = new NetworkVariableFloat(
+            new NetworkVariableSettings{WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = 0.0f});
 
-        private float pitch;
+        private NetworkVariableFloat pitch = new NetworkVariableFloat(
+            new NetworkVariableSettings{WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = 0.0f});
 
-        public float Yaw => yaw;
+        private float pitchLocal;
+
+        private float yawLocal;
+
+        public float Pitch
+        {
+            get
+            {
+                if (IsLocalPlayer)
+                {
+                    return pitchLocal;
+                }
+                return pitch.Value;
+            }
+            private set
+            {
+                pitchLocal = value;
+                pitch.Value = value;
+            }
+        }
+
+        public float Yaw
+        {
+            get
+            {
+                if (IsLocalPlayer)
+                {
+                    return yawLocal;
+                }
+                return yaw.Value;
+            }
+            private set
+            {
+                yawLocal = value;
+                yaw.Value = value;
+            }
+        }
 
         public void Update()
         {
             if (!base.IsLocalPlayer)
             {
+                if (thirdPersonCharacterBase != null)
+                {
+                    thirdPersonCharacterBase.transform.localRotation = Quaternion.Euler(0, Yaw, 0);
+                }
                 // exit from update if this is not the local player
                 return;
             }
@@ -173,17 +216,17 @@ namespace PropHunt.Character
 
             float zoomChange = 0;
             // bound pitch between -180 and 180
-            pitch = (pitch % 360 + 180) % 360 - 180;
+            Pitch = (Pitch % 360 + 180) % 360 - 180;
             // Only allow rotation if player is allowed to move
             if (PlayerInputManager.playerMovementState == PlayerInputState.Allow)
             {
                 yawChange = rotationRate * deltaTime * yawChange;
-                yaw += yawChange;
-                pitch += rotationRate * deltaTime * -1 * pitchChange;
+                Yaw += yawChange;
+                Pitch += rotationRate * deltaTime * -1 * pitchChange;
                 // zoomChange = zoomSpeed * deltaTime * -1 * unityService.GetAxis("Mouse ScrollWheel");
             }
             // Clamp rotation of camera between minimum and maximum specified pitch
-            pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+            Pitch = Mathf.Clamp(Pitch, minPitch, maxPitch);
             frameRotation = yawChange;
             // Change camera zoom by desired level
             // Bound the current distance between minimum and maximum
@@ -192,7 +235,7 @@ namespace PropHunt.Character
             // Set the player's rotation to be that of the camera's yaw
             // transform.rotation = Quaternion.Euler(0, yaw, 0);
             // Set pitch to be camera's rotation
-            cameraTransform.rotation = Quaternion.Euler(pitch, yaw, 0);
+            cameraTransform.rotation = Quaternion.Euler(Pitch, Yaw, 0);
 
             // Set the local position of the camera to be the current rotation projected
             //   backwards by the current distance of the camera from the player
@@ -220,7 +263,7 @@ namespace PropHunt.Character
 
             if (thirdPersonCharacterBase != null)
             {
-                thirdPersonCharacterBase.transform.localRotation = Quaternion.Euler(0, yaw, 0);
+                thirdPersonCharacterBase.transform.localRotation = Quaternion.Euler(0, Yaw, 0);
                 if (actualDistance < shadowOnlyDistance)
                 {
                     MaterialUtils.RecursiveSetShadowCasingMode(thirdPersonCharacterBase, UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly);
@@ -246,7 +289,7 @@ namespace PropHunt.Character
                 }
             }
 
-            yaw %= 360;
+            Yaw %= 360;
         }
     }
 }

@@ -34,7 +34,7 @@ namespace PropHunt.Animation
             {
                 SetFootGroundedServerRpc(newState);
             }
-            else
+            else if (IsLocalPlayer)
             {
                 groundFeet.Value = newState;
                 if (playerFootGrounded != null)
