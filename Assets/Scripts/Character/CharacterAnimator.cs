@@ -72,7 +72,7 @@ namespace PropHunt.Character
         private CharacterAnimatorState animState = new CharacterAnimatorState();
 
         public NetworkVariable<CharacterAnimatorState> animatorState =
-            new NetworkVariable<CharacterAnimatorState>(new NetworkVariableSettings {WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = 5});
+            new NetworkVariable<CharacterAnimatorState>(new NetworkVariableSettings { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = 5 });
 
         public void Start()
         {

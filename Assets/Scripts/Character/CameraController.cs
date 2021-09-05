@@ -158,10 +158,10 @@ namespace PropHunt.Character
         }
 
         private NetworkVariableFloat yaw = new NetworkVariableFloat(
-            new NetworkVariableSettings{WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = 0.0f});
+            new NetworkVariableSettings { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = 0.0f });
 
         private NetworkVariableFloat pitch = new NetworkVariableFloat(
-            new NetworkVariableSettings{WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = 0.0f});
+            new NetworkVariableSettings { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = 0.0f });
 
         private float pitchLocal;
 

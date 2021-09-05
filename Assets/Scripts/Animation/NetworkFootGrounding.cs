@@ -13,7 +13,7 @@ namespace PropHunt.Animation
         /// <summary>
         /// Current state of player foot grounding
         /// </summary>
-        public NetworkVariable<bool> groundFeet = new NetworkVariable<bool>(new NetworkVariableSettings {WritePermission = NetworkVariablePermission.OwnerOnly}, false);
+        public NetworkVariable<bool> groundFeet = new NetworkVariable<bool>(new NetworkVariableSettings { WritePermission = NetworkVariablePermission.OwnerOnly }, false);
 
         /// <summary>
         /// component to control player foot grounding

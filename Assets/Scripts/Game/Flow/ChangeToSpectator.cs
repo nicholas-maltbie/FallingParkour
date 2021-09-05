@@ -23,7 +23,7 @@ namespace PropHunt.Game.Flow
             if (NetworkManager.Singleton.IsServer && character != null)
             {
                 StartCoroutine(
-                    playerSpawnManager.SpawnPlayerCharacter(otherObj.GetComponent<NetworkBehaviour>().OwnerClientId, 
+                    playerSpawnManager.SpawnPlayerCharacter(otherObj.GetComponent<NetworkBehaviour>().OwnerClientId,
                     playerSpawnManager.spectatorPlayer));
             }
         }

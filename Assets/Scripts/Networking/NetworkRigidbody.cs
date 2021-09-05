@@ -9,7 +9,7 @@ public class NetworkRigidbody : NetworkBehaviour
     public NetworkVariableVector3 netAngularVelocity;
     public NetworkVariableVector3 netPosition;
     public NetworkVariableQuaternion netRotation;
-    public NetworkVariableUInt netUpdateId = new NetworkVariableUInt(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly});
+    public NetworkVariableUInt netUpdateId = new NetworkVariableUInt(new NetworkVariableSettings() { WritePermission = NetworkVariablePermission.OwnerOnly });
 
     [SerializeField]
     bool m_SyncVelocity = true;
@@ -22,10 +22,10 @@ public class NetworkRigidbody : NetworkBehaviour
 
     [SerializeField]
     bool m_SyncRotation = true;
-    
+
     [SerializeField]
     float m_InterpolationTime;
-    
+
     [SerializeField]
     float m_SyncRate = 20;
 
@@ -47,10 +47,10 @@ public class NetworkRigidbody : NetworkBehaviour
     void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
-        netVelocity = new NetworkVariableVector3(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate});
-        netAngularVelocity = new NetworkVariableVector3(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate});
-        netPosition = new NetworkVariableVector3(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate});
-        netRotation = new NetworkVariableQuaternion(new NetworkVariableSettings(){WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate});
+        netVelocity = new NetworkVariableVector3(new NetworkVariableSettings() { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
+        netAngularVelocity = new NetworkVariableVector3(new NetworkVariableSettings() { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
+        netPosition = new NetworkVariableVector3(new NetworkVariableSettings() { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
+        netRotation = new NetworkVariableQuaternion(new NetworkVariableSettings() { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
     }
 
     void BeginInterpolation()
