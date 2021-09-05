@@ -74,7 +74,7 @@ namespace PropHunt.Environment.Hexagon
             }
             if (NetworkManager.Singleton.IsServer && deleteElapsed >= deleteTime)
             {
-                GetComponent<NetworkObject>().Despawn(true);
+                GameObject.Destroy(gameObject);
             }
         }
 

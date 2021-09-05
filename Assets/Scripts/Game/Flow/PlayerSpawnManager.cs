@@ -85,7 +85,7 @@ namespace PropHunt.Game.Flow
                 NetworkManager.Singleton.ConnectedClients[connectionId].PlayerObject;
             if (oldPlayer != null)
             {
-                oldPlayer.Despawn(true);
+                GameObject.Destroy(oldPlayer.gameObject);
             }
             GameObject newPlayer = NetworkManager.Instantiate(playerPrefab);
             newPlayer.transform.rotation = rotation;
@@ -146,7 +146,7 @@ namespace PropHunt.Game.Flow
                     {
                         if (client.PlayerObject != null)
                         {
-                            client.PlayerObject.Despawn(true);
+                            GameObject.Destroy(client.PlayerObject.gameObject);
                         }
                     }
                     // Once laoding is complete, go to lobby

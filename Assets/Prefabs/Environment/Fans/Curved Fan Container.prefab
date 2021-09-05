@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 249697813445521289}
-  - component: {fileID: 8719960034665903215}
   - component: {fileID: 1644229995505940272}
-  - component: {fileID: 7837255365692526276}
+  - component: {fileID: 4447160614162137875}
+  - component: {fileID: 1649063935939829710}
+  - component: {fileID: 3469952339242983242}
   m_Layer: 0
   m_Name: Curved Fan Container
   m_TagString: Untagged
@@ -34,26 +35,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8719960034665903215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 249697813445521294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6fe1bbdec364e14498e0e5bd31329de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  angularVelocity:
-    m_InternalValue: {x: 0, y: 0, z: 0}
-  localRotation:
-    m_InternalValue: 0
-  attitude:
-    m_InternalValue: {x: 0, y: 0, z: 0}
-  linearVelocity:
-    m_InternalValue: {x: 0, y: 0, z: 0}
 --- !u!114 &1644229995505940272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,7 +52,23 @@ MonoBehaviour:
   PrefabHashGenerator: Curved Fan Container
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
---- !u!114 &7837255365692526276
+--- !u!54 &4447160614162137875
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249697813445521294}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1649063935939829710
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -80,46 +77,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 249697813445521294}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 0feafef9f50b3a14db1503c652ed8190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FixedSendsPerSecond: 20
-  AssumeSyncedSends: 1
-  InterpolatePosition: 1
-  SnapDistance: 10
-  InterpolateServer: 1
-  MinMeters: 0.15
-  MinDegrees: 1.5
-  ExtrapolatePosition: 0
-  MaxSendsToExtrapolate: 5
-  Channel: 
-  EnableRange: 0
-  EnableNonProvokedResendChecks: 0
-  DistanceSendrate:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 500
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!114 &125905316268879158
+  angularVelocity:
+    m_InternalValue: {x: 0, y: 30, z: 0}
+  localRotation:
+    m_InternalValue: 1
+  linearVelocity:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  localTranslation:
+    m_InternalValue: 0
+--- !u!114 &3469952339242983242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249697813445521294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e9c0bd911decd645829f0dcd61f6db0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  netVelocity:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  netAngularVelocity:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  netPosition:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  netRotation:
+    m_InternalValue: {x: 0, y: 0, z: 0, w: 0}
+  netUpdateId:
+    m_InternalValue: 0
+  m_SyncVelocity: 1
+  m_SyncAngularVelocity: 1
+  m_SyncPosition: 1
+  m_SyncRotation: 1
+  m_InterpolationTime: 0.1
+--- !u!114 &648060233229677620
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -128,11 +124,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1101654514622298624}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edc0c5f9473720a42be88407aa0f9f6c, type: 3}
+  m_Script: {fileID: 11500000, guid: a56b8da8ea3eb884190d4f93870edef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachedRigidbody: {fileID: 4447160614162137875}
   avoidTransferMomentum: 0
---- !u!114 &125905316268879153
+--- !u!114 &8270227994909797763
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -141,11 +138,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2807388081644155114}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edc0c5f9473720a42be88407aa0f9f6c, type: 3}
+  m_Script: {fileID: 11500000, guid: a56b8da8ea3eb884190d4f93870edef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachedRigidbody: {fileID: 4447160614162137875}
   avoidTransferMomentum: 0
---- !u!114 &125905316268879159
+--- !u!114 &2766413306059148676
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -154,11 +152,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3358292101590301612}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edc0c5f9473720a42be88407aa0f9f6c, type: 3}
+  m_Script: {fileID: 11500000, guid: a56b8da8ea3eb884190d4f93870edef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachedRigidbody: {fileID: 4447160614162137875}
   avoidTransferMomentum: 0
---- !u!114 &125905316268879152
+--- !u!114 &4180318637203718242
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -167,9 +166,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8220432621046793760}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edc0c5f9473720a42be88407aa0f9f6c, type: 3}
+  m_Script: {fileID: 11500000, guid: a56b8da8ea3eb884190d4f93870edef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachedRigidbody: {fileID: 4447160614162137875}
   avoidTransferMomentum: 0
 --- !u!1001 &125905316268879160
 PrefabInstance:

@@ -55,6 +55,10 @@ namespace PropHunt.Environment
 
         public void FixedUpdate()
         {
+            if (!IsServer)
+            {
+                return;
+            }
             // move object by velocity
             Vector3 deltaPos = Time.fixedDeltaTime * linearVelocity.Value;
             if (localTranslation.Value && transform.parent != null)

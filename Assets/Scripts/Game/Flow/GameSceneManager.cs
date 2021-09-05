@@ -61,7 +61,7 @@ namespace PropHunt.Game.Flow
             if (this.gamePhaseTimer != null)
             {
                 this.gamePhaseTimer.StopTimer();
-                this.gamePhaseTimer.GetComponent<NetworkObject>().Despawn(true);
+                GameObject.Destroy(this.gamePhaseTimer.gameObject);
                 this.gamePhaseTimer = null;
             }
         }
