@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7589c7d34a869cc4d9a3ce7474df739c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offlineScene: MainMenu
   lobbyScene: LobbyScene
   levelLibrary: {fileID: 11400000, guid: 4ed5fac5c4fbdb54eac040549d921916, type: 2}
   timerPrefab: {fileID: 3423447297187209531, guid: 0d379e827af7e944095b2c2ee6ffa675, type: 3}

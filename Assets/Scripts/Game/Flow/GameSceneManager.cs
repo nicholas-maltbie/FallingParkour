@@ -3,12 +3,15 @@ using PropHunt.Game.Level;
 using MLAPI;
 using MLAPI.SceneManagement;
 using MLAPI.Connection;
+using UnityEngine.SceneManagement;
 
 namespace PropHunt.Game.Flow
 {
     public class GameSceneManager : MonoBehaviour
     {
         [Header("Scene Management")]
+
+        public string offlineScene;
 
         public string lobbyScene;
 
@@ -34,6 +37,11 @@ namespace PropHunt.Game.Flow
         /// </summary>
         private float bufferElapsed = 0.0f;
 
+        /// <summary>
+        /// Is the player online?
+        /// </summary>
+        private bool previousOnlineState = false;
+
         public void Start()
         {
             if (string.IsNullOrEmpty(gameScene))
@@ -43,14 +51,15 @@ namespace PropHunt.Game.Flow
             GameManager.OnGamePhaseChange += HandleGamePhaseChange;
         }
 
-        public void ChangeScene(string newScene)
+        public void ChangeGameScene(string newScene)
         {
             gameScene = newScene;
         }
 
         public void OnStartServer()
         {
-            GameManager.ChangePhase(GamePhase.Reset);
+            NetworkSceneManager.SwitchScene(lobbyScene);
+            GameManager.ChangePhase(GamePhase.Lobby);
         }
 
         /// <summary>
@@ -78,7 +87,6 @@ namespace PropHunt.Game.Flow
 
         public void HandleGamePhaseChange(object sender, GamePhaseChange change)
         {
-            UnityEngine.Debug.Log("loadingScene: " + change.next.ToString());
             // Cleanup from previous game state
             switch (change.previous)
             {
@@ -135,6 +143,16 @@ namespace PropHunt.Game.Flow
 
         public void Update()
         {
+            bool onlineState = NetworkManager.Singleton.IsClient || NetworkManager.Singleton.IsServer;
+
+            if (!onlineState && previousOnlineState)
+            {
+                SceneManager.LoadScene(offlineScene);
+                GameManager.ChangePhase(GamePhase.Disabled);
+            }
+
+            previousOnlineState = onlineState;
+
             // Only run this on server
             if (!NetworkManager.Singleton.IsServer)
             {
@@ -173,7 +191,6 @@ namespace PropHunt.Game.Flow
                     break;
                 case GamePhase.Reset:
                     GameManager.ChangePhase(GamePhase.Lobby);
-                    // }
                     break;
             }
         }
