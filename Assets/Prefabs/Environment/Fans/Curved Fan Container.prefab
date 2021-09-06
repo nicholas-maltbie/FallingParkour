@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 249697813445521289}
-  - component: {fileID: 249697813445521291}
-  - component: {fileID: -3784827364768863918}
-  - component: {fileID: 8719960034665903215}
+  - component: {fileID: 1644229995505940272}
+  - component: {fileID: 4447160614162137875}
+  - component: {fileID: 3469952339242983242}
+  - component: {fileID: 1649063935939829710}
   m_Layer: 0
   m_Name: Curved Fan Container
   m_TagString: Untagged
@@ -34,7 +35,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &249697813445521291
+--- !u!114 &1644229995505940272
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,15 +44,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 249697813445521294}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 0
-  serverOnly: 0
-  visible: 0
-  m_AssetId: afa0896c30a36284b96f815ca6f4feb7
-  hasSpawned: 0
---- !u!114 &-3784827364768863918
+  NetworkInstanceId: 0
+  PrefabHash: 11204289849633589364
+  PrefabHashGenerator: Curved Fan Container
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+--- !u!54 &4447160614162137875
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249697813445521294}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &3469952339242983242
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -60,27 +77,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 249697813445521294}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Script: {fileID: 11500000, guid: 3e9c0bd911decd645829f0dcd61f6db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  clientAuthority: 0
-  sendInterval: 0.05
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 1
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 1
-  bufferTimeMultiplier: 3
-  bufferSizeLimit: 64
-  catchupThreshold: 6
-  catchupMultiplier: 0.1
-  showGizmos: 0
-  showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
---- !u!114 &8719960034665903215
+  netVelocity:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  netAngularVelocity:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  netPosition:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  netRotation:
+    m_InternalValue: {x: 0, y: 0, z: 0, w: 0}
+  netUpdateId:
+    m_InternalValue: 0
+  m_SyncVelocity: 1
+  m_SyncAngularVelocity: 1
+  m_SyncPosition: 1
+  m_SyncRotation: 1
+  m_InterpolationTime: 0.1
+--- !u!114 &1649063935939829710
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,16 +104,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 249697813445521294}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6fe1bbdec364e14498e0e5bd31329de, type: 3}
+  m_Script: {fileID: 11500000, guid: 0feafef9f50b3a14db1503c652ed8190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  angularVelocity: {x: 0, y: 30, z: 0}
-  localRotation: 0
-  attitude: {x: 0, y: 0, z: 0}
-  linearVelocity: {x: 0, y: 0, z: 0}
---- !u!114 &125905316268879158
+  angularVelocity:
+    m_InternalValue: {x: 0, y: 30, z: 0}
+  localRotation:
+    m_InternalValue: 1
+  linearVelocity:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  localTranslation:
+    m_InternalValue: 0
+--- !u!114 &648060233229677620
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,11 +124,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1101654514622298624}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edc0c5f9473720a42be88407aa0f9f6c, type: 3}
+  m_Script: {fileID: 11500000, guid: a56b8da8ea3eb884190d4f93870edef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachedRigidbody: {fileID: 4447160614162137875}
   avoidTransferMomentum: 0
---- !u!114 &125905316268879153
+--- !u!114 &8270227994909797763
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,11 +138,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2807388081644155114}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edc0c5f9473720a42be88407aa0f9f6c, type: 3}
+  m_Script: {fileID: 11500000, guid: a56b8da8ea3eb884190d4f93870edef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachedRigidbody: {fileID: 4447160614162137875}
   avoidTransferMomentum: 0
---- !u!114 &125905316268879159
+--- !u!114 &2766413306059148676
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,11 +152,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3358292101590301612}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edc0c5f9473720a42be88407aa0f9f6c, type: 3}
+  m_Script: {fileID: 11500000, guid: a56b8da8ea3eb884190d4f93870edef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachedRigidbody: {fileID: 4447160614162137875}
   avoidTransferMomentum: 0
---- !u!114 &125905316268879152
+--- !u!114 &4180318637203718242
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -146,9 +166,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8220432621046793760}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edc0c5f9473720a42be88407aa0f9f6c, type: 3}
+  m_Script: {fileID: 11500000, guid: a56b8da8ea3eb884190d4f93870edef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachedRigidbody: {fileID: 4447160614162137875}
   avoidTransferMomentum: 0
 --- !u!1001 &125905316268879160
 PrefabInstance:

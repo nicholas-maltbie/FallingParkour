@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Mirror;
+using MLAPI;
 using PropHunt.Character;
 using UnityEngine;
 
@@ -23,9 +20,11 @@ namespace PropHunt.Game.Flow
         {
             GameObject otherObj = other.gameObject;
             CharacterName character = otherObj.GetComponent<CharacterName>();
-            if (isServer && character != null)
+            if (NetworkManager.Singleton.IsServer && character != null)
             {
-                StartCoroutine(playerSpawnManager.SpawnPlayerCharacter(character.connectionToClient, playerSpawnManager.spectatorPlayer));
+                StartCoroutine(
+                    playerSpawnManager.SpawnPlayerCharacter(otherObj.GetComponent<NetworkBehaviour>().OwnerClientId,
+                    playerSpawnManager.spectatorPlayer));
             }
         }
     }

@@ -1,5 +1,5 @@
-using Mirror;
-using UnityEngine;
+using MLAPI;
+using MLAPI.Messaging;
 
 namespace PropHunt.Environment
 {
@@ -12,14 +12,14 @@ namespace PropHunt.Environment
         /// When a player steps onto this tile
         /// </summary>
         /// <param name="sender">Who stepped on this object</param>
-        [Command(requiresAuthority = false)]
-        public virtual void CmdStepOn(NetworkConnectionToClient sender = null) { }
+        [ServerRpc]
+        public virtual void StepOnServerRpc() { }
 
         /// <summary>
         /// When a player steps off of this tile
         /// </summary>
         /// <param name="sender">Who stepped on this object</param>
-        [Command(requiresAuthority = false)]
-        public virtual void CmdStepOff(NetworkConnectionToClient sender = null) { }
+        [ServerRpc]
+        public virtual void StepOffServerRpc() { }
     }
 }

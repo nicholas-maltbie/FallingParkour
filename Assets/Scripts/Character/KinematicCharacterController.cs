@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Mirror;
+using MLAPI;
 using PropHunt.Environment;
 using PropHunt.Utils;
 using UnityEngine;
@@ -26,17 +26,6 @@ namespace PropHunt.Character
         /// Maximum angle between two colliding objects
         /// </summary>
         public const float MaxAngleShoveRadians = 90.0f;
-
-        /// <summary>
-        /// Mocked unity service for accessing inputs, delta time, and
-        /// various other static unity inputs in a testable manner.
-        /// </summary>
-        public IUnityService unityService = new UnityService();
-
-        /// <summary>
-        /// Network service for managing network calls
-        /// </summary>
-        public INetworkService networkService;
 
         /// <summary>
         /// Player collider for checking things
@@ -446,37 +435,36 @@ namespace PropHunt.Character
         {
             this.cameraController = GetComponent<CameraController>();
             this.characterRigidbody = GetComponent<Rigidbody>();
-            this.networkService = new NetworkService(this);
             this.capsuleCollider = GetComponent<CapsuleCollider>();
             feetFollowObj = new GameObject();
             feetFollowObj.name = "feetFollowObj";
             feetFollowObj.transform.SetParent(transform);
         }
 
-        public void Update()
+        public void FixedUpdate()
         {
-            if (!networkService.isLocalPlayer)
+            if (!base.IsLocalPlayer)
             {
                 // exit from update if this is not the local player
                 return;
             }
 
-            float deltaTime = unityService.deltaTime;
+            float fixedDeltaTime = Time.fixedDeltaTime;
 
             float deltaPos = (transform.position - this.previousPosition).magnitude;
             float deltaAngle = Mathf.Rad2Deg * Quaternion.Angle(transform.rotation, this.previousRotation);
 
-            float linVel = deltaPos / deltaTime;
-            float angVel = deltaAngle / deltaTime;
+            float linVel = deltaPos / fixedDeltaTime;
+            float angVel = deltaAngle / fixedDeltaTime;
 
             this.previousPosition = transform.position;
             this.previousRotation = transform.rotation;
 
             if (IsProne)
             {
-                this.remainingProneTime -= deltaTime;
+                this.remainingProneTime -= fixedDeltaTime;
                 this.characterRigidbody.isKinematic = false;
-                this.characterRigidbody.velocity += this.gravity * deltaTime;
+                this.characterRigidbody.velocity += this.gravity * fixedDeltaTime;
 
                 CheckGrounded();
 
@@ -489,7 +477,7 @@ namespace PropHunt.Character
                 if (linVel <= thresholdVelocity &&
                     angVel <= thresholdAngularVelocity)
                 {
-                    elapsedUnderThreshold += deltaTime;
+                    elapsedUnderThreshold += fixedDeltaTime;
                     if (elapsedUnderThreshold >= earlyStopProneThreshold)
                     {
                         elapsedUnderThreshold = 0;
@@ -530,12 +518,12 @@ namespace PropHunt.Character
                 }
                 else if (Falling)
                 {
-                    velocity += gravity * deltaTime;
-                    this.elapsedFalling += deltaTime;
+                    velocity += gravity * fixedDeltaTime;
+                    this.elapsedFalling += fixedDeltaTime;
                 }
 
                 // Compute player jump if they are attempting to jump
-                bool jumped = PlayerJump(deltaTime);
+                bool jumped = PlayerJump(fixedDeltaTime);
 
                 Vector3 movement = RotatedMovement * movementSpeed;
 
@@ -565,9 +553,9 @@ namespace PropHunt.Character
                 // These are broken into two steps so the player's world velocity (usually due to falling)
                 //    does not interfere with their ability to walk around according to inputs
                 // Move the player according to their movement
-                MovePlayer(movement * deltaTime);
+                MovePlayer(movement * fixedDeltaTime);
                 // Move the player according to their world velocity
-                MovePlayer(velocity * deltaTime);
+                MovePlayer(velocity * fixedDeltaTime);
 
                 // if the player was standing on the ground at the start of the frame and is not 
                 //    trying to jump right now, snap them down to the ground
@@ -589,7 +577,7 @@ namespace PropHunt.Character
                     .Select(floor => floor.GetComponent<DetectPlayerStand>())
                     .Where(detectStand => detectStand != null)
                     .ToList()
-                    .ForEach(detectStand => detectStand.CmdStepOn());
+                    .ForEach(detectStand => detectStand.StepOnServerRpc());
 
                 // For each object that were standing on previously that we are not standing on now
                 previousStanding.Where(floor => !currentStanding.Contains(floor))
@@ -597,7 +585,7 @@ namespace PropHunt.Character
                     .Select(floor => floor.GetComponent<DetectPlayerStand>())
                     .Where(detectStand => detectStand != null)
                     .ToList()
-                    .ForEach(detectStand => detectStand.CmdStepOff());
+                    .ForEach(detectStand => detectStand.StepOffServerRpc());
 
                 // Save state of player
                 previousFalling = Falling;
@@ -667,9 +655,9 @@ namespace PropHunt.Character
         /// <summary>
         /// Give player vertical velocity if they can jump and are attempting to jump.
         /// </summary>
-        /// <param name="deltaTime">Time in an update</param>
+        /// <param name="fixedDeltaTime">Time in an update</param>
         /// <returns>true if the player successfully jumped, false otherwise</returns>
-        public bool PlayerJump(float deltaTime)
+        public bool PlayerJump(float fixedDeltaTime)
         {
             // Give the player some vertical velocity if they are jumping and grounded
             if (CanJump)
@@ -684,7 +672,7 @@ namespace PropHunt.Character
             }
             else
             {
-                elapsedSinceJump += deltaTime;
+                elapsedSinceJump += fixedDeltaTime;
                 return false;
             }
         }
@@ -753,8 +741,8 @@ namespace PropHunt.Character
         /// </summary>
         public float PushOutOverlapping()
         {
-            float deltaTime = unityService.deltaTime;
-            return PushOutOverlapping(maxPushSpeed * deltaTime);
+            float fixedDeltaTime = Time.fixedDeltaTime;
+            return PushOutOverlapping(maxPushSpeed * fixedDeltaTime);
         }
 
         public float PushOutOverlapping(float maxDistance)

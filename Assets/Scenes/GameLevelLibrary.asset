@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultLevelIndex: 0
   gameLevels:
-  - levelName: Assets/Scenes/BrokenFloor.unity
+  - levelName: BrokenFloor
     displayName: Hex-A-Gone
-  - levelName: Assets/Scenes/BigFans.unity
+  - levelName: BigFans
     displayName: Big Fans
-  - levelName: Assets/Scenes/Wipeout.unity
+  - levelName: Wipeout
     displayName: Wipeout

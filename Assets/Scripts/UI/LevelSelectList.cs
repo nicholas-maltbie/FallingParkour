@@ -1,4 +1,3 @@
-using Mirror;
 using PropHunt.Game.Level;
 using PropHunt.Game.Flow;
 using System;
@@ -13,7 +12,8 @@ namespace PropHunt.UI
     /// <summary>
     /// Events that occur when new level is selected
     /// </summary>
-    public struct LevelSelectEvent : NetworkMessage
+    [Serializable]
+    public struct LevelSelectEvent
     {
         /// <summary>
         /// New game level selected
@@ -96,9 +96,8 @@ namespace PropHunt.UI
                     button.onClick.AddListener(() =>
                     {
                         this.selectedScene = level.levelName;
-                        GameObject.FindObjectOfType<GameSceneManager>().ChangeScene(this.selectedScene);
+                        GameObject.FindObjectOfType<GameSceneManager>().ChangeGameScene(this.selectedScene);
                         GameObject.FindObjectOfType<CurrentlySelectedLevel>().UpdateLevel(level);
-                        NetworkServer.SendToAll<LevelSelectEvent>(new LevelSelectEvent { level = level });
                     });
                 });
             LevelSelectChange += (_, args) => LevelSelected(args.level.displayName);

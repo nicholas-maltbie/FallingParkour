@@ -27,12 +27,7 @@ namespace PropHunt.UI
         /// <summary>
         /// Can the screne be changed right now?
         /// </summary>
-        private bool CanAct => allowInputChanges && (unityService.time - previousTime > actionDelay);
-
-        /// <summary>
-        /// Unity service to read time
-        /// </summary>
-        private UnityService unityService = new UnityService();
+        private bool CanAct => allowInputChanges && (Time.time - previousTime > actionDelay);
 
         /// <summary>
         /// Requests go to the previous screen
@@ -44,7 +39,7 @@ namespace PropHunt.UI
                 return;
             }
 
-            previousTime = unityService.time;
+            previousTime = Time.time;
             UIManager.PreviousScreen(this);
         }
 
@@ -68,7 +63,7 @@ namespace PropHunt.UI
                 return;
             }
 
-            previousTime = unityService.time;
+            previousTime = Time.time;
             UIManager.RequestNewScreen(this, name);
         }
     }

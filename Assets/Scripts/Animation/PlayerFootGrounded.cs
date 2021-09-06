@@ -155,8 +155,6 @@ namespace PropHunt.Animation
         /// </summary>
         private bool previousRightFootGrounded;
 
-        public IUnityService unityService = new UnityService();
-
         public void Start()
         {
             animator = new AnimatorWrapper(GetComponent<Animator>());
@@ -173,8 +171,8 @@ namespace PropHunt.Animation
             Vector3 leftFoot = leftFootTransform.position;
             Vector3 rightFoot = rightFootTransform.position;
 
-            bool leftMoving = (leftFoot - leftFootPosition).magnitude / unityService.deltaTime >= movementThreshold;
-            bool rightMoving = (rightFoot - rightFootPosition).magnitude / unityService.deltaTime >= movementThreshold;
+            bool leftMoving = (leftFoot - leftFootPosition).magnitude / Time.deltaTime >= movementThreshold;
+            bool rightMoving = (rightFoot - rightFootPosition).magnitude / Time.deltaTime >= movementThreshold;
 
             leftFootPosition = leftFoot;
             rightFootPosition = rightFoot;

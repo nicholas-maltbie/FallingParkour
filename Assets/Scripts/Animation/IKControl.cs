@@ -1,5 +1,3 @@
-using Mirror;
-using PropHunt.Utils;
 using UnityEngine;
 
 namespace PropHunt.Animation

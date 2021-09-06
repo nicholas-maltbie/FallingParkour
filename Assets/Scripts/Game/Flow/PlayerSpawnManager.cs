@@ -1,14 +1,15 @@
 using UnityEngine;
-using Mirror;
 using System.Collections;
 using PropHunt.Environment.Checkpoint;
+using MLAPI;
+using MLAPI.Connection;
 
 namespace PropHunt.Game.Flow
 {
     /// <summary>
     /// Spawn manager for creating and managing player in the game. 
     /// </summary>
-    public class PlayerSpawnManager : NetworkBehaviour
+    public class PlayerSpawnManager : MonoBehaviour
     {
         /// <summary>
         /// In game player for running through levels.
@@ -25,30 +26,16 @@ namespace PropHunt.Game.Flow
         /// </summary>
         public GameObject spectatorPlayer;
 
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
-            NetworkClient.RegisterPrefab(inGamePlayer);
-            NetworkClient.RegisterPrefab(lobbyPlayer);
-            NetworkClient.RegisterPrefab(spectatorPlayer);
-        }
-
-        public override void OnStartServer()
+        public void OnEnable()
         {
             UnityEngine.Debug.Log("Setting up spawn manager");
-            CustomNetworkManager.OnPlayerConnect += HandlePlayerConnect;
+            NetworkManager.Singleton.OnClientConnectedCallback += HandlePlayerConnect;
             GameManager.OnGamePhaseChange += HandleGamePhaseChange;
         }
 
         public void OnDisable()
         {
-            OnStopServer();
-        }
-
-        public override void OnStopServer()
-        {
-            base.OnStopServer();
-            CustomNetworkManager.OnPlayerConnect -= HandlePlayerConnect;
+            NetworkManager.Singleton.OnClientConnectedCallback -= HandlePlayerConnect;
             GameManager.OnGamePhaseChange -= HandleGamePhaseChange;
         }
 
@@ -57,8 +44,12 @@ namespace PropHunt.Game.Flow
             HandleGamePhaseChange(this, new GamePhaseChange(GameManager.gamePhase, GameManager.gamePhase));
         }
 
-        public void HandlePlayerConnect(object sender, PlayerConnectEvent joinEvent)
+        public void HandlePlayerConnect(ulong connectionId)
         {
+            if (!NetworkManager.Singleton.IsServer)
+            {
+                return;
+            }
             // If in game, spawn a player for them... debug behaviour yay
             if (GameManager.gamePhase == GamePhase.InGame || GameManager.gamePhase == GamePhase.Score)
             {
@@ -69,55 +60,61 @@ namespace PropHunt.Game.Flow
                 {
                     (pos, rot) = defaultCheckpoint.GetRandomSpawn();
                 }
-                StartCoroutine(SpawnPlayerCharacter(joinEvent.connection, spectatorPlayer, pos, rot));
+                StartCoroutine(SpawnPlayerCharacter(connectionId, spectatorPlayer, pos, rot));
             }
             else if (GameManager.gamePhase == GamePhase.Lobby)
             {
-                StartCoroutine(SpawnPlayerCharacter(joinEvent.connection, lobbyPlayer));
+                StartCoroutine(SpawnPlayerCharacter(connectionId, lobbyPlayer));
             }
             else
             {
                 // Default spawn a lobby player for the player character
-                StartCoroutine(SpawnPlayerCharacter(joinEvent.connection, lobbyPlayer));
+                StartCoroutine(SpawnPlayerCharacter(connectionId, lobbyPlayer));
             }
         }
 
-        public IEnumerator SpawnPlayerCharacter(NetworkConnection conn, GameObject playerPrefab)
+        public IEnumerator SpawnPlayerCharacter(ulong connectionId, GameObject playerPrefab)
         {
-            return SpawnPlayerCharacter(conn, playerPrefab, Vector3.zero, Quaternion.identity);
+            return SpawnPlayerCharacter(connectionId, playerPrefab, Vector3.zero, Quaternion.identity);
         }
 
-        public IEnumerator SpawnPlayerCharacter(NetworkConnection conn, GameObject playerPrefab, Vector3 pos, Quaternion rotation)
+        public IEnumerator SpawnPlayerCharacter(ulong connectionId, GameObject playerPrefab, Vector3 pos, Quaternion rotation)
         {
-            // if (!conn.isReady)
-            // {
             yield return null;
-            // }
-            GameObject newPlayer = GameObject.Instantiate(playerPrefab);
+            NetworkObject oldPlayer =
+                NetworkManager.Singleton.ConnectedClients[connectionId].PlayerObject;
+            if (oldPlayer != null)
+            {
+                GameObject.Destroy(oldPlayer.gameObject);
+            }
+            GameObject newPlayer = NetworkManager.Instantiate(playerPrefab);
             newPlayer.transform.rotation = rotation;
             newPlayer.transform.position = pos;
-            NetworkServer.DestroyPlayerForConnection(conn);
-            NetworkServer.AddPlayerForConnection(conn, newPlayer);
+            newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(connectionId);
         }
 
         public void HandleGamePhaseChange(object sender, GamePhaseChange change)
         {
+            if (!NetworkManager.Singleton.IsServer)
+            {
+                return;
+            }
             // Handle whenever the game state changes
             switch (change.next)
             {
                 // Do things differently based on the new phase
                 case GamePhase.Lobby:
                     // Spawn a player for each active connection (lobby player)
-                    foreach (NetworkConnection conn in NetworkServer.connections.Values)
+                    foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
                     {
-                        StartCoroutine(SpawnPlayerCharacter(conn, lobbyPlayer));
+                        StartCoroutine(SpawnPlayerCharacter(client.ClientId, lobbyPlayer));
                     }
                     break;
                 case GamePhase.Setup:
                     // Clean up existing players
-                    foreach (NetworkConnection conn in NetworkServer.connections.Values)
+                    foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
                     {
-                        NetworkServer.DestroyPlayerForConnection(conn);
+                        NetworkManager.Destroy(client.PlayerObject);
                     }
                     break;
                 case GamePhase.InGame:
@@ -126,7 +123,7 @@ namespace PropHunt.Game.Flow
                     ISpawnPointCollection defaultCheckpoint = SpawnPointUtilities.GetDefaultCheckpoint();
                     var spawnEnum = defaultCheckpoint != null ?
                         defaultCheckpoint.GetRandomizedSpawns().GetEnumerator() : null;
-                    foreach (NetworkConnection conn in NetworkServer.connections.Values)
+                    foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
                     {
                         Vector3 pos = Vector3.zero;
                         Quaternion rot = Quaternion.identity;
@@ -138,16 +135,19 @@ namespace PropHunt.Game.Flow
                             }
                             (pos, rot) = spawnEnum.Current;
                         }
-                        StartCoroutine(SpawnPlayerCharacter(conn, inGamePlayer, pos, rot));
+                        StartCoroutine(SpawnPlayerCharacter(client.ClientId, inGamePlayer, pos, rot));
                     }
                     break;
                 case GamePhase.Score:
                     break;
                 case GamePhase.Reset:
                     // Destory spawned players for each connection
-                    foreach (NetworkConnection conn in NetworkServer.connections.Values)
+                    foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
                     {
-                        NetworkServer.DestroyPlayerForConnection(conn);
+                        if (client.PlayerObject != null)
+                        {
+                            GameObject.Destroy(client.PlayerObject.gameObject);
+                        }
                     }
                     // Once laoding is complete, go to lobby
                     break;

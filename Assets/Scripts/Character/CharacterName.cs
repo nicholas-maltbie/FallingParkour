@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Mirror;
-using PropHunt.Game.Flow;
-using PropHunt.Utils;
+using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.NetworkVariable;
 using UnityEngine;
 
 namespace PropHunt.Character
@@ -56,12 +56,12 @@ namespace PropHunt.Character
         /// <summary>
         /// Get lookup of all names by player connection id
         /// </summary>
-        public static SortedDictionary<int, string> GetPlayerNames()
+        public static SortedDictionary<ulong, string> GetPlayerNames()
         {
-            SortedDictionary<int, string> playerNames = new SortedDictionary<int, string>();
+            SortedDictionary<ulong, string> playerNames = new SortedDictionary<ulong, string>();
             foreach (CharacterName name in GameObject.FindObjectsOfType<CharacterName>())
             {
-                playerNames[name.playerId] = name.characterName;
+                playerNames[name.playerId.Value] = name.characterName.Value;
             }
             return playerNames;
         }
@@ -114,7 +114,7 @@ namespace PropHunt.Character
         /// <summary>
         /// Network connection id of player joining the server
         /// </summary>
-        public readonly int connId;
+        public readonly ulong connId;
 
         /// <summary>
         /// Create a player name change event with previous and new names with the associated
@@ -124,7 +124,7 @@ namespace PropHunt.Character
         /// be empty string if the player had no name previously)</param>
         /// <param name="newName">New name the player is using</param>
         /// <param name="connId">Network connection id associated with this player</param>
-        public PlayerNameChange(string previousName, string newName, int connId)
+        public PlayerNameChange(string previousName, string newName, ulong connId)
         {
             this.previousName = previousName;
             this.newName = newName;
@@ -145,55 +145,40 @@ namespace PropHunt.Character
         /// <summary>
         /// Id associated with this player
         /// </summary>
-        [SyncVar]
-        public int playerId;
+        public NetworkVariableULong playerId = new NetworkVariableULong(0);
 
         /// <summary>
         /// name associated with this player
         /// </summary>
-        [SyncVar]
-        public string characterName = "Player";
-
-        /// <summary>
-        /// Network service for managing tests
-        /// </summary>
-        public INetworkService networkService;
+        public NetworkVariableString characterName = new NetworkVariableString("Player");
 
         /// <summary>
         /// Update a player name from a client with authority via command
         /// </summary>
         /// <param name="newName">New name to assign a player</param>
-        [Command]
-        public void CmdUpdatePlayerName(string newName)
+        [ServerRpc]
+        public void UpdatePlayerNameServerRpc(string newName)
         {
-            PlayerNameChange changeEvent = new PlayerNameChange(characterName, newName, playerId);
-            characterName = newName;
+            PlayerNameChange changeEvent = new PlayerNameChange(characterName.Value, newName, playerId.Value);
+            characterName.Value = newName;
             // Send an event for this change event
             OnPlayerNameChange?.Invoke(this, changeEvent);
         }
 
-        public void Awake()
-        {
-            networkService = new NetworkService(this);
-        }
-
         public IEnumerator SendNameWhenReady()
         {
-            while (!NetworkClient.ready)
-            {
-                yield return null;
-            }
-            CmdUpdatePlayerName(CharacterNameManagement.playerName);
+            yield return null;
+            UpdatePlayerNameServerRpc(CharacterNameManagement.playerName);
         }
 
         public void Start()
         {
-            if (networkService.isServer && connectionToClient != null)
+            if (base.IsHost)
             {
-                playerId = connectionToClient.connectionId;
+                playerId.Value = OwnerClientId;
             }
             // Synchronize state to server if local player
-            if (networkService.isLocalPlayer)
+            if (base.IsLocalPlayer)
             {
                 StartCoroutine(SendNameWhenReady());
             }

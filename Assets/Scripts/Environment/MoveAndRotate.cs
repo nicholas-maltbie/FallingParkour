@@ -1,5 +1,5 @@
-using Mirror;
-using PropHunt.Utils;
+using MLAPI;
+using MLAPI.NetworkVariable;
 using UnityEngine;
 
 namespace PropHunt.Environment
@@ -9,72 +9,54 @@ namespace PropHunt.Environment
     /// </summary>
     public class MoveAndRotate : NetworkBehaviour
     {
-        public IUnityService unityService = new UnityService();
-
         /// <summary>
         /// Angular velocity of object in degrees per second for each euclidian axis
         /// </summary>
         [SerializeField]
-        [SyncVar]
         [Tooltip("Angular velocity of object in degrees per second for each euclidian axis")]
-        protected Vector3 angularVelocity;
+        protected NetworkVariable<Vector3> angularVelocity = new NetworkVariable<Vector3>();
 
         /// <summary>
         /// Does this rotation work in local or world space. If true, will rotate in local space.
         /// If false will rotate in world space.
         /// </summary>
         [SerializeField]
-        [SyncVar]
         [Tooltip("Does this rotation work in local or world space")]
-        protected bool localRotation;
-
-        /// <summary>
-        /// Current rotation of the object as a euclidian degrees
-        /// </summary>
-        [SerializeField]
-        [SyncVar]
-        [Tooltip("Current rotation of the object as a euclidian degrees")]
-        protected Vector3 attitude;
+        protected NetworkVariable<bool> localRotation = new NetworkVariable<bool>();
 
         /// <summary>
         /// Linear velocity of object in units per second for each axis
         /// </summary>
         [SerializeField]
-        [SyncVar]
         [Tooltip("Linear velocity of object in units per second for each axis")]
-        protected Vector3 linearVelocity;
+        protected NetworkVariable<Vector3> linearVelocity = new NetworkVariable<Vector3>();
 
-        public override void OnStartServer()
+        public void Start()
         {
-            if (localRotation)
+            if (!NetworkManager.Singleton.IsServer)
             {
-                attitude = transform.localEulerAngles;
-            }
-            else
-            {
-                attitude = transform.eulerAngles;
+                return;
             }
         }
 
         public void Update()
         {
-            float deltaTime = unityService.deltaTime;
+            if (!NetworkManager.Singleton.IsServer)
+            {
+                return;
+            }
+            float deltaTime = Time.deltaTime;
 
             // move object by velocity
-            transform.position += deltaTime * linearVelocity;
+            transform.position += deltaTime * linearVelocity.Value;
             // rotate object by rotation
-            attitude += deltaTime * angularVelocity;
-            // Bound all angles between 0 and 360
-            attitude.x %= 360;
-            attitude.y %= 360;
-            attitude.z %= 360;
-            if (localRotation)
+            if (localRotation.Value)
             {
-                transform.localEulerAngles = attitude;
+                transform.localRotation = transform.localRotation * Quaternion.Euler(deltaTime * angularVelocity.Value);
             }
             else
             {
-                transform.eulerAngles = attitude;
+                transform.rotation = transform.rotation * Quaternion.Euler(deltaTime * angularVelocity.Value);
             }
         }
     }

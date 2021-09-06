@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using Mirror;
-using PropHunt.Character.Avatar;
+using MLAPI;
 using PropHunt.Environment.Checkpoint;
-using PropHunt.Utils;
 using UnityEngine;
 
 namespace PropHunt.Character

@@ -1,28 +1,30 @@
-using Mirror;
-using PropHunt.Utils;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Runtime.Serialization.Formatters.Binary;
+using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.Serialization;
 
 namespace PropHunt.Game.Communication
 {
     /// <summary>
     /// Events for logging to chat information
     /// </summary>
-    public readonly struct ChatMessage : IEquatable<ChatMessage>, NetworkMessage
+    [Serializable]
+    public struct ChatMessage : IEquatable<ChatMessage>, INetworkSerializable
     {
         /// <summary>
         /// Label of source for event as a string
         /// </summary>
-        public readonly string source;
+        public string source;
         /// <summary>
         /// Time that the event ocurred
         /// </summary>
-        public readonly long time;
+        public long time;
         /// <summary>
         /// Content int he message
         /// </summary>
-        public readonly string content;
+        public string content;
 
         public bool Equals(ChatMessage other)
         {
@@ -48,6 +50,13 @@ namespace PropHunt.Game.Communication
             {
                 return $"[{DateTime.FromBinary(time).ToShortTimeString()}] {content}";
             }
+        }
+
+        public void NetworkSerialize(NetworkSerializer serializer)
+        {
+            serializer.Serialize(ref source);
+            serializer.Serialize(ref time);
+            serializer.Serialize(ref content);
         }
     }
 
@@ -91,7 +100,11 @@ namespace PropHunt.Game.Communication
         private static void AdjustMessageLogServer(ChatMessage chatMessage)
         {
             // OnMessage(chatMessage);
-            NetworkServer.SendToAll(chatMessage);
+            NetworkBuffer buffer = new NetworkBuffer();
+            var binaryFormatter = new BinaryFormatter();
+            binaryFormatter.Serialize(buffer, chatMessage);
+            CustomMessagingManager.SendUnnamedMessage(
+                new List<ulong>(NetworkManager.Singleton.ConnectedClients.Keys), buffer);
         }
 
         public static void AddInfoMessage(string message)

@@ -1,11 +1,14 @@
-
-using Mirror;
+using MLAPI;
+using MLAPI.Messaging;
 using PropHunt.Environment.Sound;
 using PropHunt.Utils;
 using UnityEngine;
 
 namespace PropHunt.Character.Footstep
 {
+    /// <summary>
+    /// Create timed play footstep sounds.
+    /// </summary>
     [RequireComponent(typeof(KinematicCharacterController))]
     public class TimedPlayerFootstepSound : NetworkBehaviour
     {
@@ -61,14 +64,6 @@ namespace PropHunt.Character.Footstep
         [SerializeField]
         private SoundType soundType = SoundType.Footstep;
 
-        public INetworkService networkService;
-        public IUnityService unityService = new UnityService();
-
-        public void Awake()
-        {
-            this.networkService = new NetworkService(this);
-        }
-
         public virtual void Start()
         {
             this.kcc = GetComponent<KinematicCharacterController>();
@@ -76,7 +71,7 @@ namespace PropHunt.Character.Footstep
 
         protected void MakeFootstepAtPoint(Vector3 point, GameObject ground)
         {
-            this.lastFootstep = unityService.time;
+            this.lastFootstep = Time.time;
             this.elapsedWalkingSilent = 0.0f;
             SoundEffectEvent sfxEvent = new SoundEffectEvent
             {
@@ -89,13 +84,13 @@ namespace PropHunt.Character.Footstep
                 mixerGroup = "Footsteps"
             };
             PlayFootstepSound(sfxEvent);
-            if (this.networkService.isServer)
+            if (this.IsClient)
             {
-                RpcCreateFootstepSound(sfxEvent);
+                CreateFootstepSoundServerRpc(sfxEvent);
             }
             else
             {
-                CmdCreateFootstepSound(sfxEvent);
+                CreateFootstepSoundClientRpc(sfxEvent);
             }
         }
 
@@ -106,7 +101,7 @@ namespace PropHunt.Character.Footstep
 
         public void Update()
         {
-            if (!this.networkService.isLocalPlayer)
+            if (!base.IsLocalPlayer)
             {
                 return;
             }
@@ -114,7 +109,7 @@ namespace PropHunt.Character.Footstep
             // If the player is on the ground and not moving, update the elapsed walking time
             if (!kcc.Falling && kcc.InputMovement.magnitude > 0)
             {
-                elapsedWalkingSilent += unityService.deltaTime;
+                elapsedWalkingSilent += Time.deltaTime;
             }
 
             if (elapsedWalkingSilent >= maxFootstepSoundDelay)
@@ -128,16 +123,16 @@ namespace PropHunt.Character.Footstep
             return SoundMaterial.Concrete;
         }
 
-        [Command]
-        public void CmdCreateFootstepSound(SoundEffectEvent sfxEvent)
+        [ServerRpc]
+        public void CreateFootstepSoundServerRpc(SoundEffectEvent sfxEvent)
         {
-            RpcCreateFootstepSound(sfxEvent);
+            CreateFootstepSoundClientRpc(sfxEvent);
         }
 
         [ClientRpc]
-        public void RpcCreateFootstepSound(SoundEffectEvent sfxEvent)
+        public void CreateFootstepSoundClientRpc(SoundEffectEvent sfxEvent)
         {
-            if (this.networkService.isLocalPlayer)
+            if (base.IsLocalPlayer)
             {
                 return;
             }

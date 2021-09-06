@@ -15,8 +15,6 @@ namespace PropHunt.UI
 
         private float elapsed = 0.0f;
 
-        public IUnityService unityService = new UnityService();
-
         public void Start()
         {
             UpdatePlayerList();
@@ -24,7 +22,7 @@ namespace PropHunt.UI
 
         public void Update()
         {
-            elapsed += unityService.deltaTime;
+            elapsed += Time.deltaTime;
             if (elapsed >= updateInterval)
             {
                 UpdatePlayerList();
@@ -33,7 +31,7 @@ namespace PropHunt.UI
 
         public void UpdatePlayerList()
         {
-            SortedDictionary<int, string> playerNames = CharacterNameManagement.GetPlayerNames();
+            SortedDictionary<ulong, string> playerNames = CharacterNameManagement.GetPlayerNames();
             text.text = string.Join("\n", playerNames.Values);
         }
     }

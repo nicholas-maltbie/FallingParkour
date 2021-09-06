@@ -1,8 +1,7 @@
-
-using Mirror;
-using PropHunt.Character.Avatar;
+using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.NetworkVariable;
 using PropHunt.Utils;
-using UnityEngine;
 
 namespace PropHunt.Animation
 {
@@ -11,18 +10,15 @@ namespace PropHunt.Animation
     /// </summary>
     public class NetworkFootGrounding : NetworkBehaviour
     {
-        [SyncVar(hook = nameof(OnGroundFeetChange))]
-        public bool groundFeet;
+        /// <summary>
+        /// Current state of player foot grounding
+        /// </summary>
+        public NetworkVariable<bool> groundFeet = new NetworkVariable<bool>(new NetworkVariableSettings { WritePermission = NetworkVariablePermission.OwnerOnly }, false);
 
         /// <summary>
         /// component to control player foot grounding
         /// </summary>
         public PlayerFootGrounded playerFootGrounded;
-
-        /// <summary>
-        /// Network service for operating character control
-        /// </summary>
-        public INetworkService networkService;
 
         public void OnGroundFeetChange(bool _, bool newState)
         {
@@ -34,13 +30,13 @@ namespace PropHunt.Animation
 
         public void SetFootGroundedState(bool newState)
         {
-            if (!networkService.isServer)
+            if (!this.IsHost)
             {
-                CmdSetFootGroundedState(newState);
+                SetFootGroundedServerRpc(newState);
             }
-            else
+            else if (IsLocalPlayer)
             {
-                groundFeet = newState;
+                groundFeet.Value = newState;
                 if (playerFootGrounded != null)
                 {
                     playerFootGrounded.enableFootGrounded = newState;
@@ -48,21 +44,26 @@ namespace PropHunt.Animation
             }
         }
 
-        public void Awake()
+        public void OnEnable()
         {
-            this.networkService = new NetworkService(this);
+            groundFeet.OnValueChanged += OnGroundFeetChange;
+        }
+
+        public void OnDisable()
+        {
+            groundFeet.OnValueChanged -= OnGroundFeetChange;
         }
 
         public void Start()
         {
-            if (networkService.isServer)
+            if (base.IsLocalPlayer)
             {
                 SetFootGroundedState(true);
             }
         }
 
-        [Command]
-        public void CmdSetFootGroundedState(bool newState)
+        [ServerRpc]
+        public void SetFootGroundedServerRpc(bool newState)
         {
             SetFootGroundedState(newState);
         }

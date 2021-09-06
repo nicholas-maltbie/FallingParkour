@@ -1,6 +1,4 @@
-using Mirror;
 using PropHunt.Character;
-using PropHunt.Utils;
 using UnityEngine;
 
 namespace PropHunt.Environment
@@ -31,7 +29,7 @@ namespace PropHunt.Environment
                 return;
             }
             KinematicCharacterController kcc = collision.gameObject.GetComponent<KinematicCharacterController>();
-            if (kcc == null || !kcc.isLocalPlayer)
+            if (kcc == null || !kcc.IsLocalPlayer)
             {
                 return;
             }

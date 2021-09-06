@@ -8,7 +8,6 @@ namespace PropHunt.Environment
     /// </summary>
     public class RigidbodyMovingGround : MonoBehaviour, IMovingGround
     {
-        public IUnityService unityService = new UnityService();
         [SerializeField]
         private Rigidbody attachedRigidbody;
 
@@ -35,13 +34,20 @@ namespace PropHunt.Environment
         /// <inheritdoc/>
         public Vector3 GetVelocityAtPoint(Vector3 point)
         {
+            NetworkRigidbody nrb = attachedRigidbody.gameObject.GetComponent<NetworkRigidbody>();
+            if (nrb != null)
+            {
+                Vector3 vel = attachedRigidbody.GetPointVelocity(point);
+                attachedRigidbody.velocity = nrb.netVelocity.Value;
+                attachedRigidbody.angularVelocity = nrb.netAngularVelocity.Value;
+            }
             return attachedRigidbody.GetPointVelocity(point);
         }
 
         /// <inheritdoc/>
         public Vector3 GetDisplacementAtPoint(Vector3 point)
         {
-            return attachedRigidbody.GetPointVelocity(point) * unityService.deltaTime;
+            return attachedRigidbody.GetPointVelocity(point) * Time.deltaTime;
         }
     }
 }

@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Mirror;
-using PropHunt.Utils;
+using System.Runtime.Serialization.Formatters.Binary;
+using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.Serialization;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -10,7 +13,8 @@ namespace PropHunt.Environment.Sound
     /// <summary>
     /// Event describing a sound effect for sharing over the network
     /// </summary>
-    public struct SoundEffectEvent : NetworkMessage
+    [Serializable]
+    public class SoundEffectEvent : INetworkSerializable
     {
         /// <summary>
         /// identifier for sound effect event
@@ -33,12 +37,21 @@ namespace PropHunt.Environment.Sound
         /// Mixer group to play this sound effect in
         /// </summary>
         public string mixerGroup;
+
+        public void NetworkSerialize(NetworkSerializer serializer)
+        {
+            serializer.Serialize(ref sfxId);
+            serializer.Serialize(ref point);
+            serializer.Serialize(ref pitchValue);
+            serializer.Serialize(ref volume);
+            serializer.Serialize(ref mixerGroup);
+        }
     }
 
     /// <summary>
     /// Manager for sound effects in a given scene
     /// </summary>
-    public class SoundEffectManager : MonoBehaviour
+    public class SoundEffectManager : NetworkBehaviour
     {
         /// <summary>
         /// Global instance of sound effect to play sound effects in the scene
@@ -145,12 +158,11 @@ namespace PropHunt.Environment.Sound
         /// <param name="pitch">Pitch value of sound effect</param>
         /// <param name="volume">Volume value of sound effect</param>
         /// <param name="audioMixerGroup">Audio mixer group to play this sound effect in</param>
-        [Server]
         public static void CreateNetworkedSoundEffectAtPoint(
             Vector3 point, SoundMaterial material, SoundType type, float pitch = 1.0f, float volume = 1.0f,
             string audioMixerGroup = defaultAudioMixerGroup)
         {
-            if (SoundEffectManager.Instance == null || !NetworkServer.active)
+            if (SoundEffectManager.Instance == null)
             {
                 return;
             }
@@ -172,14 +184,37 @@ namespace PropHunt.Environment.Sound
         /// Create a sound effect event on the server and send this event to all clients
         /// </summary>
         /// <param name="sfxEvent">Sound effect event to create</param>
-        [Server]
+        [ServerRpc(RequireOwnership = false)]
+        private void CreateNetworkedSoundEffectAtPointServerRpc(SoundEffectEvent sfxEvent)
+        {
+            CreateNetworkedSoundEffectAtPoint(sfxEvent);
+        }
+
+        /// <summary>
+        /// Create a sound effect event on the server and send this event to all clients
+        /// </summary>
+        /// <param name="sfxEvent">Sound effect event to create</param>
         public static void CreateNetworkedSoundEffectAtPoint(SoundEffectEvent sfxEvent)
         {
-            if (SoundEffectManager.Instance == null || !NetworkServer.active)
+            if (SoundEffectManager.Instance == null)
             {
                 return;
             }
-            NetworkServer.SendToAll<SoundEffectEvent>(sfxEvent);
+
+            if (!NetworkManager.Singleton.IsServer)
+            {
+                SoundEffectManager.Instance.CreateSoundEffectAtPointClientRpc(sfxEvent);
+            }
+            else
+            {
+                SoundEffectManager.Instance.CreateSoundEffectAtPointClientRpc(sfxEvent);
+            }
+        }
+
+        [ClientRpc]
+        private void CreateSoundEffectAtPointClientRpc(SoundEffectEvent sfxEvent)
+        {
+            CreateSoundEffectAtPoint(sfxEvent);
         }
 
         /// <summary>
@@ -207,7 +242,7 @@ namespace PropHunt.Environment.Sound
                 SoundEffectManager.Instance.soundEffectLibrary.GetSFXClipBySoundMaterialAndType(soundMaterial, soundType).audioClip);
         }
 
-        public static IEnumerator PlaySFX(AudioSource source, string audioMixerGroup)
+        private static IEnumerator PlaySFX(AudioSource source, string audioMixerGroup)
         {
             yield return null;
             source.outputAudioMixerGroup = audioMixerGroup != null && SoundEffectManager.Instance.HasAudioMixerGroup(audioMixerGroup) ?
@@ -229,7 +264,7 @@ namespace PropHunt.Environment.Sound
         /// <param name="volume">Volume to play sound effect at</param>
         /// <param name="audioMixerGroup">Audio mixer group to play this sound effect in</param>
         /// <returns></returns>
-        public static GameObject CreateSoundEffectAtPoint(Vector3 point,
+        private static GameObject CreateSoundEffectAtPoint(Vector3 point,
             AudioClip clip, float pitchValue = 1.0f, float volume = 1.0f,
             string audioMixerGroup = defaultAudioMixerGroup)
         {

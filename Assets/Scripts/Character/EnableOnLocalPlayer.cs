@@ -1,4 +1,4 @@
-using Mirror;
+using MLAPI;
 using UnityEngine;
 
 namespace PropHunt.Character
@@ -10,7 +10,7 @@ namespace PropHunt.Character
 
         public void Update()
         {
-            enableOnLocalPlayer.SetActive(isLocalPlayer);
+            enableOnLocalPlayer.SetActive(base.IsLocalPlayer);
         }
     }
 }

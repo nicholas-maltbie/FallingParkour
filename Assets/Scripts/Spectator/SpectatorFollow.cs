@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Mirror;
+using MLAPI;
 using PropHunt.Character;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -95,7 +93,7 @@ namespace PropHunt.Spectator
         /// <param name="step">Direction and count to move forward in followable list.</param>
         public void NextTarget(int step = 1)
         {
-            if (isLocalPlayer)
+            if (base.IsLocalPlayer)
             {
                 List<Followable> followables = GetFollowables();
                 if (followables.Count > 0)

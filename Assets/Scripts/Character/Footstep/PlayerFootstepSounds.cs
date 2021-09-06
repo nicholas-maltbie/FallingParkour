@@ -1,8 +1,4 @@
-using Mirror;
 using PropHunt.Animation;
-using PropHunt.Character.Avatar;
-using PropHunt.Environment.Sound;
-using PropHunt.Utils;
 using UnityEngine;
 
 namespace PropHunt.Character.Footstep
@@ -28,7 +24,9 @@ namespace PropHunt.Character.Footstep
 
         public void HandleFootstepEvent(object sender, FootstepEvent footstepEvent)
         {
-            if (!networkService.isLocalPlayer || footstepEvent.state != FootstepState.Down || (unityService.time - lastFootstep) < minFootstepSoundDelay)
+            if (!base.IsLocalPlayer ||
+                footstepEvent.state != FootstepState.Down ||
+                (Time.time - lastFootstep) < minFootstepSoundDelay)
             {
                 return;
             }

@@ -1,4 +1,5 @@
-using Mirror;
+using MLAPI;
+using MLAPI.Messaging;
 using PropHunt.Utils;
 using UnityEngine;
 
@@ -9,13 +10,6 @@ namespace PropHunt.Character
     /// </summary>
     public class CharacterPush : NetworkBehaviour
     {
-        public IUnityService unityService = new UnityService();
-
-        /// <summary>
-        /// Network service for checking client server status of object
-        /// </summary>
-        public INetworkService networkService;
-
         /// <summary>
         /// Power of the player push
         /// </summary>
@@ -25,11 +19,6 @@ namespace PropHunt.Character
         /// Force of pushing down when standing on objects
         /// </summary>    
         public float weight = 10.0f;
-
-        public void Start()
-        {
-            this.networkService = new NetworkService(this);
-        }
 
         /// <summary>
         /// Apply a push to an object at a point with a given force
@@ -52,15 +41,15 @@ namespace PropHunt.Character
         /// <param name="hit">Object hit</param>
         /// <param name="force">Force of push</param>
         /// <param name="point">Point of hit on the game object</param>
-        [Command]
-        public void CmdPushWithForce(GameObject hit, Vector3 force, Vector3 point)
-        {
-            PushWithForce(hit, force, point);
-        }
+        // [ServerRpc]
+        // public void PushWithForceServerRpc(GameObject hit, Vector3 force, Vector3 point)
+        // {
+        //     PushWithForce(hit, force, point);
+        // }
 
         public void PushObject(IControllerColliderHit hit)
         {
-            if (!this.networkService.isLocalPlayer)
+            if (!base.IsLocalPlayer)
             {
                 // exit from update if this is not the local player
                 return;
@@ -95,15 +84,15 @@ namespace PropHunt.Character
             }
 
             // Apply the push
-            if (this.networkService.isServer)
+            if (IsHost)
             {
                 // On the server, just push it
-                PushWithForce(hit.gameObject, force * unityService.deltaTime, hit.point);
+                PushWithForce(hit.gameObject, force * Time.deltaTime, hit.point);
             }
             else
             {
                 // On client, send message to server to push the object
-                CmdPushWithForce(hit.gameObject, force * unityService.deltaTime, hit.point);
+                // PushWithForceServerRpc(hit.gameObject, force * Time.deltaTime, hit.point);
             }
         }
     }

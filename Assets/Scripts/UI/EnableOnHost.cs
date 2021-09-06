@@ -1,4 +1,4 @@
-using Mirror;
+using MLAPI;
 using UnityEngine;
 
 namespace PropHunt.UI
@@ -12,10 +12,9 @@ namespace PropHunt.UI
 
         public void OnScreenLoaded()
         {
-            bool isHost = NetworkServer.active;
             foreach (GameObject go in enableOnHost)
             {
-                go.SetActive(isHost);
+                go.SetActive(NetworkManager.Singleton.IsHost);
             }
         }
 

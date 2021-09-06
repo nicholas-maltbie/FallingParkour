@@ -1,8 +1,8 @@
-﻿using Mirror;
-using PropHunt.Utils;
-using PropHunt.Environment;
+﻿using PropHunt.Environment;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using MLAPI;
+using MLAPI.Messaging;
 
 namespace PropHunt.Character
 {
@@ -12,16 +12,6 @@ namespace PropHunt.Character
     [RequireComponent(typeof(CameraController))]
     public class FocusDetection : NetworkBehaviour
     {
-        /// <summary>
-        /// Unity service for getting player inputs
-        /// </summary>
-        public IUnityService unityService = new UnityService();
-
-        /// <summary>
-        /// Network service for managing network calls
-        /// </summary>
-        public INetworkService networkService;
-
         /// <summary>
         /// Create sphere radius variable -J
         /// </summary>
@@ -73,27 +63,26 @@ namespace PropHunt.Character
         /// <summary> Start is called before the first frame update</summary>
         public void Start()
         {
-            this.networkService = new NetworkService(this);
             this.cameraController = GetComponent<CameraController>();
         }
 
         public void InteractWithObject(GameObject target, GameObject source)
         {
-            if (networkService.isServer)
+            if (IsHost)
             {
                 target.GetComponent<Interactable>().Interact(source);
             }
             else
             {
-                CmdInteractWithObject(target, source);
+                // InteractWithObjectServerRpc(target, source);
             }
         }
 
-        [Command]
-        public void CmdInteractWithObject(GameObject target, GameObject source)
-        {
-            target.GetComponent<Interactable>().Interact(source);
-        }
+        // [ServerRpc]
+        // public void InteractWithObjectServerRpc(GameObject target, GameObject source)
+        // {
+        //     target.GetComponent<Interactable>().Interact(source);
+        // }
 
         /// <summary>Update is called once per frame</summary>
         public void Update()
@@ -103,7 +92,7 @@ namespace PropHunt.Character
             float cameraDistance = controller != null ? controller.CameraDistance : 0;
             float focusRange = viewDistance + cameraDistance;
             // Only update if IsLocalPlayer is true
-            if (!this.networkService.isLocalPlayer)
+            if (!base.IsLocalPlayer)
             {
                 // exit from update if this is not the local player
                 return;

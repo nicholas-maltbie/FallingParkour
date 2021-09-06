@@ -1,5 +1,3 @@
-
-using PropHunt.Utils;
 using UnityEngine;
 
 namespace PropHunt.Environment
@@ -9,11 +7,6 @@ namespace PropHunt.Environment
     /// </summary>
     public class MovementTracking : MonoBehaviour, IMovingGround
     {
-        /// <summary>
-        /// Unity service for manaing updates
-        /// </summary>
-        public IUnityService unityService = new UnityService();
-
         /// <summary>
         /// Should momentum be transferred to players when they
         /// leave this object.
@@ -59,7 +52,7 @@ namespace PropHunt.Environment
 
         public Vector3 GetVelocityAtPoint(Vector3 point)
         {
-            return GetDisplacementAtPoint(point) / unityService.deltaTime;
+            return GetDisplacementAtPoint(point) / Time.deltaTime;
         }
 
         public Vector3 GetDisplacementAtPoint(Vector3 point)

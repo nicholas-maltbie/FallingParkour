@@ -1,6 +1,7 @@
 using PropHunt.Game.Communication;
 using System;
 using PropHunt.Utils;
+using UnityEngine;
 
 namespace PropHunt.Game.Flow
 {
@@ -52,8 +53,6 @@ namespace PropHunt.Game.Flow
 
         public static float phaseStart;
 
-        public static IUnityService unityService = new UnityService();
-
         public static void ChangePhase(GamePhase newPhase)
         {
             if (newPhase == gamePhase)
@@ -64,7 +63,7 @@ namespace PropHunt.Game.Flow
             GamePhaseChange changeEvent = new GamePhaseChange(gamePhase, newPhase);
             gamePhase = newPhase;
             OnGamePhaseChange?.Invoke(null, changeEvent);
-            phaseStart = unityService.time;
+            phaseStart = Time.time;
         }
     }
 }

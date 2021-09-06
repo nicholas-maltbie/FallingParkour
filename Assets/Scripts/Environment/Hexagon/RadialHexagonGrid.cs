@@ -1,6 +1,5 @@
 using System.Collections;
-using Mirror;
-using PropHunt.Utils;
+using MLAPI;
 using UnityEngine;
 
 namespace PropHunt.Environment.Hexagon
@@ -79,12 +78,12 @@ namespace PropHunt.Environment.Hexagon
             DeleteOnStand hexDelete = hex.GetComponent<DeleteOnStand>();
             if (hexDelete != null)
             {
-                hexDelete.normalColor1 = recolor1;
-                hexDelete.normalColor2 = recolor2;
+                hexDelete.normalColor1.Value = recolor1;
+                hexDelete.normalColor2.Value = recolor2;
                 Color.RGBToHSV(recolor1, out float h1, out float s1, out float v1);
                 Color.RGBToHSV(recolor2, out float h2, out float s2, out float v2);
-                hexDelete.fadeColor1 = Color.HSVToRGB(h1, s1 * 0.2f, 1 - ((1 - v1) * 0.2f));
-                hexDelete.fadeColor2 = Color.HSVToRGB(h2, s2 * 0.2f, 1 - ((1 - v2) * 0.2f));
+                hexDelete.fadeColor1.Value = Color.HSVToRGB(h1, s1 * 0.2f, 1 - ((1 - v1) * 0.2f));
+                hexDelete.fadeColor2.Value = Color.HSVToRGB(h2, s2 * 0.2f, 1 - ((1 - v2) * 0.2f));
                 hexDelete.UpdateColor();
             }
             Vector2 newPos = distanceOffset + step * side;
@@ -92,7 +91,7 @@ namespace PropHunt.Environment.Hexagon
             hex.transform.position = transform.position + hexPos;
             hex.transform.parent = hexBase.transform;
 
-            NetworkServer.Spawn(hex);
+            hex.GetComponent<NetworkObject>().Spawn(destroyWithScene: true);
         }
 
         /// <summary>
@@ -140,14 +139,12 @@ namespace PropHunt.Environment.Hexagon
 
         public void Start()
         {
-            NetworkClient.RegisterPrefab(hexagonPrefab);
-        }
-
-        public override void OnStartServer()
-        {
-            hexBase = new GameObject();
-            hexBase.name = "Hexagon Base";
-            StartCoroutine(CreateGrid());
+            if (IsServer)
+            {
+                hexBase = new GameObject();
+                hexBase.name = "Hexagon Base";
+                StartCoroutine(CreateGrid());
+            }
         }
     }
 }

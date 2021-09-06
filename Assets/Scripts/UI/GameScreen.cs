@@ -1,4 +1,3 @@
-using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;

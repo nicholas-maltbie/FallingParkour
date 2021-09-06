@@ -216,6 +216,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1438153606}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -40
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -829,6 +833,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1057536765}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -270
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -260
@@ -1065,6 +1073,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -1318,6 +1327,10 @@ PrefabInstance:
     - target: {fileID: 249697813445521294, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
       propertyPath: m_Name
       value: Curved Fan Container
+      objectReference: {fileID: 0}
+    - target: {fileID: 1649063935939829710, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -30
       objectReference: {fileID: 0}
     - target: {fileID: 4028059115363820791, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
       propertyPath: m_LocalScale.x
@@ -1597,6 +1610,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1438153606}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -40
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -1748,6 +1765,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -1795,10 +1813,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 820096636}
-  - component: {fileID: 820096638}
   - component: {fileID: 820096637}
-  - component: {fileID: 820096639}
   - component: {fileID: 820096640}
+  - component: {fileID: 820096639}
+  - component: {fileID: 820096638}
   m_Layer: 0
   m_Name: Moving Target
   m_TagString: Untagged
@@ -1833,8 +1851,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9e71d8b5fbfda545b729900444b08df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   linearSpeed: 3
   targetsList:
   - {fileID: 1964600772}
@@ -1848,14 +1864,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 820096635}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 984985913
-  serverOnly: 0
-  visible: 0
-  m_AssetId: 
-  hasSpawned: 0
+  FixedSendsPerSecond: 20
+  AssumeSyncedSends: 1
+  InterpolatePosition: 1
+  SnapDistance: 10
+  InterpolateServer: 1
+  MinMeters: 0.15
+  MinDegrees: 1.5
+  ExtrapolatePosition: 0
+  MaxSendsToExtrapolate: 5
+  Channel: 
+  EnableRange: 0
+  EnableNonProvokedResendChecks: 0
+  DistanceSendrate:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 20
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 500
+      value: 20
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &820096639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1865,26 +1912,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 820096635}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  clientAuthority: 0
-  sendInterval: 0.05
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 1
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 1
-  bufferTimeMultiplier: 3
-  bufferSizeLimit: 64
-  catchupThreshold: 6
-  catchupMultiplier: 0.1
-  showGizmos: 0
-  showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  NetworkInstanceId: 0
+  PrefabHash: 12494371574847332402
+  PrefabHashGenerator: Moving Target
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
 --- !u!54 &820096640
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1896,8 +1931,8 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -2090,6 +2125,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1438153606}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -40
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -2176,6 +2215,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 464740574}
     m_Modifications:
+    - target: {fileID: 763383608637304312, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -30
+      objectReference: {fileID: 0}
     - target: {fileID: 909467002374587693, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Name
       value: Reversed Fan Rotation Parent (2)
@@ -2373,50 +2416,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7560938382942759585, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
   m_PrefabInstance: {fileID: 953949880}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &955521268
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 955521269}
-  - component: {fileID: 955521270}
-  m_Layer: 0
-  m_Name: Spec Target 2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &955521269
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 955521268}
-  m_LocalRotation: {x: -0, y: 0.42851478, z: -0, w: 0.90353477}
-  m_LocalPosition: {x: -12.75, y: -2.5090086, z: 6.93}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 19
-  m_LocalEulerAnglesHint: {x: 0, y: 50.747, z: 0}
---- !u!114 &955521270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 955521268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da859f811529b0b428b2f67bec07515c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ignoreCollider: {fileID: 0}
 --- !u!1 &980147683
 GameObject:
   m_ObjectHideFlags: 0
@@ -2686,7 +2685,6 @@ GameObject:
   - component: {fileID: 1069172165}
   - component: {fileID: 1069172167}
   - component: {fileID: 1069172168}
-  - component: {fileID: 1069172166}
   m_Layer: 0
   m_Name: Checkpoint Flag
   m_TagString: Untagged
@@ -2708,23 +2706,6 @@ Transform:
   m_Father: {fileID: 1474827462}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1069172166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1069172164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 1660369395
-  serverOnly: 0
-  visible: 0
-  m_AssetId: 
-  hasSpawned: 0
 --- !u!65 &1069172167
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2750,8 +2731,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa5bd002477ea20439cf62440f4d53bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   playerSpawnManager: {fileID: 0}
 --- !u!1001 &1077215220
 PrefabInstance:
@@ -2760,6 +2739,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1438153606}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -40
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -2941,6 +2924,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -3102,6 +3086,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1438153606}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -40
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -3387,6 +3375,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 372356489}
     m_Modifications:
+    - target: {fileID: 763383608637304312, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: 45
+      objectReference: {fileID: 0}
     - target: {fileID: 909467002374587693, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Name
       value: Reversed Fan Rotation Parent (2)
@@ -3489,6 +3481,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 372356489}
     m_Modifications:
+    - target: {fileID: 763383608637304312, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: 60
+      objectReference: {fileID: 0}
     - target: {fileID: 909467002374587693, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Name
       value: Fan Rotation Parent (2)
@@ -3780,6 +3776,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 277034048}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -30
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -4021,6 +4021,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -4099,6 +4100,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 464740574}
     m_Modifications:
+    - target: {fileID: 763383608637304312, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -45
+      objectReference: {fileID: 0}
     - target: {fileID: 909467002374587693, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Name
       value: Reversed Fan Rotation Parent (3)
@@ -4242,6 +4247,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -4313,6 +4319,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1763611723}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -45
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -4539,6 +4549,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 464740574}
     m_Modifications:
+    - target: {fileID: 763383608637304312, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: 45
+      objectReference: {fileID: 0}
     - target: {fileID: 909467002374587693, guid: df3f3f96dc09b9341bebb4215f018931, type: 3}
       propertyPath: m_Name
       value: Fan Rotation Parent (2)
@@ -4769,6 +4783,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1438153606}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -40
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -5447,6 +5465,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -5520,6 +5539,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1707871403}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: -45
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: -30
@@ -5668,6 +5691,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 878899128}
     m_Modifications:
+    - target: {fileID: 1145256007321908785, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
+      propertyPath: angularVelocity.m_InternalValue.y
+      value: 270
+      objectReference: {fileID: 0}
     - target: {fileID: 1938791798446604957, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: angularVelocity.y
       value: 260
@@ -6180,6 +6207,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
