@@ -646,7 +646,7 @@ namespace PropHunt.Character
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
             if (movingGround != null && !movingGround.AvoidTransferMomentum())
             {
-                groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition);
+                groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition, Time.fixedDeltaTime);
             }
 
             return groundVelocity;
@@ -696,7 +696,7 @@ namespace PropHunt.Character
                 return;
             }
             // Otherwise, get the displacement of the floor at the previous position
-            Vector3 displacement = movingGround.GetDisplacementAtPoint(groundHitPosition);
+            Vector3 displacement = movingGround.GetDisplacementAtPoint(groundHitPosition, Time.fixedDeltaTime);
 
             if (movingGround.ShouldAttach())
             {

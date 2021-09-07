@@ -32,7 +32,7 @@ namespace PropHunt.Environment
         }
 
         /// <inheritdoc/>
-        public Vector3 GetVelocityAtPoint(Vector3 point)
+        public Vector3 GetVelocityAtPoint(Vector3 point, float deltaTime)
         {
             NetworkRigidbody nrb = attachedRigidbody.gameObject.GetComponent<NetworkRigidbody>();
             if (nrb != null)
@@ -45,9 +45,9 @@ namespace PropHunt.Environment
         }
 
         /// <inheritdoc/>
-        public Vector3 GetDisplacementAtPoint(Vector3 point)
+        public Vector3 GetDisplacementAtPoint(Vector3 point, float deltaTime)
         {
-            return attachedRigidbody.GetPointVelocity(point) * Time.deltaTime;
+            return attachedRigidbody.GetPointVelocity(point) * deltaTime;
         }
     }
 }

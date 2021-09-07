@@ -12,8 +12,9 @@ namespace PropHunt.Environment
         /// at a given point on the surface of the object (in world space).
         /// </summary>
         /// <param name="point">Point on the surface of the object (in world space).</param>
+        /// <param name="deltaTime">delta time for computing velocity.</param>
         /// <returns>Velocity that the object is moving at the point.</returns>
-        Vector3 GetVelocityAtPoint(Vector3 point);
+        Vector3 GetVelocityAtPoint(Vector3 point, float deltaTime);
 
         /// <summary>
         /// Get displacement of the moving object at a given point on the
@@ -22,7 +23,7 @@ namespace PropHunt.Environment
         /// <param name="point">Point on the surface of the object (in world space).</param>
         /// <returns>Displacement on the surface of this object from that point
         /// for the current fixed update</returns>
-        Vector3 GetDisplacementAtPoint(Vector3 point);
+        Vector3 GetDisplacementAtPoint(Vector3 point, float deltaTime);
 
         /// <summary>
         /// Should momentum be transferred to players when they
