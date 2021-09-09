@@ -33,7 +33,7 @@ namespace PropHunt.Environment
 
         public void FixedUpdate()
         {
-            if (!NetworkManager.Singleton.IsServer)
+            if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer)
             {
                 return;
             }

@@ -40,7 +40,7 @@ namespace PropHunt.Environment
         /// </summary>
         public Vector3 Displacement { get; private set; }
 
-        public void Update()
+        public void FixedUpdate()
         {
             ChangeAttitude = transform.rotation * Quaternion.Inverse(PreviousAttitude);
             Displacement = transform.position - PreviousPosition;
@@ -50,12 +50,12 @@ namespace PropHunt.Environment
             PreviousAttitude = transform.rotation;
         }
 
-        public Vector3 GetVelocityAtPoint(Vector3 point)
+        public Vector3 GetVelocityAtPoint(Vector3 point, float deltaTime)
         {
-            return GetDisplacementAtPoint(point) / Time.deltaTime;
+            return GetDisplacementAtPoint(point, deltaTime) / deltaTime;
         }
 
-        public Vector3 GetDisplacementAtPoint(Vector3 point)
+        public Vector3 GetDisplacementAtPoint(Vector3 point, float deltaTime)
         {
             // Get relative position to previous start
             Vector3 relativePosition = point - PreviousPosition;
