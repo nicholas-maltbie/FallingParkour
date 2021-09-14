@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: RecolorSample
-  m_Shader: {fileID: -6465566751694194690, guid: 6ee87c2d743bb7c4bb9f126fbc157abf, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 3a70065435bac3641872ed9b90b7d05e, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,6 +19,14 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Albedo:
+        m_Texture: {fileID: 2800000, guid: 25bd1e52fe4a36540b1056ec8349c5a4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Albedo:
+        m_Texture: {fileID: 2800000, guid: 25bd1e52fe4a36540b1056ec8349c5a4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _AlbedoTexture:
         m_Texture: {fileID: 2800000, guid: 16896f3af805cb54dac227d27852d570, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -83,6 +91,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _AlphaClip: 0
     - _BackgroundMaskStrength: 1
@@ -104,6 +113,8 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _ScrollSpeedX: 0
+    - _ScrollSpeedY: -1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -112,6 +123,9 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
+    - Scale: {r: 100, g: 100, b: 10, a: 0}
+    - ScrollSpeed: {r: 0, g: 1, b: -1, a: 0}
+    - Speed: {r: 0, g: 0, b: 0, a: 0}
     - _Backgroun2: {r: 1, g: 0.9167996, b: 0, a: 0}
     - _Background1: {r: 1, g: 0.537543, b: 0, a: 0}
     - _Background2: {r: 0.9716981, g: 0.957, b: 0.371262, a: 0}
@@ -122,8 +136,11 @@ Material:
     - _PatternColor: {r: 0, g: 0.031219006, b: 1, a: 0}
     - _PatternOffset: {r: 0, g: 0, b: 0, a: 0}
     - _PatternTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _RecolorBlack: {r: 0, g: 0, b: 0, a: 0}
+    - _RecolorWhite: {r: 1, g: 1, b: 1, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _offset: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &6413770058961798455
 MonoBehaviour:
