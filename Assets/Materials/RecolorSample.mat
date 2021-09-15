@@ -123,9 +123,9 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Scale: {r: 100, g: 100, b: 10, a: 0}
+    - Scale: {r: 1, g: -1, b: 1, a: 0}
     - ScrollSpeed: {r: 0, g: 1, b: -1, a: 0}
-    - Speed: {r: 0, g: 0, b: 0, a: 0}
+    - Speed: {r: 0, g: -1, b: 1, a: 0}
     - _Backgroun2: {r: 1, g: 0.9167996, b: 0, a: 0}
     - _Background1: {r: 1, g: 0.537543, b: 0, a: 0}
     - _Background2: {r: 0.9716981, g: 0.957, b: 0.371262, a: 0}
