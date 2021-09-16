@@ -223,6 +223,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2318210381346111627, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
+      propertyPath: NetworkConfig.RegisteredScenes.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2318210381346111627, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
+      propertyPath: NetworkConfig.RegisteredScenes.Array.data[5]
+      value: Factory
+      objectReference: {fileID: 0}
     - target: {fileID: 8542409671753137158, guid: 128bf2dcaa8d43942a6e23d498102de3, type: 3}
       propertyPath: m_Name
       value: NetworkManager

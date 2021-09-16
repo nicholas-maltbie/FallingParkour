@@ -90,6 +90,7 @@ MonoBehaviour:
     - BigFans
     - BrokenFloor
     - Wipeout
+    - Factory
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 1250752114043530695, guid: d3c7992bedb32c547a65b63a8702b3d8, type: 3}
