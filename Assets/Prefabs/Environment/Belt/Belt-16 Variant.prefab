@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &1050449621
+--- !u!114 &4865924750118719687
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
   velocity: 1
-  direction: 1
 --- !u!1001 &7542946083656658174
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25,10 +24,6 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 1804f9df23e32364d90684600f33a595, type: 3}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1804f9df23e32364d90684600f33a595, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1804f9df23e32364d90684600f33a595, type: 3}
       propertyPath: m_LocalPosition.x
