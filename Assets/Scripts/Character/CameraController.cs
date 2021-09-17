@@ -203,7 +203,7 @@ namespace PropHunt.Character
 
         public void Update()
         {
-            if (!base.IsLocalPlayer)
+            if (!this.IsLocalPlayer)
             {
                 if (thirdPersonCharacterBase != null)
                 {

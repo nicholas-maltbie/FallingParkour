@@ -104,8 +104,6 @@ namespace PropHunt.Character
                 animState.falling = falling;
                 animState.longFalling = kcc.FallingTime >= longFallingThreshold;
 
-                UnityEngine.Debug.Log($"Updating for character with id {this.GetComponent<NetworkObject>().NetworkObjectId}");
-
                 animatorState.Value = animState;
             }
 

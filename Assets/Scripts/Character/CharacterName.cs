@@ -173,12 +173,12 @@ namespace PropHunt.Character
 
         public void Start()
         {
-            if (base.IsHost)
+            if (this.IsHost)
             {
                 playerId.Value = OwnerClientId;
             }
             // Synchronize state to server if local player
-            if (base.IsLocalPlayer)
+            if (this.IsLocalPlayer)
             {
                 StartCoroutine(SendNameWhenReady());
             }

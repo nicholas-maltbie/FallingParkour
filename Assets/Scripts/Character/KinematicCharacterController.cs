@@ -443,7 +443,7 @@ namespace PropHunt.Character
 
         public void FixedUpdate()
         {
-            if (!base.IsLocalPlayer)
+            if (!this.IsLocalPlayer)
             {
                 // exit from update if this is not the local player
                 return;
@@ -851,7 +851,8 @@ namespace PropHunt.Character
                 // Apply some force to the object hit if it is moveable, Apply force on entity hit
                 if (push != null &&
                     hit.collider.attachedRigidbody != null &&
-                    !hit.collider.attachedRigidbody.isKinematic)
+                    !hit.collider.attachedRigidbody.isKinematic &&
+                    hit.collider.gameObject.GetComponent<IPushable>() != null)
                 {
                     push.PushObject(new KinematicCharacterControllerHit(
                         hit.collider, hit.collider.attachedRigidbody, hit.collider.gameObject,

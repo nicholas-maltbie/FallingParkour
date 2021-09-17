@@ -27,7 +27,7 @@ namespace PropHunt.Character
 
         public void LateUpdate()
         {
-            if (!base.IsLocalPlayer)
+            if (!this.IsLocalPlayer)
             {
                 // exit from update if this is not the local player
                 return;

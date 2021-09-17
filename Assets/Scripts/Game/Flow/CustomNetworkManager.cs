@@ -24,7 +24,7 @@ namespace PropHunt.Game.Flow
 
         // public override void OnServerReady(NetworkConnection conn)
         // {
-        //     base.OnServerReady(conn);
+        //     this.OnServerReady(conn);
         //     PlayerConnectEvent connectEvent = new PlayerConnectEvent(conn);
         //     OnPlayerConnect?.Invoke(this, connectEvent);
         // }
@@ -35,7 +35,7 @@ namespace PropHunt.Game.Flow
         //     {
         //         StartCoroutine(SendJoinMessage(conn));
         //     }
-        //     base.OnServerConnect(conn);
+        //     this.OnServerConnect(conn);
         // }
 
         public void SetPlayerName(object sender, PlayerNameChange nameChange)
@@ -73,7 +73,7 @@ namespace PropHunt.Game.Flow
 
         // public override void OnStartServer()
         // {
-        //     base.OnStartServer();
+        //     this.OnStartServer();
         //     playerNameLookup ;
         // }
 
@@ -85,7 +85,7 @@ namespace PropHunt.Game.Flow
         //         NetworkClient.RegisterPrefab(timerPrefab.gameObject);
         //     }
 
-        //     base.OnStartClient();
+        //     this.OnStartClient();
         //     DebugChatLog.ClearChatLog();
         //     NetworkClient.RegisterHandler<ChatMessage>(DebugChatLog.OnMessage);
         //     NetworkClient.RegisterHandler<SoundEffectEvent>(SoundEffectManager.CreateSoundEffectAtPoint);
@@ -94,7 +94,7 @@ namespace PropHunt.Game.Flow
 
         // public override void OnStopClient()
         // {
-        //     base.OnStopClient();
+        //     this.OnStopClient();
         //     NetworkClient.UnregisterHandler<ChatMessage>();
         //     NetworkClient.UnregisterHandler<SoundEffectEvent>();
         //     NetworkClient.UnregisterHandler<LevelSelectEvent>();
@@ -106,7 +106,7 @@ namespace PropHunt.Game.Flow
         //         playerNameLookup.ContainsKey(conn.connectionId) ?
         //         playerNameLookup[conn.connectionId] : "Player" + conn.connectionId;
         //     DebugChatLog.SendChatMessage(new ChatMessage("", $"{playerName} disconnected from server"));
-        //     base.OnServerDisconnect(conn);
+        //     this.OnServerDisconnect(conn);
         // }
     }
 }

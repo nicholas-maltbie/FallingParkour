@@ -15,7 +15,7 @@ namespace PropHunt.Character.Footstep
 
         public override void Start()
         {
-            base.Start();
+            this.Start();
             if (footGrounded != null)
             {
                 footGrounded.PlayerFootstep += HandleFootstepEvent;
@@ -24,7 +24,7 @@ namespace PropHunt.Character.Footstep
 
         public void HandleFootstepEvent(object sender, FootstepEvent footstepEvent)
         {
-            if (!base.IsLocalPlayer ||
+            if (!this.IsLocalPlayer ||
                 footstepEvent.state != FootstepState.Down ||
                 (Time.time - lastFootstep) < minFootstepSoundDelay)
             {

@@ -10,7 +10,7 @@ namespace PropHunt.Character
 
         public void Update()
         {
-            enableOnLocalPlayer.SetActive(base.IsLocalPlayer);
+            enableOnLocalPlayer.SetActive(this.IsLocalPlayer);
         }
     }
 }
