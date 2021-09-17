@@ -522,8 +522,6 @@ namespace PropHunt.Character
                     this.elapsedFalling += fixedDeltaTime;
                 }
 
-                UnityEngine.Debug.Log(Velocity.ToString("F3"));
-
                 // Compute player jump if they are attempting to jump
                 bool jumped = PlayerJump(fixedDeltaTime);
 

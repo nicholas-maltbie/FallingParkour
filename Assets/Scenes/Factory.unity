@@ -2042,7 +2042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4802a01e94b1afd498a51a6bf302c089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  order: 1
+  order: 2
   offset: {x: 1, y: 1}
   rows: 3
   cols: 9
@@ -10416,8 +10416,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10, y: 20, z: 4}
-  m_Center: {x: 0, y: 10, z: 0}
+  m_Size: {x: 20, y: 20, z: 4}
+  m_Center: {x: 0, y: 10, z: -2}
 --- !u!1001 &1831256588
 PrefabInstance:
   m_ObjectHideFlags: 0
