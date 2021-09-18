@@ -59,5 +59,15 @@ namespace PropHunt.Environment
 
         /// <inheritdoc/>
         public bool ShouldAttach() => false;
+
+        public void OnCollisionStay(Collision other)
+        {
+            if (other.rigidbody != null && !other.rigidbody.isKinematic)
+            {
+                Vector3 movement = velocity * GetDirection() * Time.deltaTime;
+                other.gameObject.GetComponent<Rigidbody>().MovePosition(
+                    other.gameObject.transform.position + movement);
+            }
+        }
     }
 }

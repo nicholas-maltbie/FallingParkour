@@ -20,3 +20,5 @@ MonoBehaviour:
     displayName: Big Fans
   - levelName: Wipeout
     displayName: Wipeout
+  - levelName: Factory
+    displayName: The Factory

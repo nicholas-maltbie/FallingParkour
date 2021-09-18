@@ -1,5 +1,6 @@
 using MLAPI;
 using MLAPI.Messaging;
+using PropHunt.Environment;
 using PropHunt.Utils;
 using UnityEngine;
 
@@ -20,36 +21,9 @@ namespace PropHunt.Character
         /// </summary>    
         public float weight = 10.0f;
 
-        /// <summary>
-        /// Apply a push to an object at a point with a given force
-        /// </summary>
-        /// <param name="hit">Object being pushed</param>
-        /// <param name="force">Force applied to the object</param>
-        /// <param name="point">Point at which point is applied</param>
-        public void PushWithForce(GameObject hit, Vector3 force, Vector3 point)
-        {
-            Rigidbody rigidbody = hit.GetComponent<Rigidbody>();
-            if (rigidbody != null)
-            {
-                rigidbody.AddForceAtPosition(force, point, ForceMode.Impulse);
-            }
-        }
-
-        /// <summary>
-        /// Send a command tot he server to push a given object.
-        /// </summary>
-        /// <param name="hit">Object hit</param>
-        /// <param name="force">Force of push</param>
-        /// <param name="point">Point of hit on the game object</param>
-        // [ServerRpc]
-        // public void PushWithForceServerRpc(GameObject hit, Vector3 force, Vector3 point)
-        // {
-        //     PushWithForce(hit, force, point);
-        // }
-
         public void PushObject(IControllerColliderHit hit)
         {
-            if (!base.IsLocalPlayer)
+            if (!this.IsLocalPlayer)
             {
                 // exit from update if this is not the local player
                 return;
@@ -57,10 +31,11 @@ namespace PropHunt.Character
 
             // Check if the thing we hit can be pushed
             Rigidbody body = hit.rigidbody;
+            IPushable pushable = hit.gameObject.GetComponent<IPushable>();
 
             // Do nothing if the object does not have a rigidbody or if
             //   the rigidbody is kinematic
-            if (body == null || body.isKinematic)
+            if (body == null || body.isKinematic || pushable == null)
             {
                 return;
             }
@@ -84,16 +59,7 @@ namespace PropHunt.Character
             }
 
             // Apply the push
-            if (IsHost)
-            {
-                // On the server, just push it
-                PushWithForce(hit.gameObject, force * Time.deltaTime, hit.point);
-            }
-            else
-            {
-                // On client, send message to server to push the object
-                // PushWithForceServerRpc(hit.gameObject, force * Time.deltaTime, hit.point);
-            }
+            pushable.PushObjectServerRpc(force * Time.deltaTime * pushPower, hit.point, ForceMode.Impulse);
         }
     }
 }

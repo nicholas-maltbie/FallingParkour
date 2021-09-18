@@ -443,7 +443,7 @@ namespace PropHunt.Character
 
         public void FixedUpdate()
         {
-            if (!base.IsLocalPlayer)
+            if (!this.IsLocalPlayer)
             {
                 // exit from update if this is not the local player
                 return;
@@ -851,7 +851,8 @@ namespace PropHunt.Character
                 // Apply some force to the object hit if it is moveable, Apply force on entity hit
                 if (push != null &&
                     hit.collider.attachedRigidbody != null &&
-                    !hit.collider.attachedRigidbody.isKinematic)
+                    !hit.collider.attachedRigidbody.isKinematic &&
+                    hit.collider.gameObject.GetComponent<IPushable>() != null)
                 {
                     push.PushObject(new KinematicCharacterControllerHit(
                         hit.collider, hit.collider.attachedRigidbody, hit.collider.gameObject,
@@ -886,28 +887,25 @@ namespace PropHunt.Character
                         AttemptSnapUp(distanceToFeet + Epsilon * 2, hit, momentum);
                     }
                 }
+                // Only apply angular change if hitting something
+                // Get angle between surface normal and remaining movement
+                float angleBetween = Vector3.Angle(hit.normal, momentum) - 90.0f;
+                // Normalize angle between to be between 0 and 1
+                // 0 means no angle, 1 means 90 degree angle
+                angleBetween = Mathf.Min(MaxAngleShoveRadians, Mathf.Abs(angleBetween));
+                float normalizedAngle = angleBetween / MaxAngleShoveRadians;
+                // Reduce the momentum by the remaining movement that ocurred
+                momentum *= Mathf.Pow(1 - normalizedAngle, anglePower) * 0.9f + 0.1f;
+                // Rotate the remaining remaining movement to be projected along the plane 
+                // of the surface hit (emulate pushing against the object)
+                Vector3 projectedMomentum = Vector3.ProjectOnPlane(momentum, planeNormal).normalized * momentum.magnitude;
+                if (projectedMomentum.magnitude + Epsilon < momentum.magnitude)
+                {
+                    momentum = Vector3.ProjectOnPlane(momentum, Up).normalized * momentum.magnitude;
+                }
                 else
                 {
-                    // Only apply angular change if hitting something
-                    // Get angle between surface normal and remaining movement
-                    float angleBetween = Vector3.Angle(hit.normal, momentum) - 90.0f;
-                    // Normalize angle between to be between 0 and 1
-                    // 0 means no angle, 1 means 90 degree angle
-                    angleBetween = Mathf.Min(MaxAngleShoveRadians, Mathf.Abs(angleBetween));
-                    float normalizedAngle = angleBetween / MaxAngleShoveRadians;
-                    // Reduce the momentum by the remaining movement that ocurred
-                    momentum *= Mathf.Pow(1 - normalizedAngle, anglePower) * 0.9f + 0.1f;
-                    // Rotate the remaining remaining movement to be projected along the plane 
-                    // of the surface hit (emulate pushing against the object)
-                    Vector3 projectedMomentum = Vector3.ProjectOnPlane(momentum, planeNormal).normalized * momentum.magnitude;
-                    if (projectedMomentum.magnitude + Epsilon < momentum.magnitude)
-                    {
-                        momentum = Vector3.ProjectOnPlane(momentum, Up).normalized * momentum.magnitude;
-                    }
-                    else
-                    {
-                        momentum = projectedMomentum;
-                    }
+                    momentum = projectedMomentum;
                 }
 
                 // Track number of times the character has bounced

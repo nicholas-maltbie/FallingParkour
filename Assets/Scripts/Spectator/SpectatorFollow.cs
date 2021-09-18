@@ -93,7 +93,7 @@ namespace PropHunt.Spectator
         /// <param name="step">Direction and count to move forward in followable list.</param>
         public void NextTarget(int step = 1)
         {
-            if (base.IsLocalPlayer)
+            if (this.IsLocalPlayer)
             {
                 List<Followable> followables = GetFollowables();
                 if (followables.Count > 0)

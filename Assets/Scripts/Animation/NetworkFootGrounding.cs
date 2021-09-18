@@ -56,7 +56,7 @@ namespace PropHunt.Animation
 
         public void Start()
         {
-            if (base.IsLocalPlayer)
+            if (this.IsLocalPlayer)
             {
                 SetFootGroundedState(true);
             }

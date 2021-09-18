@@ -17,12 +17,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: d1c3109bdb54ad54c8a2b2838528e640
-  - enabled: 1
-    path: Assets/Tests/PlayMode/Scenes/TestRoom.unity
-    guid: 93d48c1fe8341714a88494fa280cd825
-  - enabled: 1
-    path: Assets/Tests/PlayMode/Scenes/EmptyScene.unity
-    guid: 3f295240872610740b970f8998276e1b
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/BigFans.unity
     guid: be78e93b8569c1b4cb6faab2f4bcfbd6
@@ -32,5 +32,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Wipeout.unity
     guid: dcc062476e65c2e4f9063cf6f0026cf7
+  - enabled: 1
+    path: Assets/Scenes/Factory.unity
+    guid: eeae752a90385284a970bc1090d6a033
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: b90dafd9da192a041b170ef2a3ab1dc7, type: 2}

@@ -101,7 +101,7 @@ namespace PropHunt.Character.Footstep
 
         public void Update()
         {
-            if (!base.IsLocalPlayer)
+            if (!this.IsLocalPlayer)
             {
                 return;
             }
@@ -132,7 +132,7 @@ namespace PropHunt.Character.Footstep
         [ClientRpc]
         public void CreateFootstepSoundClientRpc(SoundEffectEvent sfxEvent)
         {
-            if (base.IsLocalPlayer)
+            if (this.IsLocalPlayer)
             {
                 return;
             }

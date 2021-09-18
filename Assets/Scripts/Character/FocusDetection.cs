@@ -92,7 +92,7 @@ namespace PropHunt.Character
             float cameraDistance = controller != null ? controller.CameraDistance : 0;
             float focusRange = viewDistance + cameraDistance;
             // Only update if IsLocalPlayer is true
-            if (!base.IsLocalPlayer)
+            if (!this.IsLocalPlayer)
             {
                 // exit from update if this is not the local player
                 return;
