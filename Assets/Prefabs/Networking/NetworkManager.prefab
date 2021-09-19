@@ -50,7 +50,6 @@ MonoBehaviour:
   lobbyScene: LobbyScene
   levelLibrary: {fileID: 11400000, guid: 4ed5fac5c4fbdb54eac040549d921916, type: 2}
   timerPrefab: {fileID: 3423447297187209531, guid: 0d379e827af7e944095b2c2ee6ffa675, type: 3}
-  bufferTime: 1
 --- !u!114 &6305578990699708057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,7 +109,7 @@ MonoBehaviour:
     CreatePlayerPrefab: 0
     ReceiveTickrate: 64
     NetworkTickIntervalSec: 0.05
-    MaxReceiveEventsPerTickRate: 500
+    MaxReceiveEventsPerTickRate: 100000
     EventTickrate: 64
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -147,7 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MessageBufferSize: 5120
   MaxConnections: 100
-  MaxSentMessageQueueSize: 128
+  MaxSentMessageQueueSize: 10000
   ConnectAddress: 127.0.0.1
   ConnectPort: 7777
   ServerListenPort: 7777
