@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MLAPI;
 using PropHunt.Environment;
+using PropHunt.Environment.Pushable;
 using PropHunt.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;

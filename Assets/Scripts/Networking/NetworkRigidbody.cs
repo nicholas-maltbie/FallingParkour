@@ -3,6 +3,7 @@ using MLAPI;
 using MLAPI.NetworkVariable;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class NetworkRigidbody : NetworkBehaviour
 {
     public NetworkVariableVector3 netVelocity;
@@ -148,6 +149,21 @@ public class NetworkRigidbody : NetworkBehaviour
     bool NetworkVariablesInitialized()
     {
         return netVelocity.Settings.WritePermission == NetworkVariablePermission.OwnerOnly;
+    }
+
+    public Vector3 GetVelocityAtPoint(Vector3 worldPos)
+    {
+        Vector3 startingVel = m_Rigidbody.velocity;
+        Vector3 startingAngVel = m_Rigidbody.angularVelocity;
+        
+        m_Rigidbody.velocity = this.netVelocity.Value;
+        m_Rigidbody.angularVelocity = this.netAngularVelocity.Value;
+        Vector3 vel = m_Rigidbody.GetPointVelocity(worldPos);
+
+        m_Rigidbody.velocity = startingVel;
+        m_Rigidbody.angularVelocity = startingAngVel;
+
+        return vel;
     }
 
     static bool TryUpdate(NetworkVariableVector3 variable, Vector3 value)

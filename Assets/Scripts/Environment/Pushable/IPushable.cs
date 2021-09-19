@@ -1,7 +1,7 @@
 using UnityEngine;
 using MLAPI.Messaging;
 
-namespace PropHunt.Environment
+namespace PropHunt.Environment.Pushable
 {
     /// <summary>
     /// Pushable object that can be shoved with a given force

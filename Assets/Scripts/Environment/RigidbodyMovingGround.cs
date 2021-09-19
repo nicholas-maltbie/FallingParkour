@@ -37,9 +37,7 @@ namespace PropHunt.Environment
             NetworkRigidbody nrb = attachedRigidbody.gameObject.GetComponent<NetworkRigidbody>();
             if (nrb != null)
             {
-                Vector3 vel = attachedRigidbody.GetPointVelocity(point);
-                attachedRigidbody.velocity = nrb.netVelocity.Value;
-                attachedRigidbody.angularVelocity = nrb.netAngularVelocity.Value;
+                return nrb.GetVelocityAtPoint(point);
             }
             return attachedRigidbody.GetPointVelocity(point);
         }
