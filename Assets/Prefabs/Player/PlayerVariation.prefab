@@ -239,9 +239,9 @@ MonoBehaviour:
   stepUpDepth: 0.05
   verticalSnapUp: 0.35
   snapBufferTime: 0.05
-  earlyStopProneThreshold: 0.2
-  thresholdAngularVelocity: 15
-  thresholdVelocity: 1
+  earlyStopProneThreshold: 0.05
+  thresholdAngularVelocity: 240
+  thresholdVelocity: 3
 --- !u!114 &6378087374586662482
 MonoBehaviour:
   m_ObjectHideFlags: 0
