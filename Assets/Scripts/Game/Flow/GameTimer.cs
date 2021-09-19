@@ -57,8 +57,11 @@ namespace PropHunt.Game.Flow
         /// <param name="length">Length of timer to start</param>
         public void StartTimer(float length)
         {
-            this.length.Value = length;
-            StartTimer();
+            if (IsServer)
+            {
+                this.length.Value = length;
+                StartTimer();
+            }
         }
 
         /// <summary>
@@ -66,8 +69,11 @@ namespace PropHunt.Game.Flow
         /// </summary>
         public void StartTimer()
         {
-            this.elapsed.Value = 0.0f;
-            this.Running = true;
+            if (IsServer)
+            {
+                this.elapsed.Value = 0.0f;
+                this.Running = true;
+            }
         }
 
         /// <summary>
@@ -91,13 +97,16 @@ namespace PropHunt.Game.Flow
         /// </summary>
         public void StopTimer()
         {
-            this.elapsed.Value = 0.0f;
-            this.Running = false;
+            if (IsServer)
+            {
+                this.elapsed.Value = 0.0f;
+                this.Running = false;
+            }
         }
 
         public void Update()
         {
-            if (this.Running && !this.Finished)
+            if (this.Running && !this.Finished && IsServer)
             {
                 this.elapsed.Value += Time.deltaTime;
                 if (this.Finished)

@@ -28,14 +28,9 @@ namespace PropHunt.Game.Flow
         private static bool loaded = false;
 
         /// <summary>
-        /// Buffer time between setup and in game phases
+        /// Progress toward switching to next scene
         /// </summary>
-        public float bufferTime = 1.0f;
-
-        /// <summary>
-        /// Buffer time that has elapsed so far
-        /// </summary>
-        private float bufferElapsed = 0.0f;
+        private SceneSwitchProgress progress;
 
         /// <summary>
         /// Is the player online?
@@ -51,6 +46,11 @@ namespace PropHunt.Game.Flow
             GameManager.OnGamePhaseChange += HandleGamePhaseChange;
         }
 
+        public void OnSceneSwitch()
+        {
+
+        }
+
         public void ChangeGameScene(string newScene)
         {
             gameScene = newScene;
@@ -58,7 +58,7 @@ namespace PropHunt.Game.Flow
 
         public void OnStartServer()
         {
-            NetworkSceneManager.SwitchScene(lobbyScene);
+            this.progress = NetworkSceneManager.SwitchScene(lobbyScene);
             GameManager.ChangePhase(GamePhase.Lobby);
         }
 
@@ -111,9 +111,8 @@ namespace PropHunt.Game.Flow
                 case GamePhase.Lobby:
                     break;
                 case GamePhase.Setup:
-                    bufferElapsed = 0.0f;
                     // NetworkServer.SetAllClientsNotReady();
-                    NetworkSceneManager.SwitchScene(gameScene);
+                    this.progress = NetworkSceneManager.SwitchScene(gameScene);
                     // Once loading is complete, go to InGame
                     break;
                 case GamePhase.InGame:
@@ -135,7 +134,7 @@ namespace PropHunt.Game.Flow
                 case GamePhase.Reset:
                     // Start loading the lobby scene
                     UnityEngine.Debug.Log("Loading scene: " + lobbyScene);
-                    NetworkSceneManager.SwitchScene(lobbyScene);
+                    this.progress = NetworkSceneManager.SwitchScene(lobbyScene);
                     // Once laoding is complete, go to lobby
                     break;
             }
@@ -168,29 +167,17 @@ namespace PropHunt.Game.Flow
                     }
                     break;
                 case GamePhase.Setup:
-                    bool allReady = true;
-                    foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
-                    {
-                        // if (!client.isReady)
-                        // {
-                        //     allReady = false;
-                        // }
-                    }
-                    if (allReady)
-                    {
-                        bufferElapsed += Time.deltaTime;
-                    }
                     // As soon as scene is loaded, move to in game
-                    if (bufferElapsed >= bufferTime &&
-                        allReady
-                        // (NetworkManager.loadingSceneAsync == null || NetworkManager.loadingSceneAsync.isDone)
-                        )
+                    if (progress.IsAllClientsDoneLoading && progress.IsCompleted)
                     {
                         GameManager.ChangePhase(GamePhase.InGame);
                     }
                     break;
                 case GamePhase.Reset:
-                    GameManager.ChangePhase(GamePhase.Lobby);
+                    if (progress.IsAllClientsDoneLoading && progress.IsCompleted)
+                    {
+                        GameManager.ChangePhase(GamePhase.Lobby);
+                    }
                     break;
             }
         }

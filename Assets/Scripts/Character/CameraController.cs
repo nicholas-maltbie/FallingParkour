@@ -180,7 +180,10 @@ namespace PropHunt.Character
             private set
             {
                 pitchLocal = value;
-                pitch.Value = value;
+                if (IsLocalPlayer)
+                {
+                    pitch.Value = value;
+                }
             }
         }
 
@@ -197,7 +200,10 @@ namespace PropHunt.Character
             private set
             {
                 yawLocal = value;
-                yaw.Value = value;
+                if (IsLocalPlayer)
+                {
+                    yaw.Value = value;
+                }
             }
         }
 

@@ -150,37 +150,41 @@ namespace PropHunt.Character
         /// <summary>
         /// name associated with this player
         /// </summary>
-        public NetworkVariableString characterName = new NetworkVariableString("Player");
+        public NetworkVariableString characterName = new NetworkVariableString(
+            new NetworkVariableSettings { WritePermission = NetworkVariablePermission.OwnerOnly },
+            "Player");
 
         /// <summary>
-        /// Update a player name from a client with authority via command
+        /// Whenever a player's name is updated
         /// </summary>
         /// <param name="newName">New name to assign a player</param>
-        [ServerRpc]
-        public void UpdatePlayerNameServerRpc(string newName)
+        private void OnCharacterNameChange(string _, string newName)
         {
             PlayerNameChange changeEvent = new PlayerNameChange(characterName.Value, newName, playerId.Value);
-            characterName.Value = newName;
             // Send an event for this change event
             OnPlayerNameChange?.Invoke(this, changeEvent);
         }
 
-        public IEnumerator SendNameWhenReady()
+        public void OnEnable()
         {
-            yield return null;
-            UpdatePlayerNameServerRpc(CharacterNameManagement.playerName);
+            this.characterName.OnValueChanged -= OnCharacterNameChange;
+        }
+
+        public void OnDisable()
+        {
+            this.characterName.OnValueChanged += OnCharacterNameChange;
         }
 
         public void Start()
         {
-            if (this.IsHost)
+            if (IsServer)
             {
                 playerId.Value = OwnerClientId;
             }
             // Synchronize state to server if local player
             if (this.IsLocalPlayer)
             {
-                StartCoroutine(SendNameWhenReady());
+                characterName.Value = CharacterNameManagement.playerName;
             }
         }
     }

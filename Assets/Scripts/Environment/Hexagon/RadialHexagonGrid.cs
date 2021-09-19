@@ -143,6 +143,7 @@ namespace PropHunt.Environment.Hexagon
             {
                 hexBase = new GameObject();
                 hexBase.name = "Hexagon Base";
+                hexBase.transform.parent = transform;
                 StartCoroutine(CreateGrid());
             }
         }

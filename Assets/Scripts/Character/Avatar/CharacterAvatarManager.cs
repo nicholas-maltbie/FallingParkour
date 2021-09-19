@@ -32,13 +32,16 @@ namespace PropHunt.Character.Avatar
         /// <summary>
         /// Current avatar selected by this player
         /// </summary>
-        public NetworkVariableString avatarSelected = new NetworkVariableString(new NetworkVariableSettings { WritePermission = NetworkVariablePermission.Everyone }, "");
+        public NetworkVariableString avatarSelected = new NetworkVariableString(
+            new NetworkVariableSettings { WritePermission = NetworkVariablePermission.OwnerOnly },
+            "");
 
         public void Start()
         {
             if (IsLocalPlayer)
             {
-                SetAvatarServerRpc(string.IsNullOrEmpty(defaultAvatar) ? avatarLibrary.DefaultAvater.Name : defaultAvatar);
+                avatarSelected.Value =
+                    string.IsNullOrEmpty(defaultAvatar) ? avatarLibrary.DefaultAvater.Name : defaultAvatar;
             }
         }
 
@@ -52,9 +55,14 @@ namespace PropHunt.Character.Avatar
             avatarSelected.OnValueChanged -= OnAvatarChange;
         }
 
-
         private IEnumerator SetupAvatar(string avatarName)
         {
+            while (loading)
+            {
+                yield return null;
+            }
+
+            loading = true;
             Enumerable.Range(0, modelBase.transform.childCount)
                 .Select(i => modelBase.transform.GetChild(i))
                 .ToList()
@@ -95,21 +103,10 @@ namespace PropHunt.Character.Avatar
             loading = false;
         }
 
-        [ServerRpc]
-        public void SetAvatarServerRpc(string newlySelectedAvatar)
-        {
-            avatarSelected.Value = newlySelectedAvatar;
-            LoadNewAvatar(newlySelectedAvatar);
-        }
-
         private bool loading = false;
         public void LoadNewAvatar(string avatarName)
         {
-            if (!loading)
-            {
-                loading = true;
-                StartCoroutine(SetupAvatar(avatarName));
-            }
+            StartCoroutine(SetupAvatar(avatarName));
         }
 
         public void OnAvatarChange(string _, string avatarName) => LoadNewAvatar(avatarName);
