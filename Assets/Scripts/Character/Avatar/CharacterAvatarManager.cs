@@ -57,6 +57,12 @@ namespace PropHunt.Character.Avatar
 
         private IEnumerator SetupAvatar(string avatarName)
         {
+            while (loading)
+            {
+                yield return null;
+            }
+
+            loading = true;
             Enumerable.Range(0, modelBase.transform.childCount)
                 .Select(i => modelBase.transform.GetChild(i))
                 .ToList()
@@ -100,11 +106,7 @@ namespace PropHunt.Character.Avatar
         private bool loading = false;
         public void LoadNewAvatar(string avatarName)
         {
-            if (!loading)
-            {
-                loading = true;
-                StartCoroutine(SetupAvatar(avatarName));
-            }
+            StartCoroutine(SetupAvatar(avatarName));
         }
 
         public void OnAvatarChange(string _, string avatarName) => LoadNewAvatar(avatarName);
