@@ -80,7 +80,7 @@ namespace PropHunt.Environment
             }
             Vector3 velocity = GetVelocity();
             if ((kcc.LinearVelocity - velocity).magnitude > thresholdRelativeVelocity &&
-                (percentThresholdVelocity == 0 || 
+                (percentThresholdVelocity == 0 ||
                     velocity.magnitude > thresholdRelativeVelocity * percentThresholdVelocity))
             {
                 // Knock the player prone for prone time seconds
