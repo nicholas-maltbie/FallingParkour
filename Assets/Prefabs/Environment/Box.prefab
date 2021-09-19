@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7032653423571191390}
   - component: {fileID: 7032653423571191391}
   - component: {fileID: 7032653423571191202}
-  - component: {fileID: 2216381648995235144}
+  - component: {fileID: 3367549212217774950}
   m_Layer: 0
   m_Name: Box
   m_TagString: Untagged
@@ -161,7 +161,7 @@ MonoBehaviour:
   PrefabHashGenerator: Box
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
---- !u!114 &2216381648995235144
+--- !u!114 &3367549212217774950
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -170,6 +170,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7032653423571191385}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b65b70a1a4a9404abccddc6c944a40e, type: 3}
+  m_Script: {fileID: 11500000, guid: a50731e36aed2d446bfbd69078224021, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

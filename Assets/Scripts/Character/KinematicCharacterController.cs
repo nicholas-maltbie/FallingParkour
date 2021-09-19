@@ -870,8 +870,10 @@ namespace PropHunt.Character
                     break;
                 }
 
+                // Don't allow player to push what they're standing on
                 // Apply some force to the object hit if it is moveable, Apply force on entity hit
                 if (push != null &&
+                    hit.collider.gameObject != floor &&
                     hit.collider.attachedRigidbody != null &&
                     !hit.collider.attachedRigidbody.isKinematic &&
                     hit.collider.gameObject.GetComponent<IPushable>() != null)

@@ -58,7 +58,7 @@ namespace PropHunt.Character
             }
 
             // Apply the push
-            pushable.PushObjectServerRpc(force * Time.deltaTime * pushPower, hit.point, ForceMode.Impulse);
+            pushable.PushObjectServerAndLocal(force * Time.deltaTime * pushPower, hit.point, ForceMode.Impulse);
         }
     }
 }

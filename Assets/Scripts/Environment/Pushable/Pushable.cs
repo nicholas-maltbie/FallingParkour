@@ -20,12 +20,18 @@ namespace PropHunt.Environment.Pushable
             objRigidbody = GetComponent<Rigidbody>();
         }
 
-        /// <summary>
-        /// Send a command to push an object at a specific position.
-        /// </summary>
-        /// <param name="force">Force vector applied to the object.</param>
-        /// <param name="point">Point to apply force on the object.</param>
-        /// <param name="forceMode">Mode of the force being applied.</param>
+        /// <inheritdoc/>
+        public void PushObjectServerAndLocal(Vector3 force, Vector3 point, ForceMode forceMode)
+        {
+            UnityEngine.Debug.Log($"Pushing object with stats force:{force} point:{point} mode:{forceMode}");
+            objRigidbody.AddForceAtPosition(force, point, forceMode);
+            if (!IsServer)
+            {
+                PushObjectServerRpc(force, point, forceMode);
+            }
+        }
+
+        /// <inheritdoc/>
         [ServerRpc(RequireOwnership = false)]
         public void PushObjectServerRpc(Vector3 force, Vector3 point, ForceMode forceMode)
         {
