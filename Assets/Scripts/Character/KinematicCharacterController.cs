@@ -486,8 +486,7 @@ namespace PropHunt.Character
                 // Exclude the floor's velocity from the linear speed calculation for checking prone
                 float movingSpeedCalculation = Mathf.Max(
                     0,
-                    linearSpeed - (movingGroundDisplacement/fixedDeltaTime).magnitude);
-                UnityEngine.Debug.Log($"speed:{linearSpeed} moving:{movingSpeedCalculation} groundDisp:{movingGroundDisplacement.ToString("F3")} linThreshold:{movingSpeedCalculation <= thresholdVelocity} angThreshold:{angularSpeed <= thresholdAngularVelocity}");
+                    linearSpeed - (movingGroundDisplacement / fixedDeltaTime).magnitude);
 
                 // If player's velocity is less than threshold for threshold time, exit prone early
                 if (movingSpeedCalculation <= thresholdVelocity &&
