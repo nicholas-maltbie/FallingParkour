@@ -397,6 +397,16 @@ namespace PropHunt.Character
         private Quaternion previousRotation;
 
         /// <summary>
+        /// Player's displacement caused by the moving floor this update.
+        /// </summary>
+        private Vector3 movingGroundDisplacement;
+
+        /// <summary>
+        /// linear velocity of the player measured via displacement from the previous movement.
+        /// </summary>
+        public Vector3 LinearVelocity { get; private set; }
+
+        /// <summary>
         /// Can the player jump right now.
         /// </summary>
         public bool CanJump => elapsedFalling >= 0 && (!FallingAngle(maxJumpAngle) || elapsedFalling <= coyoteTime) &&
@@ -451,11 +461,11 @@ namespace PropHunt.Character
 
             float fixedDeltaTime = Time.fixedDeltaTime;
 
-            float deltaPos = (transform.position - this.previousPosition).magnitude;
-            float deltaAngle = Mathf.Rad2Deg * Quaternion.Angle(transform.rotation, this.previousRotation);
+            LinearVelocity = (transform.position - this.previousPosition) / fixedDeltaTime;
+            float deltaAngle = Quaternion.Angle(transform.rotation, this.previousRotation);
 
-            float linVel = deltaPos / fixedDeltaTime;
-            float angVel = deltaAngle / fixedDeltaTime;
+            float linearSpeed = LinearVelocity.magnitude;
+            float angularSpeed = deltaAngle / fixedDeltaTime;
 
             this.previousPosition = transform.position;
             this.previousRotation = transform.rotation;
@@ -473,9 +483,14 @@ namespace PropHunt.Character
                 this.feetFollowObj.transform.localRotation = Quaternion.identity;
                 this.distanceToGround = Mathf.Infinity;
 
+                // Exclude the floor's velocity from the linear speed calculation for checking prone
+                float movingSpeedCalculation = Mathf.Max(
+                    0,
+                    linearSpeed - (movingGroundDisplacement / fixedDeltaTime).magnitude);
+
                 // If player's velocity is less than threshold for threshold time, exit prone early
-                if (linVel <= thresholdVelocity &&
-                    angVel <= thresholdAngularVelocity)
+                if (movingSpeedCalculation <= thresholdVelocity &&
+                    angularSpeed <= thresholdAngularVelocity)
                 {
                     elapsedUnderThreshold += fixedDeltaTime;
                     if (elapsedUnderThreshold >= earlyStopProneThreshold)
@@ -683,6 +698,10 @@ namespace PropHunt.Character
         /// </summary>
         public void MoveWithGround()
         {
+            movingGroundDisplacement = Vector3.zero;
+
+            Vector3 moveWithGroundStart = transform.position;
+
             if (feetFollowObj.transform.parent != transform)
             {
                 transform.position = feetFollowObj.transform.position + footOffset;
@@ -711,6 +730,8 @@ namespace PropHunt.Character
 
             transform.position += (verticalSnapDown * 0.5f) * surfaceNormal;
             SnapPlayerDown(-surfaceNormal, verticalSnapDown);
+
+            movingGroundDisplacement = transform.position - moveWithGroundStart;
         }
 
         /// <summary>
