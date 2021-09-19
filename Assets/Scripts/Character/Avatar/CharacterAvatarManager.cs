@@ -32,13 +32,16 @@ namespace PropHunt.Character.Avatar
         /// <summary>
         /// Current avatar selected by this player
         /// </summary>
-        public NetworkVariableString avatarSelected = new NetworkVariableString(new NetworkVariableSettings { WritePermission = NetworkVariablePermission.Everyone }, "");
+        public NetworkVariableString avatarSelected = new NetworkVariableString(
+            new NetworkVariableSettings { WritePermission = NetworkVariablePermission.OwnerOnly },
+            "");
 
         public void Start()
         {
             if (IsLocalPlayer)
             {
-                SetAvatarServerRpc(string.IsNullOrEmpty(defaultAvatar) ? avatarLibrary.DefaultAvater.Name : defaultAvatar);
+                avatarSelected.Value =
+                    string.IsNullOrEmpty(defaultAvatar) ? avatarLibrary.DefaultAvater.Name : defaultAvatar;
             }
         }
 
@@ -52,8 +55,7 @@ namespace PropHunt.Character.Avatar
             avatarSelected.OnValueChanged -= OnAvatarChange;
         }
 
-
-        private IEnumerator SetupAvatar(string avatarName)
+        private void SetupAvatar(string avatarName)
         {
             Enumerable.Range(0, modelBase.transform.childCount)
                 .Select(i => modelBase.transform.GetChild(i))
@@ -62,7 +64,7 @@ namespace PropHunt.Character.Avatar
                 {
                     GameObject.Destroy(child.gameObject);
                 });
-            yield return new WaitForFixedUpdate();
+            // yield return new WaitForFixedUpdate();
 
             GameObject avatar = avatarLibrary.DefaultAvater.avatar;
             avatar.transform.position = modelBase.transform.position;
@@ -73,12 +75,12 @@ namespace PropHunt.Character.Avatar
             }
 
             modelBase.GetComponent<Animator>().avatar = null;
-            yield return new WaitForFixedUpdate();
+            // yield return new WaitForFixedUpdate();
             GameObject created = GameObject.Instantiate(avatar);
             created.SetActive(false);
             created.transform.parent = modelBase.transform;
             modelBase.GetComponent<Animator>().avatar = created.GetComponent<Animator>().avatar;
-            yield return new WaitForFixedUpdate();
+            // yield return new WaitForFixedUpdate();
 
             // Move child components to be parented by this object
             while (created.transform.childCount > 0)
@@ -88,18 +90,11 @@ namespace PropHunt.Character.Avatar
                 created.SetActive(true);
             }
 
-            yield return new WaitForFixedUpdate();
+            // yield return new WaitForFixedUpdate();
             // Delete the created avatar base
             GameObject.Destroy(created);
-            yield return new WaitForFixedUpdate();
+            // yield return new WaitForFixedUpdate();
             loading = false;
-        }
-
-        [ServerRpc]
-        public void SetAvatarServerRpc(string newlySelectedAvatar)
-        {
-            avatarSelected.Value = newlySelectedAvatar;
-            LoadNewAvatar(newlySelectedAvatar);
         }
 
         private bool loading = false;
@@ -108,7 +103,7 @@ namespace PropHunt.Character.Avatar
             if (!loading)
             {
                 loading = true;
-                StartCoroutine(SetupAvatar(avatarName));
+                SetupAvatar(avatarName);
             }
         }
 

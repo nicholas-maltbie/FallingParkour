@@ -27,7 +27,7 @@ namespace PropHunt.Game.Flow
         public void Start()
         {
             var manager = GameObject.FindObjectOfType<GameSceneManager>();
-            if (manager != null)
+            if (IsServer && manager != null)
             {
                 currentLevel.Value = library.GetLevel(manager.gameScene);
             }
@@ -49,7 +49,10 @@ namespace PropHunt.Game.Flow
         /// <param name="newLevel">New level that is selected</param>
         public void UpdateLevel(GameLevel newLevel)
         {
-            currentLevel.Value = newLevel;
+            if (IsServer)
+            {
+                currentLevel.Value = newLevel;
+            }
         }
 
         public void UpdateSelectedLevel(GameLevel _, GameLevel selected)

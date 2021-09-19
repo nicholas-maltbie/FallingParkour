@@ -69,7 +69,7 @@ namespace PropHunt.UI
             GameObject.FindObjectsOfType<CharacterAvatarManager>()
                 .Where(avatar => avatar.IsLocalPlayer)
                 .ToList()
-                .ForEach(avatar => avatar.SetAvatarServerRpc(avatarId));
+                .ForEach(avatar => avatar.LoadNewAvatar(avatarId));
 
             NewCharacterSelected?.Invoke(this, EventArgs.Empty);
 

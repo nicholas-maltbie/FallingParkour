@@ -142,8 +142,8 @@ MonoBehaviour:
   m_SyncAngularVelocity: 1
   m_SyncPosition: 1
   m_SyncRotation: 1
-  m_InterpolationTime: 0
-  m_SyncRate: 20
+  m_InterpolationTime: 0.1
+  m_SyncRate: 10
 --- !u!114 &7032653423571191202
 MonoBehaviour:
   m_ObjectHideFlags: 0
