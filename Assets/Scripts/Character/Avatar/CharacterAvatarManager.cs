@@ -55,7 +55,7 @@ namespace PropHunt.Character.Avatar
             avatarSelected.OnValueChanged -= OnAvatarChange;
         }
 
-        private void SetupAvatar(string avatarName)
+        private IEnumerator SetupAvatar(string avatarName)
         {
             Enumerable.Range(0, modelBase.transform.childCount)
                 .Select(i => modelBase.transform.GetChild(i))
@@ -64,7 +64,7 @@ namespace PropHunt.Character.Avatar
                 {
                     GameObject.Destroy(child.gameObject);
                 });
-            // yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
 
             GameObject avatar = avatarLibrary.DefaultAvater.avatar;
             avatar.transform.position = modelBase.transform.position;
@@ -75,12 +75,12 @@ namespace PropHunt.Character.Avatar
             }
 
             modelBase.GetComponent<Animator>().avatar = null;
-            // yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
             GameObject created = GameObject.Instantiate(avatar);
             created.SetActive(false);
             created.transform.parent = modelBase.transform;
             modelBase.GetComponent<Animator>().avatar = created.GetComponent<Animator>().avatar;
-            // yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
 
             // Move child components to be parented by this object
             while (created.transform.childCount > 0)
@@ -90,10 +90,10 @@ namespace PropHunt.Character.Avatar
                 created.SetActive(true);
             }
 
-            // yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
             // Delete the created avatar base
             GameObject.Destroy(created);
-            // yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
             loading = false;
         }
 
@@ -103,7 +103,7 @@ namespace PropHunt.Character.Avatar
             if (!loading)
             {
                 loading = true;
-                SetupAvatar(avatarName);
+                StartCoroutine(SetupAvatar(avatarName));
             }
         }
 
