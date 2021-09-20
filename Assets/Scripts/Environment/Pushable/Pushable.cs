@@ -16,11 +16,6 @@ namespace PropHunt.Environment.Pushable
         private Rigidbody objRigidbody;
 
         /// <summary>
-        /// Buffer time for local player after they push the object.
-        /// </summary>
-        private float localControlBuffer = 1.0f;
-
-        /// <summary>
         /// Cooldown in seconds between how soon the owner can change.
         /// </summary>
         private float ownerChangeCooldown = 0.05f;
