@@ -23,8 +23,7 @@ namespace PropHunt.Environment.Pushable
         /// <inheritdoc/>
         public void PushObjectServerAndLocal(Vector3 force, Vector3 point, ForceMode forceMode)
         {
-            UnityEngine.Debug.Log($"Pushing object with stats force:{force} point:{point} mode:{forceMode}");
-            objRigidbody.AddForceAtPosition(force, point, forceMode);
+            PushObject(force, point, forceMode);
             if (!IsServer)
             {
                 PushObjectServerRpc(force, point, forceMode);
@@ -35,7 +34,16 @@ namespace PropHunt.Environment.Pushable
         [ServerRpc(RequireOwnership = false)]
         public void PushObjectServerRpc(Vector3 force, Vector3 point, ForceMode forceMode)
         {
+            PushObject(force, point, forceMode);
+        }
+
+        private void PushObject(Vector3 force, Vector3 point, ForceMode forceMode)
+        {
             objRigidbody.AddForceAtPosition(force, point, forceMode);
+            if (!IsServer)
+            {
+                var networkRigidbody = GetComponent<NetworkRigidbody>();
+            }
         }
     }
 }

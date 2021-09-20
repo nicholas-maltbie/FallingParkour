@@ -48,10 +48,14 @@ public class NetworkRigidbody : NetworkBehaviour
     void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
-        netVelocity = new NetworkVariableVector3(new NetworkVariableSettings() { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
-        netAngularVelocity = new NetworkVariableVector3(new NetworkVariableSettings() { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
-        netPosition = new NetworkVariableVector3(new NetworkVariableSettings() { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
-        netRotation = new NetworkVariableQuaternion(new NetworkVariableSettings() { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
+        netVelocity = new NetworkVariableVector3(new NetworkVariableSettings()
+            { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
+        netAngularVelocity = new NetworkVariableVector3(new NetworkVariableSettings()
+            { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
+        netPosition = new NetworkVariableVector3(new NetworkVariableSettings()
+            { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
+        netRotation = new NetworkVariableQuaternion(new NetworkVariableSettings()
+            { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
     }
 
     void BeginInterpolation()
@@ -151,6 +155,21 @@ public class NetworkRigidbody : NetworkBehaviour
         return netVelocity.Settings.WritePermission == NetworkVariablePermission.OwnerOnly;
     }
 
+    /// <summary>
+    /// Allow this box to be moved locally by the client for a duration of time.
+    /// </summary>
+    /// <param name="duration">Time to allow for local control in seconds.</param>
+    public void AllowLocalControl(float duration)
+    {
+
+    }
+
+    /// <summary>
+    /// Get the surface velocity of this object at a given position using the smoothed velocity values from the
+    /// networkrigidbody. 
+    /// </summary>
+    /// <param name="worldPos">Position on the surface of the object.</param>
+    /// <returns>Velocity at the given position on this rigidbody.</returns>
     public Vector3 GetVelocityAtPoint(Vector3 worldPos)
     {
         Vector3 startingVel = m_Rigidbody.velocity;
