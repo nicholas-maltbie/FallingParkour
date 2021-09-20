@@ -665,7 +665,7 @@ namespace PropHunt.Character
                 // Weight movement of ground by ground movement weight
                 float velocityWeight =
                     movingGround.GetMovementWeight(groundHitPosition, LinearVelocity, Time.fixedDeltaTime);
-                float transferWeight = 
+                float transferWeight =
                     movingGround.GetTransferMomentumWeight(groundHitPosition, LinearVelocity, Time.fixedDeltaTime);
                 groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition, Time.fixedDeltaTime);
                 UnityEngine.Debug.Log($"velWeight{velocityWeight} tWeight:{transferWeight} groundVel:{groundVelocity}");
@@ -729,7 +729,7 @@ namespace PropHunt.Character
             }
 
             float weight = movingGround.GetMovementWeight(groundHitPosition, LinearVelocity, Time.fixedDeltaTime);
-            
+
             // Move player by floor displacement this frame
             transform.position += displacement * weight;
 

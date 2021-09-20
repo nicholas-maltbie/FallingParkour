@@ -49,18 +49,18 @@ public class NetworkRigidbody : NetworkBehaviour
     uint m_InterpolationChangeId;
     InterpolationState m_InterpolationState;
     Rigidbody m_Rigidbody;
-    
+
     void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
         netVelocity = new NetworkVariableVector3(new NetworkVariableSettings()
-            { WritePermission = permissionType, SendTickrate = m_SyncRate });
+        { WritePermission = permissionType, SendTickrate = m_SyncRate });
         netAngularVelocity = new NetworkVariableVector3(new NetworkVariableSettings()
-            { WritePermission = permissionType, SendTickrate = m_SyncRate });
+        { WritePermission = permissionType, SendTickrate = m_SyncRate });
         netPosition = new NetworkVariableVector3(new NetworkVariableSettings()
-            { WritePermission = permissionType, SendTickrate = m_SyncRate });
+        { WritePermission = permissionType, SendTickrate = m_SyncRate });
         netRotation = new NetworkVariableQuaternion(new NetworkVariableSettings()
-            { WritePermission = permissionType, SendTickrate = m_SyncRate });
+        { WritePermission = permissionType, SendTickrate = m_SyncRate });
     }
 
     void BeginInterpolation()
@@ -171,7 +171,7 @@ public class NetworkRigidbody : NetworkBehaviour
     {
         Vector3 startingVel = m_Rigidbody.velocity;
         Vector3 startingAngVel = m_Rigidbody.angularVelocity;
-        
+
         m_Rigidbody.velocity = this.netVelocity.Value;
         m_Rigidbody.angularVelocity = this.netAngularVelocity.Value;
         Vector3 vel = m_Rigidbody.GetPointVelocity(worldPos);

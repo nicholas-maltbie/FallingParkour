@@ -29,7 +29,7 @@ namespace PropHunt.Environment
         {
             float objSpeed = this.GetVelocityAtPoint(point, deltaTime).magnitude;
             float playerSpeed = playerVelocity.magnitude;
-            
+
             float relativeVelocity = Mathf.Abs(objSpeed - playerSpeed);
 
             UnityEngine.Debug.Log($"point:{point} vel:{playerVelocity} delta:{deltaTime} relVel:{relativeVelocity}");
