@@ -72,6 +72,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a50731e36aed2d446bfbd69078224021, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4403326056594963052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415272902686009912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d96c62771845549b2844aee3b15cd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attachedRigidbody: {fileID: 0}
+  attachedNetworkRigidbody: {fileID: 0}
+  transferMomentumWeight: 0.95
+  avoidTransferMomentum: 0
+  minimumVelocityThreshold: 1
+  maximumVelocityThreshold: 3
 --- !u!114 &9110951515132931801
 MonoBehaviour:
   m_ObjectHideFlags: 0

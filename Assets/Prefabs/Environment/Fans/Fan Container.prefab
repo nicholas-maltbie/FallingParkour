@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attachedRigidbody: {fileID: 4224596784555751787}
+  attachedNetworkRigidbody: {fileID: 0}
+  transferMomentumWeight: 1
   avoidTransferMomentum: 0
 --- !u!114 &84730719043797627
 MonoBehaviour:
@@ -27,6 +29,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attachedRigidbody: {fileID: 4224596784555751787}
+  attachedNetworkRigidbody: {fileID: 0}
+  transferMomentumWeight: 1
   avoidTransferMomentum: 0
 --- !u!114 &3125997410604118424
 MonoBehaviour:
@@ -41,6 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attachedRigidbody: {fileID: 4224596784555751787}
+  attachedNetworkRigidbody: {fileID: 0}
+  transferMomentumWeight: 1
   avoidTransferMomentum: 0
 --- !u!114 &5676161796949812650
 MonoBehaviour:
@@ -55,6 +61,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attachedRigidbody: {fileID: 4224596784555751787}
+  attachedNetworkRigidbody: {fileID: 0}
+  transferMomentumWeight: 1
   avoidTransferMomentum: 0
 --- !u!1 &8431909921260752302
 GameObject:
@@ -151,6 +159,7 @@ MonoBehaviour:
   m_SyncPosition: 1
   m_SyncRotation: 1
   m_InterpolationTime: 0.1
+  m_SyncRate: 20
 --- !u!114 &1145256007321908785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,6 +238,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
       propertyPath: m_Name
       value: fan (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3916377247472339407, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4cf24eac614ee8f428577871444ef8d9, type: 3}

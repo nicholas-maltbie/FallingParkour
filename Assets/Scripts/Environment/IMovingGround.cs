@@ -26,6 +26,24 @@ namespace PropHunt.Environment
         Vector3 GetDisplacementAtPoint(Vector3 point, float deltaTime);
 
         /// <summary>
+        /// Get the weight of movement for a given player's velocity at a given point.
+        /// </summary>
+        /// <param name="point">Point where player is standing on the object.</param>
+        /// <param name="playerVelocity">Velocity of the player.</param>
+        /// <returns>Weight of player's attachment to the object given these
+        /// parameters. Will be between 0 (not attached at all) and 1 (fully attached).</returns>
+        float GetMovementWeight(Vector3 point, Vector3 playerVelocity, float deltaTime);
+
+        /// <summary>
+        /// Get the weight of movement of transfering momentum when a player leaves this object
+        /// </summary>
+        /// <param name="point">Point where player is standing on the object.</param>
+        /// <param name="playerVelocity">Velocity of the player.</param>
+        /// <returns>How much relative velocity teh player should retain when departing from the surface of this object
+        /// via jump or fall.</returns>
+        float GetTransferMomentumWeight(Vector3 point, Vector3 playerVelocity, float deltaTime);
+
+        /// <summary>
         /// Should momentum be transferred to players when they
         /// leave this object.
         /// </summary>

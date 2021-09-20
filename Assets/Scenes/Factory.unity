@@ -207,6 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1001 &10754427
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -315,6 +316,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!4 &19103776 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2818345877071284972, guid: bf66409d99c7b2246b3be20d64adb8fc, type: 3}
@@ -1391,6 +1393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1 &195823792
 GameObject:
   m_ObjectHideFlags: 0
@@ -3582,6 +3585,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1001 &703228836
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3591,7 +3595,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7032653423571191384, guid: 3c0fc68367e551749bdf932cbcf85454, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7032653423571191384, guid: 3c0fc68367e551749bdf932cbcf85454, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3637,9 +3641,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Box (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 7032653423571191390, guid: 3c0fc68367e551749bdf932cbcf85454, type: 3}
-      propertyPath: m_Mass
-      value: 1
+    - target: {fileID: 7032653423571191385, guid: 3c0fc68367e551749bdf932cbcf85454, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c0fc68367e551749bdf932cbcf85454, type: 3}
@@ -4178,6 +4182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1001 &892703829
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4635,6 +4640,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1001 &1063688663
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4805,6 +4811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1 &1108179865 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4895293655151655128, guid: 362e1de00e588db4fb9ee88574702996, type: 3}
@@ -4823,6 +4830,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1001 &1116348583
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4919,6 +4927,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1001 &1128243319
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5065,6 +5074,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1001 &1156638852
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5410,6 +5420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1001 &1259112868
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5708,6 +5719,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1001 &1391399743
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6991,6 +7003,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1 &1568533116 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1928889303330585159, guid: 1c150d972a8041845b10bfe54f6efa81, type: 3}
@@ -7009,6 +7022,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1 &1572735420
 GameObject:
   m_ObjectHideFlags: 0
@@ -7292,6 +7306,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1001 &1592796157
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7736,9 +7751,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Box
       objectReference: {fileID: 0}
-    - target: {fileID: 7032653423571191390, guid: 3c0fc68367e551749bdf932cbcf85454, type: 3}
-      propertyPath: m_Mass
-      value: 1
+    - target: {fileID: 7032653423571191385, guid: 3c0fc68367e551749bdf932cbcf85454, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c0fc68367e551749bdf932cbcf85454, type: 3}
@@ -8629,6 +8644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidTransferMomentum: 0
+  transferMomentumWeight: 1
 --- !u!1001 &2121054681
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8962,10 +8978,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 195823793}
     m_Modifications:
-    - target: {fileID: 2715266469802263213, guid: cb852bfb14b7bda46b15aa8073021789, type: 3}
-      propertyPath: m_InterpolationTime
-      value: 0.1
-      objectReference: {fileID: 0}
     - target: {fileID: 2715266470402894882, guid: cb852bfb14b7bda46b15aa8073021789, type: 3}
       propertyPath: m_RootOrder
       value: 1

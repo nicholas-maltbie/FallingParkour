@@ -69,5 +69,17 @@ namespace PropHunt.Environment
                     other.gameObject.transform.position + movement);
             }
         }
+
+        /// <inheritdoc/>
+        public float GetMovementWeight(Vector3 point, Vector3 playerVelocity, float deltaTime)
+        {
+            return 1.0f;
+        }
+
+        /// <inheritdoc/>
+        public float GetTransferMomentumWeight(Vector3 point, Vector3 playerVelocity, float deltaTime)
+        {
+            return 1.0f;
+        }
     }
 }

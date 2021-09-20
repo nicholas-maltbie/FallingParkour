@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7032653423571191391}
   - component: {fileID: 7032653423571191202}
   - component: {fileID: 3367549212217774950}
+  - component: {fileID: 7809743055522944689}
   m_Layer: 0
   m_Name: Box
   m_TagString: Untagged
@@ -30,7 +31,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7032653423571191385}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.75, z: 15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -173,3 +174,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a50731e36aed2d446bfbd69078224021, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7809743055522944689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7032653423571191385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d96c62771845549b2844aee3b15cd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attachedRigidbody: {fileID: 0}
+  attachedNetworkRigidbody: {fileID: 0}
+  transferMomentumWeight: 0.95
+  avoidTransferMomentum: 1
+  minimumVelocityThreshold: 2
+  maximumVelocityThreshold: 4.25
