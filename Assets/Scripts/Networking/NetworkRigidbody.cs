@@ -30,6 +30,11 @@ public class NetworkRigidbody : NetworkBehaviour
     [SerializeField]
     float m_SyncRate = 20;
 
+    [SerializeField]
+    NetworkVariablePermission permissionType = NetworkVariablePermission.OwnerOnly;
+
+    float localControlRemaining = 0.0f;
+
     [Serializable]
     struct InterpolationState
     {
@@ -44,18 +49,18 @@ public class NetworkRigidbody : NetworkBehaviour
     uint m_InterpolationChangeId;
     InterpolationState m_InterpolationState;
     Rigidbody m_Rigidbody;
-
+    
     void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
         netVelocity = new NetworkVariableVector3(new NetworkVariableSettings()
-            { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
+            { WritePermission = permissionType, SendTickrate = m_SyncRate });
         netAngularVelocity = new NetworkVariableVector3(new NetworkVariableSettings()
-            { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
+            { WritePermission = permissionType, SendTickrate = m_SyncRate });
         netPosition = new NetworkVariableVector3(new NetworkVariableSettings()
-            { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
+            { WritePermission = permissionType, SendTickrate = m_SyncRate });
         netRotation = new NetworkVariableQuaternion(new NetworkVariableSettings()
-            { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
+            { WritePermission = permissionType, SendTickrate = m_SyncRate });
     }
 
     void BeginInterpolation()
@@ -116,6 +121,7 @@ public class NetworkRigidbody : NetworkBehaviour
             }
 
             float deltaTime = Time.fixedDeltaTime;
+
             if (0 < m_InterpolationState.TimeRemaining)
             {
                 deltaTime = Mathf.Min(deltaTime, m_InterpolationState.TimeRemaining);
@@ -153,15 +159,6 @@ public class NetworkRigidbody : NetworkBehaviour
     bool NetworkVariablesInitialized()
     {
         return netVelocity.Settings.WritePermission == NetworkVariablePermission.OwnerOnly;
-    }
-
-    /// <summary>
-    /// Allow this box to be moved locally by the client for a duration of time.
-    /// </summary>
-    /// <param name="duration">Time to allow for local control in seconds.</param>
-    public void AllowLocalControl(float duration)
-    {
-
     }
 
     /// <summary>

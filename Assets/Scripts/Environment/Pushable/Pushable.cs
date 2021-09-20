@@ -15,35 +15,60 @@ namespace PropHunt.Environment.Pushable
         /// </summary>
         private Rigidbody objRigidbody;
 
+        /// <summary>
+        /// Buffer time for local player after they push the object.
+        /// </summary>
+        private float localControlBuffer = 1.0f;
+
+        /// <summary>
+        /// Cooldown in seconds between how soon the owner can change.
+        /// </summary>
+        private float ownerChangeCooldown = 0.05f;
+
+        /// <summary>
+        /// Last time the owner was changed.
+        /// </summary>
+        private float lastOwnerChangeTime = Mathf.NegativeInfinity;
+
         public void Awake()
         {
             objRigidbody = GetComponent<Rigidbody>();
         }
 
         /// <inheritdoc/>
-        public void PushObjectServerAndLocal(Vector3 force, Vector3 point, ForceMode forceMode)
+        public void PushObjectServerAndLocal(Vector3 force, Vector3 point, ForceMode forceMode, ulong sourceId)
         {
-            PushObject(force, point, forceMode);
             if (!IsServer)
             {
-                PushObjectServerRpc(force, point, forceMode);
+                PushObjectServerRpc(force, point, forceMode, sourceId);
             }
+            else if (Time.time - lastOwnerChangeTime >= ownerChangeCooldown)
+            {
+                gameObject.GetComponent<NetworkObject>().RemoveOwnership();
+                lastOwnerChangeTime = Time.time;
+            }
+            PushObject(force, point, forceMode);
         }
 
         /// <inheritdoc/>
         [ServerRpc(RequireOwnership = false)]
-        public void PushObjectServerRpc(Vector3 force, Vector3 point, ForceMode forceMode)
+        public void PushObjectServerRpc(Vector3 force, Vector3 point, ForceMode forceMode, ulong sourceId)
         {
+            if (Time.time - lastOwnerChangeTime >= ownerChangeCooldown)
+            {
+                gameObject.GetComponent<NetworkObject>().ChangeOwnership(sourceId);
+                lastOwnerChangeTime = Time.time;
+            }
             PushObject(force, point, forceMode);
         }
 
         private void PushObject(Vector3 force, Vector3 point, ForceMode forceMode)
         {
-            objRigidbody.AddForceAtPosition(force, point, forceMode);
-            if (!IsServer)
+            if (!IsOwner)
             {
                 var networkRigidbody = GetComponent<NetworkRigidbody>();
             }
+            objRigidbody.AddForceAtPosition(force, point, forceMode);
         }
     }
 }

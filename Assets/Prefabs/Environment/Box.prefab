@@ -145,6 +145,7 @@ MonoBehaviour:
   m_SyncRotation: 1
   m_InterpolationTime: 0.1
   m_SyncRate: 10
+  permissionType: 0
 --- !u!114 &7032653423571191202
 MonoBehaviour:
   m_ObjectHideFlags: 0

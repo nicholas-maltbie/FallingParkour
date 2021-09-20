@@ -58,7 +58,11 @@ namespace PropHunt.Character
             }
 
             // Apply the push
-            pushable.PushObjectServerAndLocal(force * Time.deltaTime * pushPower, hit.point, ForceMode.Impulse);
+            pushable.PushObjectServerAndLocal(
+                force * Time.deltaTime * pushPower,
+                hit.point,
+                ForceMode.Impulse,
+                NetworkManager.Singleton.LocalClientId);
         }
     }
 }

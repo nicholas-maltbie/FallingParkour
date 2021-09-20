@@ -3641,10 +3641,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Box (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 7032653423571191385, guid: 3c0fc68367e551749bdf932cbcf85454, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c0fc68367e551749bdf932cbcf85454, type: 3}
 --- !u!1001 &738358605
@@ -7753,7 +7749,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7032653423571191385, guid: 3c0fc68367e551749bdf932cbcf85454, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c0fc68367e551749bdf932cbcf85454, type: 3}
