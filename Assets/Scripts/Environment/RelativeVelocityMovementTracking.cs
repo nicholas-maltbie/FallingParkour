@@ -32,20 +32,16 @@ namespace PropHunt.Environment
 
             float relativeVelocity = Mathf.Abs(objSpeed - playerSpeed);
 
-            UnityEngine.Debug.Log($"point:{point} vel:{playerVelocity} delta:{deltaTime} relVel:{relativeVelocity}");
 
             if (relativeVelocity <= minimumVelocityThreshold)
             {
-                UnityEngine.Debug.Log($"relVel:{relativeVelocity} minVel:{minimumVelocityThreshold}");
                 return 1.0f;
             }
             else if (relativeVelocity < maximumVelocityThreshold)
             {
-                UnityEngine.Debug.Log($"relVel:{relativeVelocity} minVel:{minimumVelocityThreshold} maxVel:{maximumVelocityThreshold} ret:{1 - (relativeVelocity - minimumVelocityThreshold) / (maximumVelocityThreshold - minimumVelocityThreshold)}");
                 return 1 - (relativeVelocity - minimumVelocityThreshold) /
                     (maximumVelocityThreshold - minimumVelocityThreshold);
             }
-            UnityEngine.Debug.Log($"relVel:{relativeVelocity} minVel:{minimumVelocityThreshold} maxVel:{maximumVelocityThreshold} ret:{0.0f}");
             return 0.0f;
         }
     }

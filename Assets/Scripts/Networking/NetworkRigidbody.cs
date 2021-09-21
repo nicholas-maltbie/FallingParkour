@@ -30,10 +30,7 @@ public class NetworkRigidbody : NetworkBehaviour
     [SerializeField]
     float m_SyncRate = 20;
 
-    [SerializeField]
     NetworkVariablePermission permissionType = NetworkVariablePermission.OwnerOnly;
-
-    float localControlRemaining = 0.0f;
 
     [Serializable]
     struct InterpolationState
@@ -63,7 +60,7 @@ public class NetworkRigidbody : NetworkBehaviour
         { WritePermission = permissionType, SendTickrate = m_SyncRate });
     }
 
-    void BeginInterpolation()
+    public void BeginInterpolation()
     {
         m_InterpolationState = new InterpolationState()
         {
@@ -182,7 +179,7 @@ public class NetworkRigidbody : NetworkBehaviour
         return vel;
     }
 
-    static bool TryUpdate(NetworkVariableVector3 variable, Vector3 value)
+    bool TryUpdate(NetworkVariableVector3 variable, Vector3 value)
     {
         var current = variable.Value;
         if (Mathf.Approximately(current.x, value.x)
@@ -192,11 +189,14 @@ public class NetworkRigidbody : NetworkBehaviour
             return false;
         }
 
-        variable.Value = value;
+        if (IsOwner)
+        {
+            variable.Value = value;
+        }
         return true;
     }
 
-    static bool TryUpdate(NetworkVariableQuaternion variable, Quaternion value)
+    bool TryUpdate(NetworkVariableQuaternion variable, Quaternion value)
     {
         var current = variable.Value;
         if (Mathf.Approximately(current.x, value.x)
@@ -207,7 +207,10 @@ public class NetworkRigidbody : NetworkBehaviour
             return false;
         }
 
-        variable.Value = value;
+        if (IsOwner)
+        {
+            variable.Value = value;
+        }
         return true;
     }
 }

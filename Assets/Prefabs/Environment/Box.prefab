@@ -110,7 +110,7 @@ Rigidbody:
   m_GameObject: {fileID: 7032653423571191385}
   serializedVersion: 2
   m_Mass: 0.5
-  m_Drag: 0.5
+  m_Drag: 0.05
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -145,7 +145,6 @@ MonoBehaviour:
   m_SyncRotation: 1
   m_InterpolationTime: 0.1
   m_SyncRate: 10
-  permissionType: 0
 --- !u!114 &7032653423571191202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,7 +188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attachedRigidbody: {fileID: 0}
   attachedNetworkRigidbody: {fileID: 0}
-  transferMomentumWeight: 0.95
+  transferMomentumWeight: 0.1
   avoidTransferMomentum: 1
-  minimumVelocityThreshold: 2
-  maximumVelocityThreshold: 4.25
+  minimumVelocityThreshold: 1
+  maximumVelocityThreshold: 3

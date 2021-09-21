@@ -16,9 +16,14 @@ namespace PropHunt.Character
         public float pushPower = 2.0f;
 
         /// <summary>
-        /// Force of pushing down when standing on objects
-        /// </summary>    
-        public float weight = 10.0f;
+        /// Cooldown between push events for this player.
+        /// </summary>
+        public float pushCooldown = 0.1f;
+
+        /// <summary>
+        /// Previous time that the player pushed the object.
+        /// </summary>
+        private float previousPushTime = Mathf.NegativeInfinity;
 
         public void PushObject(IControllerColliderHit hit)
         {
@@ -40,28 +45,21 @@ namespace PropHunt.Character
             }
 
             Vector3 force = Vector3.zero;
-            // We use gravity and weight to push things down, we use
-            // our velocity and push power to push things other directions
-            if (hit.moveDirection.y < -0.3)
-            {
-                // If below us, push down
-                // Only take the movement component associated with gravity
-                force = Vector3.Scale(Vector3.down, hit.moveDirection) * pushPower;
-                // Also add some force from gravity in case we're not moving down now
-                force += Vector3.down * weight;
-            }
-            else
-            {
-                // If to the side, use the controller velocity
-                // Project movement vector onto plane defined by gravity normal (horizontal plane)
-                force = Vector3.ProjectOnPlane(hit.moveDirection, Vector3.down) * pushPower;
-            }
+            // If to the side, use the controller velocity
+            // Project movement vector onto plane defined by gravity normal (horizontal plane)
+            force = Vector3.ProjectOnPlane(hit.moveDirection, Vector3.down) * pushPower;
 
+            if (Time.time - previousPushTime <= pushCooldown)
+            {
+                return;
+            }
+            previousPushTime = Time.time;
             // Apply the push
-            pushable.PushObjectServerAndLocal(
-                force * Time.deltaTime * pushPower,
+            body.AddForce(force * pushPower, ForceMode.Force);
+            pushable.PushObjectServerRpc(
+                force * pushPower,
                 hit.point,
-                ForceMode.Impulse,
+                (int)ForceMode.Force,
                 NetworkManager.Singleton.LocalClientId);
         }
     }

@@ -668,7 +668,6 @@ namespace PropHunt.Character
                 float transferWeight =
                     movingGround.GetTransferMomentumWeight(groundHitPosition, LinearVelocity, Time.fixedDeltaTime);
                 groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition, Time.fixedDeltaTime);
-                UnityEngine.Debug.Log($"velWeight{velocityWeight} tWeight:{transferWeight} groundVel:{groundVelocity}");
                 groundVelocity *= velocityWeight;
                 groundVelocity *= transferWeight;
             }
@@ -733,7 +732,6 @@ namespace PropHunt.Character
             // Move player by floor displacement this frame
             transform.position += displacement * weight;
 
-            UnityEngine.Debug.Log($"displacement:{displacement} weight:{weight}");
             if (movingGround.ShouldAttach())
             {
                 // Attach foot follow object to floor

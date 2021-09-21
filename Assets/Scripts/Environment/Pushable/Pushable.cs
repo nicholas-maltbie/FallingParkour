@@ -16,9 +16,19 @@ namespace PropHunt.Environment.Pushable
         private Rigidbody objRigidbody;
 
         /// <summary>
+        /// Network object associated with this pushable object.
+        /// </summary>
+        private NetworkObject networkObject;
+
+        /// <summary>
         /// Cooldown in seconds between how soon the owner can change.
         /// </summary>
         private float ownerChangeCooldown = 0.05f;
+
+        /// <summary>
+        /// Cooldown to revert ownership back to server.
+        /// </summary>
+        private float revertOwnerCooldown = 1.0f;
 
         /// <summary>
         /// Last time the owner was changed.
@@ -28,42 +38,34 @@ namespace PropHunt.Environment.Pushable
         public void Awake()
         {
             objRigidbody = GetComponent<Rigidbody>();
-        }
+            networkObject = GetComponent<NetworkObject>();
 
-        /// <inheritdoc/>
-        public void PushObjectServerAndLocal(Vector3 force, Vector3 point, ForceMode forceMode, ulong sourceId)
-        {
-            if (!IsServer)
-            {
-                PushObjectServerRpc(force, point, forceMode, sourceId);
-            }
-            else if (Time.time - lastOwnerChangeTime >= ownerChangeCooldown)
-            {
-                gameObject.GetComponent<NetworkObject>().RemoveOwnership();
-                lastOwnerChangeTime = Time.time;
-            }
-            PushObject(force, point, forceMode);
+            networkObject.DontDestroyWithOwner = true;
         }
 
         /// <inheritdoc/>
         [ServerRpc(RequireOwnership = false)]
-        public void PushObjectServerRpc(Vector3 force, Vector3 point, ForceMode forceMode, ulong sourceId)
+        public void PushObjectServerRpc(Vector3 force, Vector3 point, int forceMode, ulong sourceId)
         {
             if (Time.time - lastOwnerChangeTime >= ownerChangeCooldown)
             {
-                gameObject.GetComponent<NetworkObject>().ChangeOwnership(sourceId);
+                // networkObject.ChangeOwnership(sourceId);
                 lastOwnerChangeTime = Time.time;
             }
-            PushObject(force, point, forceMode);
+            UnityEngine.Debug.Log($"Received push command: force:{force} point:{point} mode:{(ForceMode)forceMode}");
+            if (sourceId != NetworkManager.ServerClientId)
+            {
+                objRigidbody.AddForce(force, (ForceMode)forceMode);
+            }
         }
 
-        private void PushObject(Vector3 force, Vector3 point, ForceMode forceMode)
+        public void Update()
         {
-            if (!IsOwner)
+            if (IsServer && !networkObject.IsOwnedByServer &&
+                Time.time - lastOwnerChangeTime >= revertOwnerCooldown)
             {
-                var networkRigidbody = GetComponent<NetworkRigidbody>();
+                networkObject.ChangeOwnership(NetworkManager.ServerClientId);
             }
-            objRigidbody.AddForceAtPosition(force, point, forceMode);
         }
     }
 }

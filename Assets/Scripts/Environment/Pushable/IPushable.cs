@@ -16,16 +16,6 @@ namespace PropHunt.Environment.Pushable
         /// <param name="forceMode">Mode of the force being applied.</param>
         /// <param name="sourceId">Id of the player pushing this object.</param>
         [ServerRpc(RequireOwnership = false)]
-        void PushObjectServerRpc(Vector3 force, Vector3 point, ForceMode forceMode, ulong sourceId);
-
-        /// <summary>
-        /// Send a command to push an object at a specific position on the server and locally.
-        /// </summary>
-        /// <param name="force">Force vector applied to the object.</param>
-        /// <param name="point">Point to apply force on the object.</param>
-        /// <param name="forceMode">Mode of the force being applied.</param>
-        /// <param name="sourceId">Id of the player pushing this object.</param>
-        [ServerRpc(RequireOwnership = false)]
-        void PushObjectServerAndLocal(Vector3 force, Vector3 point, ForceMode forceMode, ulong sourceId);
+        void PushObjectServerRpc(Vector3 force, Vector3 point, int forceMode, ulong sourceId);
     }
 }
