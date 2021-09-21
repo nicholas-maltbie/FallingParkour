@@ -16,11 +16,6 @@ namespace PropHunt.Character
         public float pushPower = 2.0f;
 
         /// <summary>
-        /// Cooldown between push events for this player.
-        /// </summary>
-        public float pushCooldown = 0.1f;
-
-        /// <summary>
         /// Previous time that the player pushed the object.
         /// </summary>
         private float previousPushTime = Mathf.NegativeInfinity;
@@ -49,15 +44,12 @@ namespace PropHunt.Character
             // Project movement vector onto plane defined by gravity normal (horizontal plane)
             force = Vector3.ProjectOnPlane(hit.moveDirection, Vector3.down) * pushPower;
 
-            if (Time.time - previousPushTime <= pushCooldown)
-            {
-                return;
-            }
-            previousPushTime = Time.time;
+            Vector3 pushForce = force * pushPower;
+
             // Apply the push
-            body.AddForce(force * pushPower, ForceMode.Force);
+            body.AddForceAtPosition(pushForce, hit.point, ForceMode.Force);
             pushable.PushObjectServerRpc(
-                force * pushPower,
+                pushForce,
                 hit.point,
                 (int)ForceMode.Force,
                 NetworkManager.Singleton.LocalClientId);
