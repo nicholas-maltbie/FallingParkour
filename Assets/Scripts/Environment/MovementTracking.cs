@@ -13,6 +13,14 @@ namespace PropHunt.Environment
         /// </summary>
         public bool avoidTransferMomentum;
 
+        /// <summary>
+        /// How much of the objects velocity should a player retain when leaving the surface of the object via jump or
+        /// fall.
+        /// </summary>
+        [SerializeField]
+        [Range(0, 1)]
+        private float transferMomentumWeight = 1.0f;
+
         /// <inheritdoc/>
         public bool AvoidTransferMomentum() => avoidTransferMomentum;
 
@@ -50,11 +58,13 @@ namespace PropHunt.Environment
             PreviousAttitude = transform.rotation;
         }
 
+        /// <inheritdoc/>
         public Vector3 GetVelocityAtPoint(Vector3 point, float deltaTime)
         {
             return GetDisplacementAtPoint(point, deltaTime) / deltaTime;
         }
 
+        /// <inheritdoc/>
         public Vector3 GetDisplacementAtPoint(Vector3 point, float deltaTime)
         {
             // Get relative position to previous start
@@ -65,6 +75,17 @@ namespace PropHunt.Environment
             Vector3 deltaRotation = rotatedFinalPosition - relativePosition;
             // Shift point by total displacement
             return deltaRotation + Displacement;
+        }
+
+        /// <inheritdoc/>
+        public virtual float GetMovementWeight(Vector3 point, Vector3 playerVelocity, float deltaTime)
+        {
+            return 1.0f;
+        }
+
+        public float GetTransferMomentumWeight(Vector3 point, Vector3 playerVelocity, float deltaTime)
+        {
+            return transferMomentumWeight;
         }
     }
 }

@@ -136,8 +136,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b301a6bc1a0227847b8629c05ae166ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pushPower: 50
-  weight: 20
+  pushPower: 10
+  weight: 10
 --- !u!114 &8171741753156500418
 MonoBehaviour:
   m_ObjectHideFlags: 0

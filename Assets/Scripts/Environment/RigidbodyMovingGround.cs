@@ -9,7 +9,18 @@ namespace PropHunt.Environment
     public class RigidbodyMovingGround : MonoBehaviour, IMovingGround
     {
         [SerializeField]
-        private Rigidbody attachedRigidbody;
+        protected Rigidbody attachedRigidbody;
+
+        [SerializeField]
+        protected NetworkRigidbody attachedNetworkRigidbody;
+
+        /// <summary>
+        /// How much of the objects velocity should a player retain when leaving the surface of the object via jump or
+        /// fall.
+        /// </summary>
+        [SerializeField]
+        [Range(0, 1)]
+        private float transferMomentumWeight = 1.0f;
 
         /// <summary>
         /// Should momentum be transferred to players when they
@@ -29,17 +40,18 @@ namespace PropHunt.Environment
             {
                 attachedRigidbody = GetComponent<Rigidbody>();
             }
+            if (attachedNetworkRigidbody == null)
+            {
+                attachedNetworkRigidbody = GetComponent<NetworkRigidbody>();
+            }
         }
 
         /// <inheritdoc/>
         public Vector3 GetVelocityAtPoint(Vector3 point, float deltaTime)
         {
-            NetworkRigidbody nrb = attachedRigidbody.gameObject.GetComponent<NetworkRigidbody>();
-            if (nrb != null)
+            if (attachedNetworkRigidbody != null)
             {
-                Vector3 vel = attachedRigidbody.GetPointVelocity(point);
-                attachedRigidbody.velocity = nrb.netVelocity.Value;
-                attachedRigidbody.angularVelocity = nrb.netAngularVelocity.Value;
+                return attachedNetworkRigidbody.GetVelocityAtPoint(point);
             }
             return attachedRigidbody.GetPointVelocity(point);
         }
@@ -48,6 +60,17 @@ namespace PropHunt.Environment
         public Vector3 GetDisplacementAtPoint(Vector3 point, float deltaTime)
         {
             return attachedRigidbody.GetPointVelocity(point) * deltaTime;
+        }
+
+        /// <inheritdoc/>
+        public virtual float GetMovementWeight(Vector3 point, Vector3 playerVelocity, float deltaTime)
+        {
+            return 1.0f;
+        }
+
+        public float GetTransferMomentumWeight(Vector3 point, Vector3 playerVelocity, float deltaTime)
+        {
+            return transferMomentumWeight;
         }
     }
 }

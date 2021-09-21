@@ -42,15 +42,15 @@ namespace PropHunt.Environment
         /// </summary>
         private NetworkRigidbody networkRigidbody;
 
-        public Vector3 GetVelocity()
+        public Vector3 GetVelocity(Vector3 point)
         {
             if (networkRigidbody != null)
             {
-                return networkRigidbody.netVelocity.Value;
+                networkRigidbody.GetVelocityAtPoint(point);
             }
             if (body != null)
             {
-                return body.velocity;
+                return body.GetPointVelocity(point);
             }
             return Vector3.zero;
         }
@@ -78,7 +78,7 @@ namespace PropHunt.Environment
             {
                 return;
             }
-            Vector3 velocity = GetVelocity();
+            Vector3 velocity = GetVelocity(collision.GetContact(0).point);
             if ((kcc.LinearVelocity - velocity).magnitude > thresholdRelativeVelocity &&
                 (percentThresholdVelocity == 0 ||
                     velocity.magnitude > thresholdRelativeVelocity * percentThresholdVelocity))

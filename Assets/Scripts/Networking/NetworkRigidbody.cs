@@ -3,6 +3,7 @@ using MLAPI;
 using MLAPI.NetworkVariable;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class NetworkRigidbody : NetworkBehaviour
 {
     public NetworkVariableVector3 netVelocity;
@@ -29,6 +30,8 @@ public class NetworkRigidbody : NetworkBehaviour
     [SerializeField]
     float m_SyncRate = 20;
 
+    NetworkVariablePermission permissionType = NetworkVariablePermission.OwnerOnly;
+
     [Serializable]
     struct InterpolationState
     {
@@ -47,13 +50,17 @@ public class NetworkRigidbody : NetworkBehaviour
     void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
-        netVelocity = new NetworkVariableVector3(new NetworkVariableSettings() { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
-        netAngularVelocity = new NetworkVariableVector3(new NetworkVariableSettings() { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
-        netPosition = new NetworkVariableVector3(new NetworkVariableSettings() { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
-        netRotation = new NetworkVariableQuaternion(new NetworkVariableSettings() { WritePermission = NetworkVariablePermission.OwnerOnly, SendTickrate = m_SyncRate });
+        netVelocity = new NetworkVariableVector3(new NetworkVariableSettings()
+        { WritePermission = permissionType, SendTickrate = m_SyncRate });
+        netAngularVelocity = new NetworkVariableVector3(new NetworkVariableSettings()
+        { WritePermission = permissionType, SendTickrate = m_SyncRate });
+        netPosition = new NetworkVariableVector3(new NetworkVariableSettings()
+        { WritePermission = permissionType, SendTickrate = m_SyncRate });
+        netRotation = new NetworkVariableQuaternion(new NetworkVariableSettings()
+        { WritePermission = permissionType, SendTickrate = m_SyncRate });
     }
 
-    void BeginInterpolation()
+    public void BeginInterpolation()
     {
         m_InterpolationState = new InterpolationState()
         {
@@ -111,6 +118,7 @@ public class NetworkRigidbody : NetworkBehaviour
             }
 
             float deltaTime = Time.fixedDeltaTime;
+
             if (0 < m_InterpolationState.TimeRemaining)
             {
                 deltaTime = Mathf.Min(deltaTime, m_InterpolationState.TimeRemaining);
@@ -150,7 +158,28 @@ public class NetworkRigidbody : NetworkBehaviour
         return netVelocity.Settings.WritePermission == NetworkVariablePermission.OwnerOnly;
     }
 
-    static bool TryUpdate(NetworkVariableVector3 variable, Vector3 value)
+    /// <summary>
+    /// Get the surface velocity of this object at a given position using the smoothed velocity values from the
+    /// networkrigidbody. 
+    /// </summary>
+    /// <param name="worldPos">Position on the surface of the object.</param>
+    /// <returns>Velocity at the given position on this rigidbody.</returns>
+    public Vector3 GetVelocityAtPoint(Vector3 worldPos)
+    {
+        Vector3 startingVel = m_Rigidbody.velocity;
+        Vector3 startingAngVel = m_Rigidbody.angularVelocity;
+
+        m_Rigidbody.velocity = this.netVelocity.Value;
+        m_Rigidbody.angularVelocity = this.netAngularVelocity.Value;
+        Vector3 vel = m_Rigidbody.GetPointVelocity(worldPos);
+
+        m_Rigidbody.velocity = startingVel;
+        m_Rigidbody.angularVelocity = startingAngVel;
+
+        return vel;
+    }
+
+    bool TryUpdate(NetworkVariableVector3 variable, Vector3 value)
     {
         var current = variable.Value;
         if (Mathf.Approximately(current.x, value.x)
@@ -160,11 +189,14 @@ public class NetworkRigidbody : NetworkBehaviour
             return false;
         }
 
-        variable.Value = value;
+        if (IsOwner)
+        {
+            variable.Value = value;
+        }
         return true;
     }
 
-    static bool TryUpdate(NetworkVariableQuaternion variable, Quaternion value)
+    bool TryUpdate(NetworkVariableQuaternion variable, Quaternion value)
     {
         var current = variable.Value;
         if (Mathf.Approximately(current.x, value.x)
@@ -175,7 +207,10 @@ public class NetworkRigidbody : NetworkBehaviour
             return false;
         }
 
-        variable.Value = value;
+        if (IsOwner)
+        {
+            variable.Value = value;
+        }
         return true;
     }
 }

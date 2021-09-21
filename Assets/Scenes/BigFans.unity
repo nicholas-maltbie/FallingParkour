@@ -1453,6 +1453,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Curved Fan Container
       objectReference: {fileID: 0}
+    - target: {fileID: 648060233229677620, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
+      propertyPath: transferMomentumWeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2766413306059148676, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
+      propertyPath: transferMomentumWeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4180318637203718242, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
+      propertyPath: transferMomentumWeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8270227994909797763, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
+      propertyPath: transferMomentumWeight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9070007851571091129, guid: afa0896c30a36284b96f815ca6f4feb7, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -6598,14 +6614,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 277034048}
     m_Modifications:
-    - target: {fileID: 1973615801941237969, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 8e792dde1c7311e4bbd1df2bc7e9146d, type: 2}
-    - target: {fileID: 5862032396423058079, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
-      propertyPath: m_LocalScale.x
-      value: -100
-      objectReference: {fileID: 0}
     - target: {fileID: 8431909921260752297, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -6649,10 +6657,6 @@ PrefabInstance:
     - target: {fileID: 8431909921260752297, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8431909921260752299, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
-      propertyPath: sceneId
-      value: 1505579026
       objectReference: {fileID: 0}
     - target: {fileID: 8431909921260752302, guid: 12f6f24423a226e4ca88101b3b6dc862, type: 3}
       propertyPath: m_Name

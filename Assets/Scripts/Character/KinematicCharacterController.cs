@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MLAPI;
 using PropHunt.Environment;
+using PropHunt.Environment.Pushable;
 using PropHunt.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -661,7 +662,14 @@ namespace PropHunt.Character
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
             if (movingGround != null && !movingGround.AvoidTransferMomentum())
             {
+                // Weight movement of ground by ground movement weight
+                float velocityWeight =
+                    movingGround.GetMovementWeight(groundHitPosition, LinearVelocity, Time.fixedDeltaTime);
+                float transferWeight =
+                    movingGround.GetTransferMomentumWeight(groundHitPosition, LinearVelocity, Time.fixedDeltaTime);
                 groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition, Time.fixedDeltaTime);
+                groundVelocity *= velocityWeight;
+                groundVelocity *= transferWeight;
             }
 
             return groundVelocity;
@@ -701,32 +709,36 @@ namespace PropHunt.Character
             movingGroundDisplacement = Vector3.zero;
 
             Vector3 moveWithGroundStart = transform.position;
-
-            if (feetFollowObj.transform.parent != transform)
-            {
-                transform.position = feetFollowObj.transform.position + footOffset;
-            }
             // Check if we were standing on moving ground the previous frame
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
             if (movingGround == null || !onGround || distanceToGround > groundedDistance)
             {
                 // We aren't standing on something, don't do anything
                 feetFollowObj.transform.parent = transform;
+                feetFollowObj.transform.localPosition = Vector3.zero;
                 return;
             }
-            // Otherwise, get the displacement of the floor at the previous position
+
+            // Get the displacement of the floor at the previous position
             Vector3 displacement = movingGround.GetDisplacementAtPoint(groundHitPosition, Time.fixedDeltaTime);
+            // Check if we were standing on moving ground the previous frame
+            if (feetFollowObj.transform.parent != transform)
+            {
+                displacement = (feetFollowObj.transform.position + footOffset) - transform.position;
+            }
+
+            float weight = movingGround.GetMovementWeight(groundHitPosition, LinearVelocity, Time.fixedDeltaTime);
+
+            // Move player by floor displacement this frame
+            transform.position += displacement * weight;
 
             if (movingGround.ShouldAttach())
             {
                 // Attach foot follow object to floor
                 feetFollowObj.transform.parent = floor.transform;
             }
-            else
-            {
-                // Move player by floor displacement this frame
-                transform.position += displacement;
-            }
+
+            // GetMovementWeight(Vector3 point, Vector3 playerVelocity, float deltaTime)
 
             transform.position += (verticalSnapDown * 0.5f) * surfaceNormal;
             SnapPlayerDown(-surfaceNormal, verticalSnapDown);
