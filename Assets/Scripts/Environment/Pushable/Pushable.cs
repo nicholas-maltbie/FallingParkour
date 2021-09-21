@@ -52,7 +52,6 @@ namespace PropHunt.Environment.Pushable
                 // networkObject.ChangeOwnership(sourceId);
                 lastOwnerChangeTime = Time.time;
             }
-            UnityEngine.Debug.Log($"Received push command: force:{force} point:{point} mode:{(ForceMode)forceMode}");
             if (sourceId != NetworkManager.ServerClientId)
             {
                 objRigidbody.AddForce(force, (ForceMode)forceMode);
