@@ -10,14 +10,14 @@ PrefabInstance:
     - target: {fileID: 2369418802832209014, guid: db275fbdb0e36984a946954041c3bb1f, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 3d46fe46364bfb84cac0476710a61662, type: 2}
+      objectReference: {fileID: 2100000, guid: 8fa6e48f5cb906a4685daa50bb5ece6b, type: 2}
     - target: {fileID: 4865924750118719687, guid: db275fbdb0e36984a946954041c3bb1f, type: 3}
       propertyPath: velocity
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7236304585483768239, guid: db275fbdb0e36984a946954041c3bb1f, type: 3}
       propertyPath: m_Name
-      value: Belt-16 Variant
+      value: Belt-16 2x
       objectReference: {fileID: 0}
     - target: {fileID: 8009462833273768725, guid: db275fbdb0e36984a946954041c3bb1f, type: 3}
       propertyPath: m_RootOrder
