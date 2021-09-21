@@ -33,10 +33,10 @@ namespace PropHunt.Environment
 
         public void FixedUpdate()
         {
-            if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer)
-            {
-                return;
-            }
+            // if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer)
+            // {
+            //     return;
+            // }
 
             if (targetsList == null || targetsList.Count == 0)
             {

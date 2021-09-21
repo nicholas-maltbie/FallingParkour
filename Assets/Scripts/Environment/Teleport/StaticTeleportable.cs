@@ -8,6 +8,11 @@ namespace PropHunt.Environment.Teleport
     public class StaticTeleportable : MonoBehaviour, ITeleportable
     {
         /// <summary>
+        /// Teleport location for this object.
+        /// </summary>
+        public Transform givenTeleportLoc;
+
+        /// <summary>
         /// has this object been initialized.
         /// </summary>
         private bool initialized;
@@ -26,9 +31,14 @@ namespace PropHunt.Environment.Teleport
         {
             if (!this.initialized)
             {
-                this.teleportLoc = this.transform.position;
-                this.teleportRot = this.transform.rotation;
-                this.initialized = true;
+                if (givenTeleportLoc == null)
+                {
+                    SetTeleportPosition(this.transform.position, this.transform.rotation);
+                }
+                else
+                {
+                    SetTeleportPosition(givenTeleportLoc.position, givenTeleportLoc.rotation);
+                }
             }
         }
 
