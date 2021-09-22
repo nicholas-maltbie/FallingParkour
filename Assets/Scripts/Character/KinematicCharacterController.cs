@@ -280,9 +280,14 @@ namespace PropHunt.Character
         private float elapsedSinceJump;
 
         /// <summary>
-        /// How much longer will the player be prone.
+        /// How much longer will the player be prone (lower bound).
         /// </summary>
-        private float remainingProneTime;
+        private float remainingMinProneTime;
+
+        /// <summary>
+        /// How much longer will the player be prone (upper bound).
+        /// </summary>
+        private float remainingMaxProneTime;
 
         /// <summary>
         /// Elapsed time player has been standing/lying still under threshold velocity.
@@ -338,7 +343,7 @@ namespace PropHunt.Character
         /// <summary>
         /// Is the player currently prone?
         /// </summary>
-        public bool IsProne => remainingProneTime > 0;
+        public bool IsProne => remainingMaxProneTime > 0;
 
         /// <summary>
         /// Is the player currently standing on the ground?
@@ -473,7 +478,8 @@ namespace PropHunt.Character
 
             if (IsProne)
             {
-                this.remainingProneTime -= fixedDeltaTime;
+                this.remainingMaxProneTime -= fixedDeltaTime;
+                this.remainingMinProneTime -= fixedDeltaTime;
                 this.characterRigidbody.isKinematic = false;
                 this.characterRigidbody.velocity += this.gravity * fixedDeltaTime;
 
@@ -490,14 +496,16 @@ namespace PropHunt.Character
                     linearSpeed - (movingGroundDisplacement / fixedDeltaTime).magnitude);
 
                 // If player's velocity is less than threshold for threshold time, exit prone early
-                if (movingSpeedCalculation <= thresholdVelocity &&
+                if (remainingMinProneTime <= 0 &&
+                    movingSpeedCalculation <= thresholdVelocity &&
                     angularSpeed <= thresholdAngularVelocity)
                 {
                     elapsedUnderThreshold += fixedDeltaTime;
                     if (elapsedUnderThreshold >= earlyStopProneThreshold)
                     {
                         elapsedUnderThreshold = 0;
-                        remainingProneTime = 0;
+                        remainingMinProneTime = 0;
+                        remainingMaxProneTime = 0;
                     }
                 }
                 else
@@ -964,15 +972,20 @@ namespace PropHunt.Character
             // isSprinting = context.ReadValueAsButton();
         }
 
-        public void KnockPlayerProne(float time)
+        public void KnockPlayerProne(float minProneTime, float maxProneTime)
         {
-            KnockPlayerProne(time, Vector3.zero, Vector3.zero);
+            KnockPlayerProne(minProneTime, maxProneTime, Vector3.zero, Vector3.zero);
         }
 
-        public void KnockPlayerProne(float time, Vector3 linearVelocity, Vector3 angularVelocity)
+        public void KnockPlayerProne(
+            float minProneTime,
+            float maxProneTime,
+            Vector3 linearVelocity,
+            Vector3 angularVelocity)
         {
             characterRigidbody.isKinematic = false;
-            remainingProneTime = time;
+            remainingMinProneTime = minProneTime;
+            remainingMaxProneTime = maxProneTime;
             characterRigidbody.velocity = linearVelocity;
             characterRigidbody.angularVelocity = angularVelocity;
         }

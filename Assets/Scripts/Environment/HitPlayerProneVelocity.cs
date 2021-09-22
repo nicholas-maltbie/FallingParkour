@@ -10,11 +10,18 @@ namespace PropHunt.Environment
     public class HitPlayerProneVelocity : MonoBehaviour
     {
         /// <summary>
+        /// How long should a player be knocked prone (maximum time) after they are hit?
+        /// </summary>
+        [SerializeField]
+        [Tooltip("Time to set player prone when hit by this.")]
+        private float maxProneTime = 3.0f;
+
+        /// <summary>
         /// How long should a player be knocked prone (minimum time) after they are hit?
         /// </summary>
         [SerializeField]
         [Tooltip("Time to set player prone when hit by this.")]
-        private float proneTime = 3.0f;
+        private float minProneTime = 0.05f;
 
         /// <summary>
         /// Threshold relative velocity between the player and object to hit that
@@ -84,7 +91,7 @@ namespace PropHunt.Environment
                     velocity.magnitude > thresholdRelativeVelocity * percentThresholdVelocity))
             {
                 // Knock the player prone for prone time seconds
-                kcc.KnockPlayerProne(proneTime);
+                kcc.KnockPlayerProne(minProneTime, maxProneTime);
                 Vector3 point = collision.contacts[0].point;
                 collision.rigidbody.AddForceAtPosition(GetComponent<Rigidbody>().GetPointVelocity(point) * forceMod, point);
             }
