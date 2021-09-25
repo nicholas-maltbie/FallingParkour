@@ -694,7 +694,6 @@ namespace PropHunt.Character
         {
             Vector3 groundVelocity = Vector3.zero;
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
-            UnityEngine.Debug.Log($"movingGround:{movingGround} AvoidTransferMomentum:{movingGround != null && movingGround.AvoidTransferMomentum()}");
             if (movingGround != null && !movingGround.AvoidTransferMomentum())
             {
                 // Weight movement of ground by ground movement weight
@@ -703,7 +702,6 @@ namespace PropHunt.Character
                 float transferWeight =
                     movingGround.GetTransferMomentumWeight(groundHitPosition, LinearVelocity, Time.fixedDeltaTime);
                 groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition, Time.fixedDeltaTime);
-                UnityEngine.Debug.Log($"velWeight:{velocityWeight} transferWeight:{transferWeight} groundVel:{groundVelocity}");
                 groundVelocity *= velocityWeight;
                 groundVelocity *= transferWeight;
             }
