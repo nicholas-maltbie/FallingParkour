@@ -147,7 +147,7 @@ namespace PropHunt.Game.Flow
                     // Setup the InGameStateManager for this current game
                     GameObject gameStateGo = GameObject.Instantiate(gameStateManagerPrefab);
                     this.GameStateManager = gameStateGo.GetComponent<InGameStateManager>();
-                    
+
                     // Spawn object over network
                     gameStateGo.GetComponent<NetworkObject>().Spawn();
 

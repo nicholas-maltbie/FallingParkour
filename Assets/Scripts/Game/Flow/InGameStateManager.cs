@@ -12,11 +12,11 @@ namespace PropHunt.Game.Flow
     public enum InGameState
     {
         Uninitialized = 0,
-        Setup       = 10,
-        Countdown   = 20,
-        Running     = 30,
-        Reset       = 40,
-        Complete    = 50,
+        Setup = 10,
+        Countdown = 20,
+        Running = 30,
+        Reset = 40,
+        Complete = 50,
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ namespace PropHunt.Game.Flow
         /// Network variable for synchronizing in game state.
         /// </summary>
         private NetworkVariable<InGameState> currentGameState = new NetworkVariable<InGameState>(InGameState.Uninitialized);
-        
+
         /// <summary>
         /// Previous state of in game phase.
         /// </summary>
@@ -175,7 +175,7 @@ namespace PropHunt.Game.Flow
                         .Where(completionStatus => completionStatus.Status.Value == CompletedStatus.Completed)
                         .Select(status => 1)
                         .Sum();
-                    
+
                     if (completed == NetworkManager.ConnectedClientsList.Count)
                     {
                         endEarly = true;
