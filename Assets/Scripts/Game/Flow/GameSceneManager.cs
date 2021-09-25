@@ -9,6 +9,8 @@ namespace PropHunt.Game.Flow
 {
     public class GameSceneManager : MonoBehaviour
     {
+        public static GameSceneManager Singleton;
+
         [Header("Scene Management")]
 
         public string offlineScene;
@@ -19,18 +21,28 @@ namespace PropHunt.Game.Flow
 
         public GameLevelLibrary levelLibrary;
 
+        [Header("Manager Prefabs")]
+
         [SerializeField]
         private GameObject timerPrefab;
 
+        [SerializeField]
+        private GameObject gameStateManagerPrefab;
 
-        private GameTimer gamePhaseTimer;
+        [Header("Game Configuration")]
+
+        public float scoreScreenLength = 1.0f;
+
+        public GameTimer GamePhaseTimer { get; private set; }
+
+        public InGameStateManager GameStateManager { get; private set; }
 
         private static bool loaded = false;
 
         /// <summary>
         /// Progress toward switching to next scene
         /// </summary>
-        private SceneSwitchProgress progress;
+        public SceneSwitchProgress Progress { get; private set; }
 
         /// <summary>
         /// Is the player online?
@@ -39,11 +51,26 @@ namespace PropHunt.Game.Flow
 
         public void Start()
         {
+            if (loaded == false)
+            {
+                loaded = true;
+                Singleton = this;
+            }
+
             if (string.IsNullOrEmpty(gameScene))
             {
                 gameScene = levelLibrary.DefaultLevel.levelName;
             }
             GameManager.OnGamePhaseChange += HandleGamePhaseChange;
+        }
+
+        public void OnDestroy()
+        {
+            if (Singleton == this)
+            {
+                loaded = false;
+                Singleton = null;
+            }
         }
 
         public void OnSceneSwitch()
@@ -58,7 +85,7 @@ namespace PropHunt.Game.Flow
 
         public void OnStartServer()
         {
-            this.progress = NetworkSceneManager.SwitchScene(lobbyScene);
+            this.Progress = NetworkSceneManager.SwitchScene(lobbyScene);
             GameManager.ChangePhase(GamePhase.Lobby);
         }
 
@@ -67,11 +94,11 @@ namespace PropHunt.Game.Flow
         /// </summary>
         public void ClearTimer()
         {
-            if (this.gamePhaseTimer != null)
+            if (this.GamePhaseTimer != null)
             {
-                this.gamePhaseTimer.StopTimer();
-                GameObject.Destroy(this.gamePhaseTimer.gameObject);
-                this.gamePhaseTimer = null;
+                this.GamePhaseTimer.StopTimer();
+                GameObject.Destroy(this.GamePhaseTimer.gameObject);
+                this.GamePhaseTimer = null;
             }
         }
 
@@ -81,8 +108,8 @@ namespace PropHunt.Game.Flow
         public void SetupTimer()
         {
             ClearTimer();
-            this.gamePhaseTimer = GameObject.Instantiate(timerPrefab).GetComponent<GameTimer>();
-            this.gamePhaseTimer.GetComponent<NetworkObject>().Spawn();
+            this.GamePhaseTimer = GameObject.Instantiate(timerPrefab).GetComponent<GameTimer>();
+            this.GamePhaseTimer.GetComponent<NetworkObject>().Spawn();
         }
 
         public void HandleGamePhaseChange(object sender, GamePhaseChange change)
@@ -96,7 +123,8 @@ namespace PropHunt.Game.Flow
                 case GamePhase.Setup:
                     break;
                 case GamePhase.InGame:
-                    ClearTimer();
+                    // Close the game state manager
+                    this.GameStateManager.GetComponent<NetworkObject>().Despawn(true);
                     break;
                 case GamePhase.Score:
                     ClearTimer();
@@ -112,29 +140,33 @@ namespace PropHunt.Game.Flow
                     break;
                 case GamePhase.Setup:
                     // NetworkServer.SetAllClientsNotReady();
-                    this.progress = NetworkSceneManager.SwitchScene(gameScene);
+                    this.Progress = NetworkSceneManager.SwitchScene(gameScene);
                     // Once loading is complete, go to InGame
                     break;
                 case GamePhase.InGame:
-                    // Setup a timer for the game
-                    SetupTimer();
-                    // Transition to score phase upon completion of timer
-                    this.gamePhaseTimer.OnFinish += (source, args) => GameManager.ChangePhase(GamePhase.Score);
-                    // Start the timer with a time of 5 minutes
-                    this.gamePhaseTimer.StartTimer(60 * 5);
+                    // Setup the InGameStateManager for this current game
+                    GameObject gameStateGo = GameObject.Instantiate(gameStateManagerPrefab);
+                    this.GameStateManager = gameStateGo.GetComponent<InGameStateManager>();
+
+                    // Spawn object over network
+                    gameStateGo.GetComponent<NetworkObject>().Spawn();
+
+                    // Start game state manager
+                    this.GameStateManager.StartGame();
+
                     break;
                 case GamePhase.Score:
                     // Setup a timer for the score phase
                     SetupTimer();
                     // Transition to reset phase upon completion of timer
-                    this.gamePhaseTimer.OnFinish += (source, args) => GameManager.ChangePhase(GamePhase.Reset);
-                    // Start the timer with a time of 30 seconds
-                    this.gamePhaseTimer.StartTimer(30);
+                    this.GamePhaseTimer.OnFinish += (source, args) => GameManager.ChangePhase(GamePhase.Reset);
+                    // Start the timer with a time of 10 seconds
+                    this.GamePhaseTimer.StartTimer(scoreScreenLength);
                     break;
                 case GamePhase.Reset:
                     // Start loading the lobby scene
                     UnityEngine.Debug.Log("Loading scene: " + lobbyScene);
-                    this.progress = NetworkSceneManager.SwitchScene(lobbyScene);
+                    this.Progress = NetworkSceneManager.SwitchScene(lobbyScene);
                     // Once laoding is complete, go to lobby
                     break;
             }
@@ -168,13 +200,13 @@ namespace PropHunt.Game.Flow
                     break;
                 case GamePhase.Setup:
                     // As soon as scene is loaded, move to in game
-                    if (progress.IsAllClientsDoneLoading && progress.IsCompleted)
+                    if (Progress.IsAllClientsDoneLoading && Progress.IsCompleted)
                     {
                         GameManager.ChangePhase(GamePhase.InGame);
                     }
                     break;
                 case GamePhase.Reset:
-                    if (progress.IsAllClientsDoneLoading && progress.IsCompleted)
+                    if (Progress.IsAllClientsDoneLoading && Progress.IsCompleted)
                     {
                         GameManager.ChangePhase(GamePhase.Lobby);
                     }

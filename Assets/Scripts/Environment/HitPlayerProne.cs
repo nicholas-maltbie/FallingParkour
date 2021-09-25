@@ -44,7 +44,7 @@ namespace PropHunt.Environment
             // Knock the player prone for prone time seconds
             kcc.KnockPlayerProne(minProneTime, maxProneTime);
             Vector3 point = collision.contacts[0].point;
-            collision.rigidbody.AddForceAtPosition(GetComponent<Rigidbody>().GetPointVelocity(point) * forceMod, point, ForceMode.Impulse);
+            collision.rigidbody.AddForceAtPosition(GetComponent<Rigidbody>().GetPointVelocity(point) * forceMod, point, ForceMode.Force);
         }
     }
 }

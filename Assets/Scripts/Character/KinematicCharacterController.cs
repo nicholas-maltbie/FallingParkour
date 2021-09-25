@@ -360,12 +360,23 @@ namespace PropHunt.Character
         /// ability to walk.
         /// </summary>
         public bool Falling => FallingAngle(maxWalkAngle);
+
+        /// <summary>
+        /// Check if a player is falling for a given max walk angle.
+        /// </summary>
+        /// <param name="maxAngle">Maximum walk angle for the player.</param>
+        /// <returns>True if the player is slipping/falling on the slope they are currently standing on.</returns>
         public bool FallingAngle(float maxAngle) => !StandingOnGround || angle > maxAngle;
 
         /// <summary>
-        /// Was the player grounded the previous frame.
+        /// Was the player grounded the start of previous frame.
         /// </summary>
         private bool previousGrounded;
+
+        /// <summary>
+        /// Was the player grounded the start of this frame.
+        /// </summary>
+        private bool startGrounded;
 
         /// <summary>
         /// Was the player falling the previous frame.
@@ -403,6 +414,11 @@ namespace PropHunt.Character
         private Quaternion previousRotation;
 
         /// <summary>
+        /// Did the player jump the previous frame?
+        /// </summary>
+        private bool previousJumped;
+
+        /// <summary>
         /// Player's displacement caused by the moving floor this update.
         /// </summary>
         private Vector3 movingGroundDisplacement;
@@ -427,6 +443,12 @@ namespace PropHunt.Character
         /// </summary>
         /// <returns>If a player is allowed to snap down</returns>
         public bool CanSnapDown => (StandingOnGround || elapsedFalling <= snapBufferTime) && (elapsedSinceJump >= snapBufferTime);
+
+        /// <summary>
+        /// Is the character collider frozen in place as of now. When frozen, the character collider will
+        /// not update in any way.
+        /// </summary>
+        public bool Frozen { get; set; }
 
         /// <summary>
         /// Gets transformed parameters describing this capsule collider
@@ -461,7 +483,13 @@ namespace PropHunt.Character
         {
             if (!this.IsLocalPlayer)
             {
-                // exit from update if this is not the local player
+                // Exit from update if this is not the local player
+                return;
+            }
+
+            if (this.Frozen)
+            {
+                // If frozen do not update or change any settings
                 return;
             }
 
@@ -519,6 +547,7 @@ namespace PropHunt.Character
                 this.characterRigidbody.isKinematic = true;
                 this.characterRigidbody.velocity = Vector3.zero;
                 this.characterRigidbody.angularVelocity = Vector3.zero;
+                this.startGrounded = StandingOnGround;
 
                 // If player is not allowed to move, stop player movement
                 if (PlayerInputManager.playerMovementState == PlayerInputState.Deny)
@@ -565,13 +594,9 @@ namespace PropHunt.Character
 
                 // If the player was standing on the ground and is not now, increment velocity by ground
                 // velocity if the player did nto jump this frame
-                if (!StandingOnGround && previousGrounded && !jumped)
+                if (!startGrounded && previousGrounded && !previousJumped)
                 {
                     velocity = previousGroundVelocity;
-                }
-                else if (!StandingOnGround && previousGrounded && jumped)
-                {
-                    velocity += previousGroundVelocity;
                 }
 
                 // These are broken into two steps so the player's world velocity (usually due to falling)
@@ -613,7 +638,8 @@ namespace PropHunt.Character
 
                 // Save state of player
                 previousFalling = Falling;
-                previousGrounded = StandingOnGround;
+                previousGrounded = startGrounded;
+                previousJumped = jumped;
                 previousGroundVelocity = GetGroundVelocity();
                 previousStanding = GetHits(Down, groundedDistance).Select(hit => hit.collider.gameObject).ToList();
             }
