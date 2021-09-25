@@ -369,9 +369,14 @@ namespace PropHunt.Character
         public bool FallingAngle(float maxAngle) => !StandingOnGround || angle > maxAngle;
 
         /// <summary>
-        /// Was the player grounded the previous frame.
+        /// Was the player grounded the start of previous frame.
         /// </summary>
         private bool previousGrounded;
+
+        /// <summary>
+        /// Was the player grounded the start of this frame.
+        /// </summary>
+        private bool startGrounded;
 
         /// <summary>
         /// Was the player falling the previous frame.
@@ -407,6 +412,11 @@ namespace PropHunt.Character
         /// Previous rotation of the character.
         /// </summary>
         private Quaternion previousRotation;
+
+        /// <summary>
+        /// Did the player jump the previous frame?
+        /// </summary>
+        private bool previousJumped;
 
         /// <summary>
         /// Player's displacement caused by the moving floor this update.
@@ -476,7 +486,7 @@ namespace PropHunt.Character
                 // Exit from update if this is not the local player
                 return;
             }
-  
+
             if (this.Frozen)
             {
                 // If frozen do not update or change any settings
@@ -537,6 +547,7 @@ namespace PropHunt.Character
                 this.characterRigidbody.isKinematic = true;
                 this.characterRigidbody.velocity = Vector3.zero;
                 this.characterRigidbody.angularVelocity = Vector3.zero;
+                this.startGrounded = StandingOnGround;
 
                 // If player is not allowed to move, stop player movement
                 if (PlayerInputManager.playerMovementState == PlayerInputState.Deny)
@@ -583,13 +594,9 @@ namespace PropHunt.Character
 
                 // If the player was standing on the ground and is not now, increment velocity by ground
                 // velocity if the player did nto jump this frame
-                if (!StandingOnGround && previousGrounded && !jumped)
+                if (!startGrounded && previousGrounded && !previousJumped)
                 {
                     velocity = previousGroundVelocity;
-                }
-                else if (!StandingOnGround && previousGrounded && jumped)
-                {
-                    velocity += previousGroundVelocity;
                 }
 
                 // These are broken into two steps so the player's world velocity (usually due to falling)
@@ -631,7 +638,8 @@ namespace PropHunt.Character
 
                 // Save state of player
                 previousFalling = Falling;
-                previousGrounded = StandingOnGround;
+                previousGrounded = startGrounded;
+                previousJumped = jumped;
                 previousGroundVelocity = GetGroundVelocity();
                 previousStanding = GetHits(Down, groundedDistance).Select(hit => hit.collider.gameObject).ToList();
             }
@@ -686,6 +694,7 @@ namespace PropHunt.Character
         {
             Vector3 groundVelocity = Vector3.zero;
             IMovingGround movingGround = floor == null ? null : floor.GetComponent<IMovingGround>();
+            UnityEngine.Debug.Log($"movingGround:{movingGround} AvoidTransferMomentum:{movingGround != null && movingGround.AvoidTransferMomentum()}");
             if (movingGround != null && !movingGround.AvoidTransferMomentum())
             {
                 // Weight movement of ground by ground movement weight
@@ -694,6 +703,7 @@ namespace PropHunt.Character
                 float transferWeight =
                     movingGround.GetTransferMomentumWeight(groundHitPosition, LinearVelocity, Time.fixedDeltaTime);
                 groundVelocity = movingGround.GetVelocityAtPoint(groundHitPosition, Time.fixedDeltaTime);
+                UnityEngine.Debug.Log($"velWeight:{velocityWeight} transferWeight:{transferWeight} groundVel:{groundVelocity}");
                 groundVelocity *= velocityWeight;
                 groundVelocity *= transferWeight;
             }
