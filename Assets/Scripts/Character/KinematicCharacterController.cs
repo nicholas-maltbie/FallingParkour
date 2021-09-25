@@ -360,6 +360,12 @@ namespace PropHunt.Character
         /// ability to walk.
         /// </summary>
         public bool Falling => FallingAngle(maxWalkAngle);
+
+        /// <summary>
+        /// Check if a player is falling for a given max walk angle.
+        /// </summary>
+        /// <param name="maxAngle">Maximum walk angle for the player.</param>
+        /// <returns>True if the player is slipping/falling on the slope they are currently standing on.</returns>
         public bool FallingAngle(float maxAngle) => !StandingOnGround || angle > maxAngle;
 
         /// <summary>
@@ -429,6 +435,12 @@ namespace PropHunt.Character
         public bool CanSnapDown => (StandingOnGround || elapsedFalling <= snapBufferTime) && (elapsedSinceJump >= snapBufferTime);
 
         /// <summary>
+        /// Is the character collider frozen in place as of now. When frozen, the character collider will
+        /// not update in any way.
+        /// </summary>
+        public bool Frozen { get; set; }
+
+        /// <summary>
         /// Gets transformed parameters describing this capsule collider
         /// </summary>
         public (Vector3, Vector3, float, float) GetParams()
@@ -461,7 +473,13 @@ namespace PropHunt.Character
         {
             if (!this.IsLocalPlayer)
             {
-                // exit from update if this is not the local player
+                // Exit from update if this is not the local player
+                return;
+            }
+  
+            if (this.Frozen)
+            {
+                // If frozen do not update or change any settings
                 return;
             }
 

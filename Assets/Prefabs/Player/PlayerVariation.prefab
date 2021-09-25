@@ -55,6 +55,7 @@ GameObject:
   - component: {fileID: -3663087370360975145}
   - component: {fileID: 6906861509374862920}
   - component: {fileID: 3914348048351522772}
+  - component: {fileID: 2829540494293041588}
   m_Layer: 0
   m_Name: PlayerVariation
   m_TagString: Player
@@ -137,7 +138,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pushPower: 10
-  weight: 10
 --- !u!114 &8171741753156500418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -526,6 +526,18 @@ MonoBehaviour:
   m_SyncRotation: 1
   m_InterpolationTime: 0.25
   m_SyncRate: 60
+--- !u!114 &2829540494293041588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774360562829986131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 483edee5d7226d4448737ecd259573dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1159461200177953735
 GameObject:
   m_ObjectHideFlags: 0
