@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using MLAPI;
 using MLAPI.NetworkVariable;
 
@@ -163,6 +164,23 @@ namespace PropHunt.Game.Flow
                 case InGameState.Running:
                     // If the game is running, check if we can exit early!
                     bool endEarly = false;
+
+                    // If the number of "completed" states is equal to the number of players, we have completed the
+                    // level
+                    int completed = NetworkManager.ConnectedClientsList
+                        .Select(client => client.PlayerObject)
+                        .Where(playerObj => playerObj != null)
+                        .Select(playerObj => playerObj.GetComponent<CompletedLevel>())
+                        .Where(completionStatus => completionStatus != null)
+                        .Where(completionStatus => completionStatus.Status.Value == CompletedStatus.Completed)
+                        .Select(status => 1)
+                        .Sum();
+                    
+                    if (completed == NetworkManager.ConnectedClientsList.Count)
+                    {
+                        endEarly = true;
+                    }
+
 
                     // Otherwise, wait for round to end normally
                     if (endEarly)

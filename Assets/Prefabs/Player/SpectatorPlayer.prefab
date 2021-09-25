@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 722526358148954805}
   - component: {fileID: 6462058427160775520}
   - component: {fileID: 584628344693439600}
+  - component: {fileID: 4782479022912279480}
   m_Layer: 0
   m_Name: SpectatorPlayer
   m_TagString: Untagged
@@ -286,6 +287,20 @@ MonoBehaviour:
   PrefabHashGenerator: SpectatorPlayer
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
+--- !u!114 &4782479022912279480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250752114043530695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3220c6eec699ba34385f8c78f2ff8025, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Status:
+    m_InternalValue: 1
 --- !u!1 &8034969259794235780
 GameObject:
   m_ObjectHideFlags: 0
