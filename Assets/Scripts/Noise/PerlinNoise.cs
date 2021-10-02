@@ -1,6 +1,7 @@
 using UnityEngine;
 
-namespace nickmaltbie.Noise {
+namespace nickmaltbie.Noise
+{
     /// <summary>
     /// Using Perlin Noise function from adrian's soapbox "Understanding Perlin Noise" by Flafla2.
     /// https://flafla2.github.io/2014/08/09/perlinnoise.html
@@ -27,20 +28,21 @@ namespace nickmaltbie.Noise {
     /// This hash function provides the direction of the vectors so the gradient vectors
     /// do not have to be saved.
     /// </summary>
-    public class PerlinNoise : INoise {
+    public class PerlinNoise : INoise
+    {
 
         /// <summary>
         /// Corners on a unit sphere, (0, 0, 0), (0,0,1), ..., (1, 1, 1)
         /// </summary>
         private static readonly Vector3Int
-            X0Y0Z0 = new Vector3Int(0,0,0),
-            X0Y0Z1 = new Vector3Int(0,0,1),
-            X0Y1Z0 = new Vector3Int(0,1,0),
-            X0Y1Z1 = new Vector3Int(0,1,1),
-            X1Y0Z0 = new Vector3Int(1,0,0),
-            X1Y0Z1 = new Vector3Int(1,0,1),
-            X1Y1Z0 = new Vector3Int(1,1,0),
-            X1Y1Z1 = new Vector3Int(1,1,1);
+            X0Y0Z0 = new Vector3Int(0, 0, 0),
+            X0Y0Z1 = new Vector3Int(0, 0, 1),
+            X0Y1Z0 = new Vector3Int(0, 1, 0),
+            X0Y1Z1 = new Vector3Int(0, 1, 1),
+            X1Y0Z0 = new Vector3Int(1, 0, 0),
+            X1Y0Z1 = new Vector3Int(1, 0, 1),
+            X1Y1Z0 = new Vector3Int(1, 1, 0),
+            X1Y1Z1 = new Vector3Int(1, 1, 1);
 
         /// <summary>
         /// Doubled permutation to avoid overflow.
@@ -59,7 +61,8 @@ namespace nickmaltbie.Noise {
         /// value is set to zero, there is no repeat.</param>
         /// <param name="seed">Seed value for random permutation. if set to zero a arbitrary seed will be used.</param>
         /// <param name="permutationSize">Size of the permutation of random numbers</param>
-        public PerlinNoise(int repeat, int seed, int permutationSize) {
+        public PerlinNoise(int repeat, int seed, int permutationSize)
+        {
             this.permutation = MakePermutation(permutationSize, seed);
             this.repeat = repeat;
         }
@@ -70,18 +73,21 @@ namespace nickmaltbie.Noise {
         /// <param name="permutationSize">Size of permutation to generate</param>
         /// <param name="seed">Seed value for random number generator to shuffle permutation</param>
         /// <returns>An array of value between (0, permutationSize]</returns>
-        public static int[] MakePermutation(int permutationSize, int seed) {
+        public static int[] MakePermutation(int permutationSize, int seed)
+        {
             int[] permutation = new int[permutationSize];
 
-            for (int i = 0; i < permutationSize; i++) {
+            for (int i = 0; i < permutationSize; i++)
+            {
                 permutation[i] = i + 1;
             }
-            
+
             // Shuffle the permutation if a random seed is used.
             System.Random random = seed == 0 ? new System.Random() : new System.Random(seed);
             int n = permutation.Length;
-            for (int i = n - 1; i > 1; i--) {
-                int rnd = random.Next(i+1);
+            for (int i = n - 1; i > 1; i--)
+            {
+                int rnd = random.Next(i + 1);
                 int value = permutation[rnd];
                 permutation[rnd] = permutation[i];
                 permutation[i] = value;
@@ -95,7 +101,8 @@ namespace nickmaltbie.Noise {
         /// </summary>
         /// <param name="pos">Position in the grid space (three component vector) as integer values.</param>
         /// <returns>The hash of the position for creating gradient vectors.</returns>
-        public int GetHashOfPosition(Vector3Int pos) {
+        public int GetHashOfPosition(Vector3Int pos)
+        {
             int hash = pos.x;
             hash = this.permutation[hash % permutation.Length] + pos.y;
             hash = this.permutation[hash % permutation.Length] + pos.z;
@@ -108,7 +115,8 @@ namespace nickmaltbie.Noise {
         /// </summary>
         /// <param name="vec">Point in (X,Y,Z) space.</param>
         /// <returns>A noise value at given coordinate. Will always be in the range [0.0, 1.0]</returns>
-        public float GetNoise(Vector3 vec) {
+        public float GetNoise(Vector3 vec)
+        {
             return Perlin(vec);
         }
 
@@ -122,9 +130,10 @@ namespace nickmaltbie.Noise {
         /// <param name="corner2">Second corner of interpolation</param>
         /// <param name="fade">Amount to fade between corners</param>
         /// <returns>The interpolation between two gradients</returns>
-        private float GetLerpOfCorner(Vector3Int pos, Vector3 fraction, Vector3Int corner1, Vector3Int corner2, float fade) {
-            float corner1gradient = Grad (GetHashOfPosition(pos + corner1), fraction - corner1),
-                corner2gradient = Grad (GetHashOfPosition(pos + corner2), fraction - corner2);
+        private float GetLerpOfCorner(Vector3Int pos, Vector3 fraction, Vector3Int corner1, Vector3Int corner2, float fade)
+        {
+            float corner1gradient = Grad(GetHashOfPosition(pos + corner1), fraction - corner1),
+                corner2gradient = Grad(GetHashOfPosition(pos + corner2), fraction - corner2);
             return Lerp(corner1gradient, corner2gradient, fade);
         }
 
@@ -133,9 +142,11 @@ namespace nickmaltbie.Noise {
         /// </summary>
         /// <param name="vec">Vector position to computer Perlin Noise with x, y, z component</param>
         /// <returns>Perlin noise value at the given coordinate. Will always be in the range [0.0, 1.0]</returns>
-        public float Perlin(Vector3 vec) {
+        public float Perlin(Vector3 vec)
+        {
             // If we have any repeat on, change the coordinates to their "local" repetitions
-            if (this.repeat > 0) {
+            if (this.repeat > 0)
+            {
                 vec = new Vector3(vec.x % this.repeat, vec.y % this.repeat, vec.z % this.repeat);
             }
 
@@ -160,7 +171,7 @@ namespace nickmaltbie.Noise {
             // surrounding points in its unit cube.
             // This is all then combined using a lerp together as a sort of
             // weighted average based on the faded (u,v,w)
-            
+
             // Find the lerp of the gradients at corners 000 and 100
             x1 = GetLerpOfCorner(posInt, posFrac, X0Y0Z0, X1Y0Z0, vecFade.x);
             // Find the lerp of the gradients at corners 010 and 110
@@ -171,10 +182,10 @@ namespace nickmaltbie.Noise {
             x1 = GetLerpOfCorner(posInt, posFrac, X0Y0Z1, X1Y0Z1, vecFade.x);
             // Find the lerp of the gradients at corners 011 and 111
             x2 = GetLerpOfCorner(posInt, posFrac, X0Y1Z1, X1Y1Z1, vecFade.x);
-            y2 = Lerp (x1, x2, vecFade.y);
+            y2 = Lerp(x1, x2, vecFade.y);
 
             // For convenience we bind the result to 0 - 1 (theoretical min/max before is [-1, 1])
-            return (Lerp (y1, y2, vecFade.z)+1)/2;
+            return (Lerp(y1, y2, vecFade.z) + 1) / 2;
         }
 
         /// <summary>
@@ -183,24 +194,25 @@ namespace nickmaltbie.Noise {
         /// <param name="hash">Hash value at a given position.</param>
         /// <param name="vec">Gradient vector with x, y, z components.</param>
         /// <returns>Computes the dot product of the gradient vector given the hash value.</returns>
-        private float Grad(int hash, Vector3 vec) {
-            switch(hash & 0xF)
+        private float Grad(int hash, Vector3 vec)
+        {
+            switch (hash & 0xF)
             {
-                case 0x0: return  vec.x + vec.y;
+                case 0x0: return vec.x + vec.y;
                 case 0x1: return -vec.x + vec.y;
-                case 0x2: return  vec.x - vec.y;
+                case 0x2: return vec.x - vec.y;
                 case 0x3: return -vec.x - vec.y;
-                case 0x4: return  vec.x + vec.z;
+                case 0x4: return vec.x + vec.z;
                 case 0x5: return -vec.x + vec.z;
-                case 0x6: return  vec.x - vec.z;
+                case 0x6: return vec.x - vec.z;
                 case 0x7: return -vec.x - vec.z;
-                case 0x8: return  vec.y + vec.z;
+                case 0x8: return vec.y + vec.z;
                 case 0x9: return -vec.y + vec.z;
-                case 0xA: return  vec.y - vec.z;
+                case 0xA: return vec.y - vec.z;
                 case 0xB: return -vec.y - vec.z;
-                case 0xC: return  vec.y + vec.x;
+                case 0xC: return vec.y + vec.x;
                 case 0xD: return -vec.y + vec.z;
-                case 0xE: return  vec.y - vec.x;
+                case 0xE: return vec.y - vec.x;
                 case 0xF: return -vec.y - vec.z;
                 default: return 0; // never happens
             }
@@ -213,7 +225,8 @@ namespace nickmaltbie.Noise {
         /// </summary>
         /// <param name="t"></param>
         /// <returns>6t^5 - 15t^4 + 10t^3</returns>
-        private float Fade(float t) {                                            
+        private float Fade(float t)
+        {
             return t * t * t * (t * (t * 6 - 15) + 10);
         }
 
@@ -224,7 +237,8 @@ namespace nickmaltbie.Noise {
         /// <param name="b">Second value</param>
         /// <param name="x">Proportional value</param>
         /// <returns>Linear interpolation of a and b by x</returns>
-        public static float Lerp(float a, float b, float x) {
+        public static float Lerp(float a, float b, float x)
+        {
             return a + x * (b - a);
         }
     }

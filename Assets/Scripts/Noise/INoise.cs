@@ -1,10 +1,12 @@
 using UnityEngine;
 
-namespace nickmaltbie.Noise {
+namespace nickmaltbie.Noise
+{
     /// <summary>
     /// Noise function to generate noise values for a three dimensional space.
     /// </summary>
-    public interface INoise {
+    public interface INoise
+    {
         /// <summary>
         /// Will return a noise value between [0.0, 1.0] for a given (X,Y,Z) coordinate.
         /// </summary>

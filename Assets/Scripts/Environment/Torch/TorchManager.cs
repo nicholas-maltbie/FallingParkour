@@ -39,7 +39,7 @@ namespace PropHunt.Environment.Torch
         {
             // Update spawned hexes based on intensity
             this.coords.ForEach(
-                pos => 
+                pos =>
                 {
                     // If the element does not exist, skip this step
                     if (this.worldGrid.GetTileMap()[pos] == null)
@@ -52,7 +52,7 @@ namespace PropHunt.Environment.Torch
 
                     // Go through each torch, compute maximum intensity
                     float maxIntensity = 0;
-                    foreach(Torch torch in torches)
+                    foreach (Torch torch in torches)
                     {
                         float light = torch.GetStrength(objPos);
                         if (light > maxIntensity)
