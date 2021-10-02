@@ -22,3 +22,5 @@ MonoBehaviour:
     displayName: Wipeout
   - levelName: Factory
     displayName: The Factory
+  - levelName: HiddenPath
+    displayName: Hidden Path
