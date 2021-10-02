@@ -43,5 +43,10 @@ namespace nickmaltbie.TileMap.Common
         /// Clear all values from the tile grid.
         /// </summary>
         void Clear();
+
+        /// <summary>
+        /// Get an enumerator of the key elements in this tile map.
+        /// </summary>
+        IEnumerator<K> GetEnumerator();
     }
 }

@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 namespace nickmaltbie.TileMap.Common

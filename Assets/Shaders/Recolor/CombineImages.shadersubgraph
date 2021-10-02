@@ -279,6 +279,8 @@
         "m_GuidSerialized": "c5275f49-94cb-4443-9ef1-b290cc77f94e"
     },
     "m_Name": "Mask",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector4_04398915d2904a63b43babfcf52f57b4",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
@@ -557,6 +559,8 @@
         "m_GuidSerialized": "e0a95189-5e15-4858-85e2-372404b9f6e4"
     },
     "m_Name": "Image 1",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector4_3405e6f67f47409fbf561c7c820e8853",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
@@ -748,6 +752,8 @@
         "m_GuidSerialized": "f096ec5e-5687-4f2d-a55d-1643d3ca4717"
     },
     "m_Name": "Image 2",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector4_78aa24aac56f4e9fb7c645bc3f7cf85a",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,

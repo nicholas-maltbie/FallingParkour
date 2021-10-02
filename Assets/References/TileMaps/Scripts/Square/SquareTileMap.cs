@@ -9,27 +9,32 @@ namespace nickmaltbie.TileMap.Square
     /// Fixed size square grid tile map that can contain generic values at each position within the map.
     /// </summary>
     /// <typeparam name="V">Type of values contained within each cell in the grid.</typeparam>
-    public class SquareTileMap<V> : ITileMap<Vector2Int, V>
+    public class SquareTileMap<V> : IBlockableTileMap<Vector2Int, V>
     {
         /// <summary>
         /// Width of the tile map in squares.
         /// </summary>
-        private int width;
+        private readonly int width;
 
         /// <summary>
         /// Height of the tile map in squares.
         /// </summary>
-        private int height;
+        private readonly int height;
 
         /// <summary>
         /// Type of adjacency for square tiles in this grid.
         /// </summary>
-        private Adjacency adjacencyType;
+        private readonly Adjacency adjacencyType;
 
         /// <summary>
         /// Values stored within each square of the tile map.
         /// </summary>
         private V[,] values;
+
+        /// <summary>
+        /// Tiles within the map that are blocked.
+        /// </summary>
+        private readonly HashSet<Vector2Int> blocked;
 
         /// <summary>
         /// Initialize a tile map with a given width and height.
@@ -43,6 +48,7 @@ namespace nickmaltbie.TileMap.Square
             this.height = height;
             this.values = new V[width, height];
             this.adjacencyType = adjacencyType;
+            this.blocked = new HashSet<Vector2Int>();
         }
 
         /// <inheritdoc/>
@@ -81,6 +87,36 @@ namespace nickmaltbie.TileMap.Square
         public void Clear()
         {
             this.values = new V[width, height];
+        }
+
+        /// <inheritdoc/>
+        public IEnumerator<Vector2Int> GetEnumerator()
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    yield return new Vector2Int(x, y);
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public void Block(Vector2Int loc)
+        {
+            this.blocked.Add(loc);
+        }
+
+        /// <inheritdoc/>
+        public void Unblock(Vector2Int loc)
+        {
+            this.blocked.Remove(loc);
+        }
+
+        /// <inheritdoc/>
+        public bool IsBlocked(Vector2Int loc)
+        {
+            return this.blocked.Contains(loc);
         }
     }
 }
